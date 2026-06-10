@@ -117,10 +117,13 @@
     color:var(--accent);margin:18px 0 5px;}
   .case .winbody p{font-size:14px;line-height:1.55;margin:0 0 6px;}
 
-  /* ---------- BOTTOM-LEFT: GARRISON STANDING ON THE PLANET CURVE ---------- */
-  #garrison{position:fixed;left:5vw;bottom:11vh;z-index:60;height:36vh;width:auto;
+  /* ---------- BOTTOM-LEFT: GARRISON (fisheye) STANDING ON THE PLANET CURVE ---------- */
+  #garrison{position:fixed;left:4vw;bottom:9.5vh;z-index:60;height:38vh;width:auto;
     pointer-events:none;user-select:none;-webkit-user-drag:none;
-    filter:drop-shadow(0 10px 14px rgba(10,30,5,.45));}
+    filter:drop-shadow(0 6px 8px rgba(10,30,5,.35));}
+  #garrison-shadow{position:fixed;left:calc(4vw + 4vh);bottom:8.6vh;z-index:59;
+    width:18vh;height:3.4vh;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side, rgba(10,30,5,.42), rgba(10,30,5,0) 70%);}
 
   /* ---------- UFO (pixel art) ---------- */
   #ufo{position:fixed;top:84px;right:13%;z-index:70;cursor:pointer;
@@ -163,7 +166,8 @@
     #menubar .mi{display:none;}
     #ufo{top:auto;bottom:200px;right:6%;}
     #ufo svg{width:84px;}
-    #garrison{left:6vw;bottom:7vh;height:26vh;}
+    #garrison{left:5vw;bottom:6vh;height:24vh;}
+    #garrison-shadow{left:calc(5vw + 2.5vh);bottom:5.5vh;width:12vh;height:2.2vh;}
     .preview{width:min(300px,88vw);}
     .case{width:94vw;max-height:80vh;}
     .case .hero{height:120px;}
@@ -184,8 +188,9 @@
   <span class="clock" id="clock"></span>
 </div>
 
-<!-- bottom-left: Garrison standing on the planet curve (album-cover style) -->
-<img id="garrison" src="assets/garrison-standing.png" alt="Garrison Bullock standing on a tiny grass planet" draggable="false">
+<!-- bottom-left: Garrison (fisheye) standing on the planet curve (album-cover style) -->
+<div id="garrison-shadow"></div>
+<img id="garrison" src="assets/garrison-standing.png" alt="Garrison Bullock standing on a tiny grass planet, throwing a peace sign" draggable="false">
 
 <!-- UFO + pixel speech bubble -->
 <div id="ufo" title="click me"></div>
