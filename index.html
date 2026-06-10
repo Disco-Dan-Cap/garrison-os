@@ -248,7 +248,14 @@ function folderSVG(fill,dark,symbol){
   s+=`<rect x="1.5" y="10" width="29" height="15.5" fill="${fill}"/>`;     // front panel
   s+=`<rect x="1.5" y="10" width="29" height="1.2" fill="rgba(255,255,255,.35)"/>`; // top highlight
   const px=SYMBOLS[symbol]||[];
-  const cell=1.9, ox=(32-8*cell)/2, oy=11.6;
+  /* center the symbol's actual inked bounding box on the folder front panel */
+  const cell=1.6;
+  let x0=8,x1=-1,y0=8,y1=-1;
+  px.forEach((row,y)=>{for(let x=0;x<8;x++){if(row[x]==='X'){
+    if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;}}});
+  const gw=(x1-x0+1)*cell, gh=(y1-y0+1)*cell;
+  const ox=16-gw/2-x0*cell;                 /* folder is 32 wide */
+  const oy=10+(15.5-gh)/2-y0*cell;          /* front panel: y 10..25.5 */
   px.forEach((row,y)=>{for(let x=0;x<8;x++){if(row[x]==='X')
     s+=`<rect x="${(ox+x*cell).toFixed(2)}" y="${(oy+y*cell).toFixed(2)}" width="${cell}" height="${cell}" fill="#fff"/>`;}});
   return s+'</svg>';
