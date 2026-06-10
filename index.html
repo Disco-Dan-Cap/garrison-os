@@ -92,7 +92,9 @@
     border-bottom:2px solid var(--px-black);border-radius:4px 4px 0 0;cursor:grab;touch-action:none;
     background:repeating-linear-gradient(180deg,#f2f2f2 0 1px,#c8c8c8 1px 2px);}
   .titlebar.drag{cursor:grabbing;}
-  .closebox{width:13px;height:13px;border:2px solid var(--px-black);background:#cfcfcf;cursor:pointer;flex:none;}
+  .closebox{width:15px;height:15px;border:2px solid var(--px-black);background:#cfcfcf;cursor:pointer;flex:none;
+    display:flex;align-items:center;justify-content:center;}
+  .closebox::after{content:"\2715";font-size:9px;font-weight:bold;line-height:1;color:var(--px-black);}
   .closebox:hover{background:#9fb6e0;}
   .title{font-family:"Press Start 2P",monospace;font-size:8px;flex:1;text-align:center;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
