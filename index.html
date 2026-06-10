@@ -238,7 +238,8 @@ function pixelSVG(rows,palette,opts={}){
 const SYMBOLS={
   bolt:["....XX..","...XX...","..XXXX..","....XX..","...XX...","..XX....",".XX.....","XX......"],
   bottle:["...XX...","...XX...","...XX...","..XXXX..","..XXXX..","..XXXX..","..XXXX..","..XXXX.."],
-  leaf:["....XXX.","...XXXX.","..XXXXX.",".XXXXX..",".XXXX...","XXXX....",".XX.....",".X......"],
+  /* leaf: black pixel outline, green body, dark diagonal vein, stem bottom-left (G body, v vein, K outline) */
+  leaf:["......KK..","....KKvGK.","...KGvGGK.","..KGvGGGK.",".KGvGGGK..",".KvGGGGK..",".KvGGGK...",".KKGGK....","K.KKK....."],
   house:["...XX...","..XXXX..",".XXXXXX.","XXXXXXXX",".XXXXXX.",".XX..XX.",".XX..XX.",".XXXXXX."],
   mug:["........","XXXXXX..","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX..","........"],
   fan:["XX....XX","XXX..XXX",".XX..XX.","...XX...","...XX...",".XX..XX.","XXX..XXX","XX....XX"],
@@ -259,7 +260,7 @@ function folderSVG(fill,dark,symbol){
   s+=`<rect x="1.5" y="10" width="29" height="1.2" fill="rgba(255,255,255,.35)"/>`; // top highlight
   const px=SYMBOLS[symbol]||[];
   /* symbol pixels: X/W white, plus accent colors for multicolor glyphs */
-  const SYMC={X:'#fff',W:'#fff',C:'#aee2ff',L:'#c9a6f0',Y:'#ffd34d',K:'#16161c'};
+  const SYMC={X:'#fff',W:'#fff',C:'#aee2ff',L:'#c9a6f0',Y:'#ffd34d',K:'#16161c',G:'#56c172',v:'#16161c'};
   /* center the symbol's actual inked bounding box on the folder front panel */
   const cell=1.6;
   let x0=99,x1=-1,y0=99,y1=-1;
