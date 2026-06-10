@@ -117,18 +117,10 @@
     color:var(--accent);margin:18px 0 5px;}
   .case .winbody p{font-size:14px;line-height:1.55;margin:0 0 6px;}
 
-  /* ---------- BOTTOM-LEFT: PORTRAIT ON GRASS PLANET ---------- */
-  #corner{position:fixed;left:18px;bottom:8px;z-index:60;width:200px;height:210px;
-    pointer-events:none;}
-  .portrait{position:absolute;left:36px;bottom:74px;width:120px;height:120px;z-index:2;
-    border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.35);
-    background:repeating-conic-gradient(#b98a5e 0 8deg,#a9794d 8deg 16deg);
-    display:flex;align-items:flex-end;justify-content:center;}
-  .portrait .tag{font-size:10px;background:rgba(0,0,0,.55);color:#fff;width:100%;text-align:center;padding:2px;}
-  .grass-planet{position:absolute;left:0;bottom:-40px;width:200px;height:120px;
-    border-radius:50%;
-    background:radial-gradient(circle at 50% 35%, #7ec850 0%, #57a52f 45%, #2f6d1c 80%);
-    box-shadow:inset 0 6px 14px rgba(255,255,255,.35), 0 8px 18px rgba(0,0,0,.3);}
+  /* ---------- BOTTOM-LEFT: GARRISON STANDING ON THE PLANET CURVE ---------- */
+  #garrison{position:fixed;left:5vw;bottom:11vh;z-index:60;height:36vh;width:auto;
+    pointer-events:none;user-select:none;-webkit-user-drag:none;
+    filter:drop-shadow(0 10px 14px rgba(10,30,5,.45));}
 
   /* ---------- UFO (pixel art) ---------- */
   #ufo{position:fixed;top:84px;right:13%;z-index:70;cursor:pointer;
@@ -169,9 +161,9 @@
     .folder .lbl{font-size:7px;}
     #menubar{gap:10px;height:24px;}
     #menubar .mi{display:none;}
-    #ufo{top:auto;bottom:170px;right:6%;}
+    #ufo{top:auto;bottom:200px;right:6%;}
     #ufo svg{width:84px;}
-    #corner{transform:scale(.62);transform-origin:left bottom;left:8px;bottom:4px;}
+    #garrison{left:6vw;bottom:7vh;height:26vh;}
     .preview{width:min(300px,88vw);}
     .case{width:94vw;max-height:80vh;}
     .case .hero{height:120px;}
@@ -192,13 +184,8 @@
   <span class="clock" id="clock"></span>
 </div>
 
-<!-- bottom-left: Garrison standing on the planet curve (album-cover style).
-     Hidden until the Higgsfield figure asset (assets/garrison-standing.png) exists;
-     the background itself now provides the grass sphere he stands on. -->
-<div id="corner" style="display:none">
-  <div class="grass-planet"></div>
-  <div class="portrait"><span class="tag">pixel fisheye portrait &rarr;</span></div>
-</div>
+<!-- bottom-left: Garrison standing on the planet curve (album-cover style) -->
+<img id="garrison" src="assets/garrison-standing.png" alt="Garrison Bullock standing on a tiny grass planet" draggable="false">
 
 <!-- UFO + pixel speech bubble -->
 <div id="ufo" title="click me"></div>
