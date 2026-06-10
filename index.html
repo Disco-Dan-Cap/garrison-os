@@ -249,28 +249,49 @@ const SYMBOLS={
   apple:["....XX..","...XX...",".XXXXXX.","XXXXXXXX","XXXXXXXX","XXXXXXXX",".XXXXXX.","..XXXX.."]
 };
 
-/* Pixel folder: thick black outline, dark back+tab, colored front, white symbol */
+/* Pixel folder — classic open-folder shape per reference:
+   right-side back tab, stepped top-left front notch, 1px black outline.
+   26x20 pixel map: K outline, D dark back flap, F colored front. */
+const FOLDER_ROWS=[
+"................KKKKKKKK..",
+"...............KDDDDDDDDK.",
+"..............KDDDDDDDDDK.",
+"..............KDDDDDDDDDK.",
+".KDDDDDDDDDDDDDDDDDDDDDK.",
+".KDDDDDDDDDDDDDDDDDDDDDK.",
+".KKKKKKKKKDDDDDDDDDDDDDDK",
+".KFFFFFFFKKDDDDDDDDDDDDDK",
+".KFFFFFFFFKKKKKKKKKKKKKKK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KFFFFFFFFFFFFFFFFFFFFFFK",
+".KKKKKKKKKKKKKKKKKKKKKKKK"
+];
 function folderSVG(fill,dark,symbol){
-  let s='<svg viewBox="0 0 32 27" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">';
-  s+=`<rect x="16" y="0" width="15" height="9" fill="#16161c"/>`;          // tab outline
-  s+=`<rect x="0" y="4" width="32" height="23" fill="#16161c"/>`;          // body outline
-  s+=`<rect x="17.5" y="1.5" width="12" height="6" fill="${dark}"/>`;      // tab
-  s+=`<rect x="1.5" y="5.5" width="29" height="4.5" fill="${dark}"/>`;     // back panel
-  s+=`<rect x="1.5" y="10" width="29" height="15.5" fill="${fill}"/>`;     // front panel
-  s+=`<rect x="1.5" y="10" width="29" height="1.2" fill="rgba(255,255,255,.35)"/>`; // top highlight
+  const FPAL={K:'#16161c',D:dark,F:fill};
+  let s='<svg viewBox="0 0 26 20" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">';
+  FOLDER_ROWS.forEach((row,y)=>{for(let x=0;x<row.length;x++){const c=FPAL[row[x]];
+    if(c) s+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${c}"/>`;}});
   const px=SYMBOLS[symbol]||[];
   /* symbol pixels: X/W white, plus accent colors for multicolor glyphs */
   const SYMC={X:'#fff',W:'#fff',C:'#aee2ff',L:'#c9a6f0',Y:'#ffd34d',K:'#16161c',G:'#56c172',v:'#16161c'};
-  /* center the symbol's actual inked bounding box on the folder front panel */
-  const cell=1.6;
+  /* center the symbol's inked bounding box on the front panel (cols 2-23, rows 9-19) */
   let x0=99,x1=-1,y0=99,y1=-1;
   px.forEach((row,y)=>{for(let x=0;x<row.length;x++){if(SYMC[row[x]]){
     if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;}}});
-  const gw=(x1-x0+1)*cell, gh=(y1-y0+1)*cell;
-  const ox=16-gw/2-x0*cell;                 /* folder is 32 wide */
-  const oy=10+(15.5-gh)/2-y0*cell;          /* front panel: y 10..25.5 */
+  const gwu=x1-x0+1, ghu=y1-y0+1;
+  const cell=Math.min(1.3, 9.4/ghu, 20/gwu);
+  const ox=13-(gwu*cell)/2-x0*cell;
+  const oy=13.9-(ghu*cell)/2-y0*cell;
   px.forEach((row,y)=>{for(let x=0;x<row.length;x++){if(SYMC[row[x]])
-    s+=`<rect x="${(ox+x*cell).toFixed(2)}" y="${(oy+y*cell).toFixed(2)}" width="${cell}" height="${cell}" fill="${SYMC[row[x]]}"/>`;}});
+    s+=`<rect x="${(ox+x*cell).toFixed(2)}" y="${(oy+y*cell).toFixed(2)}" width="${cell.toFixed(2)}" height="${cell.toFixed(2)}" fill="${SYMC[row[x]]}"/>`;}});
   return s+'</svg>';
 }
 
