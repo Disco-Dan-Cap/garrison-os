@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garrison OS — Portfolio Prototype v0.1</title>
+<!--
+  GARRISON OS — desktop portfolio prototype v0.1
+  Pure HTML/CSS/JS. No external assets.
+  All visuals here are PLACEHOLDERS meant to be replaced by Higgsfield art:
+    - the sky/hill background  -> Bliss-style hero image
+    - .portrait box            -> pixel fisheye self-portrait
+    - .grass-planet            -> warped grass ball render
+    - .ufo                     -> UFO art (keep the bob animation)
+    - .folder                  -> retro manila folder art
+  The INTERACTION MODEL (folder -> preview -> full case study, draggable
+  windows, UFO speech bubble) is the part we're locking in here.
+-->
+<style>
+  :root{
+    --mac-face:#d9d9d9; --mac-line:#888; --mac-dark:#555;
+    --mac-title1:#e8e8e8; --mac-title2:#bcbcbc;
+    --ink:#1a1a1a; --manila:#e6c98c; --manila-tab:#d8b86e; --manila-line:#a8853f;
+    --accent:#2b5fb3;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    font-family:"Geneva","Chicago","Tahoma",system-ui,sans-serif;
+    overflow:hidden; color:var(--ink);
+    user-select:none; -webkit-user-select:none;
+  }
+
+  /* ---------- DESKTOP / BACKGROUND (placeholder Bliss sky) ---------- */
+  #desktop{
+    position:fixed; inset:0;
+    background:
+      radial-gradient(120% 80% at 50% 120%, #6db33f 0%, #5aa233 38%, #3f7d22 60%, transparent 61%),
+      linear-gradient(#3a7bd5 0%, #5b95e0 38%, #9fc6f0 70%, #cfe6fb 100%);
+    overflow:hidden;
+  }
+  /* puffy clouds */
+  .cloud{position:absolute;background:rgba(255,255,255,.9);border-radius:50%;filter:blur(2px);}
+  .cloud::before,.cloud::after{content:"";position:absolute;background:inherit;border-radius:50%;}
+  .c1{width:120px;height:38px;top:18%;left:14%;}
+  .c1::before{width:60px;height:60px;top:-26px;left:18px;}
+  .c1::after{width:46px;height:46px;top:-18px;left:62px;}
+  .c2{width:160px;height:44px;top:30%;left:62%;}
+  .c2::before{width:70px;height:70px;top:-30px;left:30px;}
+  .c2::after{width:52px;height:52px;top:-20px;left:90px;}
+
+  /* CRT overlay: scanlines + vignette for the "old screen" vibe */
+  #crt{position:fixed;inset:0;pointer-events:none;z-index:90;
+    background:
+      repeating-linear-gradient(rgba(0,0,0,.06) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 120% at 50% 50%, transparent 60%, rgba(0,0,0,.28) 100%);
+    mix-blend-mode:multiply;}
+
+  /* ---------- TOP MENU BAR (Mac Platinum) ---------- */
+  #menubar{
+    position:fixed;top:0;left:0;right:0;height:24px;z-index:80;
+    background:linear-gradient(var(--mac-title1),var(--mac-title2));
+    border-bottom:1px solid var(--mac-dark);
+    display:flex;align-items:center;gap:18px;padding:0 12px;
+    font-size:13px;
+  }
+  #menubar .logo{font-weight:bold;letter-spacing:.5px;}
+  #menubar .mi{opacity:.85;}
+  #menubar .clock{margin-left:auto;font-variant-numeric:tabular-nums;}
+
+  /* ---------- FOLDERS ---------- */
+  #icons{position:absolute;top:48px;left:24px;display:grid;
+    grid-template-columns:repeat(auto-fill,92px);gap:14px 8px;width:330px;}
+  .folder{width:92px;text-align:center;cursor:pointer;color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,.6);}
+  .folder .ic{
+    width:64px;height:48px;margin:0 auto 4px;position:relative;
+    background:var(--manila);border:1px solid var(--manila-line);border-radius:4px 4px 3px 3px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 2px 3px rgba(0,0,0,.3);
+  }
+  .folder .ic::before{ /* tab */
+    content:"";position:absolute;top:-7px;left:4px;width:26px;height:9px;
+    background:var(--manila-tab);border:1px solid var(--manila-line);border-bottom:none;
+    border-radius:4px 6px 0 0;
+  }
+  .folder .lbl{font-size:12px;line-height:1.15;padding:1px 3px;border-radius:2px;}
+  .folder:hover .lbl{background:var(--accent);color:#fff;text-shadow:none;}
+  .folder:active .ic{filter:brightness(.92);}
+
+  /* ---------- WINDOWS (Mac Platinum chrome) ---------- */
+  .win{position:absolute;background:var(--mac-face);border:1px solid #000;
+    border-radius:7px 7px 4px 4px;box-shadow:0 10px 26px rgba(0,0,0,.35);
+    display:none;flex-direction:column;z-index:40;min-width:260px;}
+  .win.open{display:flex;}
+  .titlebar{height:22px;display:flex;align-items:center;gap:8px;padding:0 8px;
+    border-bottom:1px solid var(--mac-dark);border-radius:6px 6px 0 0;cursor:grab;
+    background:repeating-linear-gradient(180deg,#eee 0 1px,#cfcfcf 1px 2px);}
+  .titlebar.drag{cursor:grabbing;}
+  .closebox{width:12px;height:12px;border:1px solid #000;background:#cfcfcf;border-radius:2px;cursor:pointer;}
+  .closebox:hover{background:#9fb6e0;}
+  .title{font-size:12px;font-weight:bold;flex:1;text-align:center;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .winbody{padding:14px;overflow:auto;background:#fff;border-radius:0 0 4px 4px;}
+
+  /* preview window */
+  .preview{width:300px;}
+  .preview .cover{height:130px;border:1px solid var(--mac-line);
+    background:linear-gradient(135deg,#cfe0f5,#e9d8b6);
+    display:flex;align-items:center;justify-content:center;color:#5a5a5a;font-size:12px;}
+  .preview .one{font-size:13px;margin:10px 0 12px;line-height:1.4;}
+  .btn{font-family:inherit;font-size:12px;padding:4px 12px;cursor:pointer;
+    background:linear-gradient(#fff,#dcdcdc);border:1px solid #000;border-radius:5px;
+    box-shadow:inset 0 1px 0 #fff;}
+  .btn:active{background:linear-gradient(#dcdcdc,#fff);}
+
+  /* case study window */
+  .case{width:min(640px,86vw);max-height:78vh;}
+  .case .winbody h2{margin:.1em 0 .1em;font-size:20px;}
+  .case .winbody .meta{color:#666;font-size:12px;margin-bottom:12px;}
+  .case .hero{height:170px;margin:0 0 14px;border:1px solid var(--mac-line);
+    background:linear-gradient(135deg,#cfe0f5,#e9d8b6);
+    display:flex;align-items:center;justify-content:center;color:#5a5a5a;font-size:12px;}
+  .case .winbody h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--accent);margin:16px 0 4px;}
+  .case .winbody p{font-size:14px;line-height:1.55;margin:0 0 6px;}
+
+  /* ---------- BOTTOM-LEFT: PORTRAIT ON GRASS PLANET ---------- */
+  #corner{position:fixed;left:18px;bottom:8px;z-index:60;width:200px;height:210px;
+    pointer-events:none;}
+  .portrait{position:absolute;left:36px;bottom:74px;width:120px;height:120px;z-index:2;
+    border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.35);
+    background:
+      repeating-conic-gradient(#b98a5e 0 8deg,#a9794d 8deg 16deg);
+    display:flex;align-items:flex-end;justify-content:center;}
+  .portrait .tag{font-size:10px;background:rgba(0,0,0,.55);color:#fff;width:100%;text-align:center;padding:2px;}
+  .grass-planet{position:absolute;left:0;bottom:-40px;width:200px;height:120px;
+    border-radius:50%;
+    background:radial-gradient(circle at 50% 35%, #7ec850 0%, #57a52f 45%, #2f6d1c 80%);
+    box-shadow:inset 0 6px 14px rgba(255,255,255,.35), 0 8px 18px rgba(0,0,0,.3);}
+
+  /* ---------- UFO ---------- */
+  #ufo{position:fixed;top:90px;right:14%;z-index:70;cursor:pointer;
+    animation:bob 3.2s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-14px) rotate(1deg);}}
+  .saucer{width:84px;height:30px;border-radius:50%;
+    background:linear-gradient(#c9ced6,#7e8794);box-shadow:0 6px 10px rgba(0,0,0,.3);position:relative;}
+  .dome{position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+    width:40px;height:30px;border-radius:50% 50% 40% 40%;
+    background:linear-gradient(#bfe6ff,#79b8e8);border:1px solid #6aa6d8;}
+  .saucer::after{content:"";position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
+    width:54px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);}
+  .ufo-lights{position:absolute;bottom:2px;left:0;right:0;display:flex;justify-content:space-around;padding:0 10px;}
+  .ufo-lights i{width:6px;height:6px;border-radius:50%;background:#ffd34d;animation:blink 1.4s infinite;}
+  .ufo-lights i:nth-child(2){animation-delay:.3s;background:#9ef0a0;}
+  .ufo-lights i:nth-child(3){animation-delay:.6s;background:#ff9bd0;}
+  .ufo-lights i:nth-child(4){animation-delay:.9s;background:#8fd0ff;}
+  @keyframes blink{0%,100%{opacity:.3;}50%{opacity:1;}}
+  #bubble{position:fixed;z-index:75;display:none;background:#fff;border:2px solid #000;
+    border-radius:12px;padding:8px 12px;font-size:14px;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,.3);}
+  #bubble::after{content:"";position:absolute;bottom:-9px;left:24px;width:0;height:0;
+    border:8px solid transparent;border-top-color:#000;}
+  #bubble::before{content:"";position:absolute;bottom:-6px;left:26px;width:0;height:0;
+    border:6px solid transparent;border-top-color:#fff;z-index:1;}
+
+  .hint{position:fixed;bottom:6px;right:10px;z-index:80;font-size:11px;color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,.6);opacity:.8;}
+</style>
+</head>
+<body>
+<div id="desktop">
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div id="icons"></div>
+</div>
+
+<!-- menu bar -->
+<div id="menubar">
+  <span class="logo">◉ Garrison OS</span>
+  <span class="mi">File</span><span class="mi">Edit</span><span class="mi">View</span><span class="mi">Special</span>
+  <span class="clock" id="clock"></span>
+</div>
+
+<!-- bottom-left portrait + grass planet -->
+<div id="corner">
+  <div class="grass-planet"></div>
+  <div class="portrait"><span class="tag">pixel fisheye portrait →</span></div>
+</div>
+
+<!-- UFO -->
+<div id="ufo" title="click me">
+  <div class="saucer">
+    <div class="dome"></div>
+    <div class="ufo-lights"><i></i><i></i><i></i><i></i></div>
+  </div>
+</div>
+<div id="bubble">gleep zip zlorp</div>
+
+<div id="crt"></div>
+<div class="hint">v0.1 placeholder art — interaction prototype</div>
+
+<script>
+/* ---------------- project data (placeholder copy) ---------------- */
+const PROJECTS = [
+  {id:"alani",  name:"Alani Nu",      one:"Nootropic functional-beverage concept — market research → brand system → packaging.",
+    role:"Brand & Packaging Design", year:"2023 → refreshed 2026",
+    challenge:"Position a new nootropic beverage in a crowded functional-drink market.",
+    process:"Trend research, competitive audit, naming, can system across multiple SKUs, retail + social art direction.",
+    outcome:"A pitch-ready brand world demonstrating strategy, not just visuals. [Tier 1 — full refresh planned]"},
+  {id:"korbel", name:"Korbel",        one:"Heritage champagne rebrand — reimagining a legacy spirits brand for a modern shelf.",
+    role:"Brand Direction / Packaging", year:"2023 → refreshed 2026",
+    challenge:"Modernize a legacy California champagne house without losing its heritage.",
+    process:"Logo rework, campaign art direction, packaging renders, environmental mockups.",
+    outcome:"A rebrand story relevant to Sazerac / Brown-Forman / Diageo. [Tier 1 — imagery regen planned]"},
+  {id:"eden",   name:"EDEN",          one:"Marketplace app concept — UX flows, business model, pitch-ready product thinking.",
+    role:"Product / UI-UX Design", year:"2021 → refreshed 2026",
+    challenge:"Design an end-to-end marketplace concept from problem to product.",
+    process:"User journeys, UI screens, business-model diagramming, pitch deck.",
+    outcome:"Demonstrates product thinking and end-to-end concept development. [Tier 1]"},
+  {id:"marian", name:"Marian Group",  one:"Real-world professional design output at scale for a real estate group.",
+    role:"In-house Design", year:"2021–2024",
+    challenge:"Sustain high-volume, on-brand creative across a professional org.",
+    process:"Identity, marketing collateral, web, large asset library.",
+    outcome:"Proof of professional output and consistency at volume. [Curate to strongest pieces]"},
+  {id:"cbh",    name:"CBH Handles",   one:"3D product visualization — dozens of tap-handle & display concepts.",
+    role:"Industrial Design / 3D Viz", year:"2018–2020",
+    challenge:"Produce a high volume of manufacturable product concepts and renders.",
+    process:"CAD modeling, rendering, concept iteration across many brewery clients.",
+    outcome:"Shows range and 3D craft. [Curate hard from 90+ images]"},
+  {id:"verve",  name:"VERVE",         one:"Ceiling-fan industrial design — solid problem framing & process docs.",
+    role:"Industrial Design", year:"2017",
+    challenge:"Rethink the ceiling fan as a designed object.",
+    process:"Sketch → CAD → renders, with a documented design process.",
+    outcome:"One of the stronger existing writeups. [Keep, light refresh]"},
+  {id:"shift",  name:"SHIFT",         one:"Inhaler / DPI product concept — clear problem statement and renders.",
+    role:"Industrial Design", year:"2017",
+    challenge:"Design a dry-powder inhaler concept with a clear use case.",
+    process:"Research, sketching, CAD, exploded renders, poster.",
+    outcome:"Strong problem-led ID story. [Keep, light refresh]"}
+];
+
+/* ---------------- build folders ---------------- */
+const icons=document.getElementById('icons');
+PROJECTS.forEach(p=>{
+  const el=document.createElement('div');
+  el.className='folder';
+  el.innerHTML=`<div class="ic"></div><div class="lbl">${p.name}</div>`;
+  el.addEventListener('click',()=>openPreview(p,el));
+  icons.appendChild(el);
+});
+
+/* ---------------- windows ---------------- */
+let z=40;
+function makeWin(cls){
+  const w=document.createElement('div');
+  w.className='win '+cls;
+  document.body.appendChild(w);
+  return w;
+}
+function bringFront(w){ w.style.zIndex=(++z); }
+function placeNear(w,x,y){
+  const vw=innerWidth,vh=innerHeight,r=w.getBoundingClientRect();
+  w.style.left=Math.max(8,Math.min(x,vw-r.width-8))+'px';
+  w.style.top =Math.max(30,Math.min(y,vh-r.height-8))+'px';
+}
+
+function openPreview(p,anchor){
+  let w=document.getElementById('prev-'+p.id);
+  if(!w){
+    w=makeWin('preview'); w.id='prev-'+p.id;
+    w.innerHTML=`
+      <div class="titlebar"><div class="closebox"></div><div class="title">${p.name}</div></div>
+      <div class="winbody">
+        <div class="cover">[ cover image ]</div>
+        <div class="one">${p.one}</div>
+        <button class="btn">Open project →</button>
+      </div>`;
+    wireWindow(w);
+    w.querySelector('.btn').addEventListener('click',()=>openCase(p));
+  }
+  w.classList.add('open'); bringFront(w);
+  const a=anchor.getBoundingClientRect();
+  placeNear(w,a.right+12,a.top);
+}
+
+function openCase(p){
+  let w=document.getElementById('case-'+p.id);
+  if(!w){
+    w=makeWin('case'); w.id='case-'+p.id;
+    w.innerHTML=`
+      <div class="titlebar"><div class="closebox"></div><div class="title">${p.name} — Case Study</div></div>
+      <div class="winbody">
+        <div class="hero">[ refreshed hero image — Higgsfield ]</div>
+        <h2>${p.name}</h2>
+        <div class="meta">${p.role} · ${p.year}</div>
+        <h3>The Challenge</h3><p>${p.challenge}</p>
+        <h3>Process</h3><p>${p.process}</p>
+        <h3>Outcome</h3><p>${p.outcome}</p>
+        <h3>Gallery</h3><p style="color:#888">[ curated images load here ]</p>
+      </div>`;
+    wireWindow(w);
+  }
+  w.classList.add('open'); bringFront(w);
+  placeNear(w,innerWidth/2-300,70);
+}
+
+/* close + drag */
+function wireWindow(w){
+  w.querySelector('.closebox').addEventListener('click',()=>w.classList.remove('open'));
+  const bar=w.querySelector('.titlebar');
+  bar.addEventListener('mousedown',e=>{
+    bringFront(w); bar.classList.add('drag');
+    const r=w.getBoundingClientRect(), ox=e.clientX-r.left, oy=e.clientY-r.top;
+    function mv(ev){ w.style.left=(ev.clientX-ox)+'px'; w.style.top=Math.max(26,ev.clientY-oy)+'px'; }
+    function up(){ document.removeEventListener('mousemove',mv); document.removeEventListener('mouseup',up); bar.classList.remove('drag'); }
+    document.addEventListener('mousemove',mv); document.addEventListener('mouseup',up);
+  });
+  w.addEventListener('mousedown',()=>bringFront(w));
+}
+
+/* ---------------- UFO speech bubble ---------------- */
+const LINES=["gleep zip zlorp","beep boop... hire him","take me to your art director","i come in peace (and pixels)"];
+const ufo=document.getElementById('ufo'), bubble=document.getElementById('bubble');
+let li=0;
+ufo.addEventListener('click',()=>{
+  const r=ufo.getBoundingClientRect();
+  bubble.textContent=LINES[li++%LINES.length];
+  bubble.style.display='block';
+  bubble.style.left=(r.left-30)+'px';
+  bubble.style.top=(r.top-44)+'px';
+  clearTimeout(ufo._t); ufo._t=setTimeout(()=>bubble.style.display='none',2200);
+});
+
+/* ---------------- clock ---------------- */
+function tick(){
+  const d=new Date();
+  document.getElementById('clock').textContent=
+    d.toLocaleDateString(undefined,{weekday:'short'})+' '+
+    d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>

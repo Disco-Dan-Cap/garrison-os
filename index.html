@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garrison OS — Portfolio v0.2</title>
+<!--
+  GARRISON OS — desktop portfolio v0.2 "skinned"
+  Changes from v0.1:
+    - Photographic Bliss background (assets/bliss-desktop.jpg / bliss-mobile.jpg,
+      Higgsfield-generated) with CSS gradient fallback.
+    - Pixel-art SVG folders: one color per project + symbol hinting at content.
+    - Pixel-art UFO with visible green alien in the dome (refs: "best ship style"
+      + "ufo with alien visible"). Bob animation + blinking lights kept.
+    - Pixel-art speech bubble (chunky black border, stepped corners, offset shadow).
+    - "Press Start 2P" pixel font for labels/accents.
+    - Mobile layout + touch (pointer-event) window dragging.
+  Still placeholder: fisheye portrait (needs Garrison photo), case-study imagery.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --mac-face:#d9d9d9; --mac-line:#888; --mac-dark:#555;
+    --mac-title1:#e8e8e8; --mac-title2:#bcbcbc;
+    --ink:#141418; --accent:#2b5fb3; --px-black:#16161c;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    font-family:"Geneva","Tahoma",system-ui,sans-serif;
+    overflow:hidden; color:var(--ink);
+    user-select:none; -webkit-user-select:none;
+  }
+  .pxfont{font-family:"Press Start 2P","Geneva",monospace;}
+
+  /* ---------- DESKTOP / BACKGROUND ---------- */
+  #desktop{
+    position:fixed; inset:0; overflow:hidden;
+    /* gradient fallback if the photo hasn't loaded / is missing */
+    background:
+      radial-gradient(130% 70% at 50% 118%, #67b13c 0%, #57a233 40%, #3c7d20 58%, transparent 59%),
+      linear-gradient(#2e6fd0 0%, #4f8fe0 40%, #9cc5f0 75%, #d2e8fc 100%);
+  }
+  #desktop .bg{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center bottom; display:block;
+  }
+
+  /* CRT overlay: scanlines + vignette */
+  #crt{position:fixed;inset:0;pointer-events:none;z-index:90;
+    background:
+      repeating-linear-gradient(rgba(0,0,0,.07) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 120% at 50% 50%, transparent 62%, rgba(0,0,0,.30) 100%);
+    mix-blend-mode:multiply;}
+
+  /* ---------- TOP MENU BAR (Mac Platinum) ---------- */
+  #menubar{
+    position:fixed;top:0;left:0;right:0;height:26px;z-index:80;
+    background:linear-gradient(var(--mac-title1),var(--mac-title2));
+    border-bottom:2px solid var(--px-black);
+    display:flex;align-items:center;gap:16px;padding:0 12px;
+    font-size:12px;
+  }
+  #menubar .logo{font-family:"Press Start 2P",monospace;font-size:10px;letter-spacing:0;}
+  #menubar .mi{opacity:.85;}
+  #menubar .clock{margin-left:auto;font-variant-numeric:tabular-nums;}
+
+  /* ---------- FOLDERS ---------- */
+  #icons{position:absolute;top:52px;left:22px;display:grid;
+    grid-template-columns:repeat(auto-fill,96px);gap:18px 10px;width:340px;}
+  .folder{width:96px;text-align:center;cursor:pointer;color:#fff;}
+  .folder svg{width:68px;height:auto;display:block;margin:0 auto 5px;
+    filter:drop-shadow(0 3px 0 rgba(0,0,0,.25));}
+  .folder .lbl{font-family:"Press Start 2P",monospace;font-size:8px;line-height:1.5;
+    padding:2px 3px;border-radius:2px;
+    text-shadow:1px 1px 0 var(--px-black),-1px 1px 0 var(--px-black),1px -1px 0 var(--px-black),-1px -1px 0 var(--px-black);}
+  .folder:hover .lbl{background:var(--accent);text-shadow:none;}
+  .folder:hover svg{transform:translateY(-2px);}
+  .folder:active svg{filter:drop-shadow(0 1px 0 rgba(0,0,0,.25)) brightness(.92);transform:translateY(1px);}
+
+  /* ---------- WINDOWS (Mac Platinum chrome) ---------- */
+  .win{position:absolute;background:var(--mac-face);border:2px solid var(--px-black);
+    border-radius:6px 6px 3px 3px;box-shadow:4px 6px 0 rgba(0,0,0,.30);
+    display:none;flex-direction:column;z-index:40;min-width:260px;}
+  .win.open{display:flex;}
+  .titlebar{height:24px;display:flex;align-items:center;gap:8px;padding:0 8px;
+    border-bottom:2px solid var(--px-black);border-radius:4px 4px 0 0;cursor:grab;touch-action:none;
+    background:repeating-linear-gradient(180deg,#f2f2f2 0 1px,#c8c8c8 1px 2px);}
+  .titlebar.drag{cursor:grabbing;}
+  .closebox{width:13px;height:13px;border:2px solid var(--px-black);background:#cfcfcf;cursor:pointer;flex:none;}
+  .closebox:hover{background:#9fb6e0;}
+  .title{font-family:"Press Start 2P",monospace;font-size:8px;flex:1;text-align:center;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .winbody{padding:14px;overflow:auto;background:#fff;border-radius:0 0 2px 2px;}
+
+  /* preview window */
+  .preview{width:300px;}
+  .preview .cover{height:130px;border:2px solid var(--px-black);
+    background:linear-gradient(135deg,#cfe0f5,#e9d8b6);
+    display:flex;align-items:center;justify-content:center;color:#5a5a5a;font-size:12px;}
+  .preview .one{font-size:13px;margin:10px 0 12px;line-height:1.45;}
+  .btn{font-family:"Press Start 2P",monospace;font-size:8px;padding:7px 12px;cursor:pointer;
+    background:linear-gradient(#fff,#dcdcdc);border:2px solid var(--px-black);
+    box-shadow:2px 2px 0 var(--px-black);}
+  .btn:active{box-shadow:0 0 0 var(--px-black);transform:translate(2px,2px);}
+
+  /* case study window */
+  .case{width:min(640px,86vw);max-height:78vh;}
+  .case .winbody h2{margin:.1em 0 .15em;font-family:"Press Start 2P",monospace;font-size:15px;}
+  .case .winbody .meta{color:#666;font-size:12px;margin-bottom:12px;}
+  .case .hero{height:170px;margin:0 0 14px;border:2px solid var(--px-black);
+    background:linear-gradient(135deg,#cfe0f5,#e9d8b6);
+    display:flex;align-items:center;justify-content:center;color:#5a5a5a;font-size:12px;}
+  .case .winbody h3{font-family:"Press Start 2P",monospace;font-size:9px;
+    color:var(--accent);margin:18px 0 5px;}
+  .case .winbody p{font-size:14px;line-height:1.55;margin:0 0 6px;}
+
+  /* ---------- BOTTOM-LEFT: PORTRAIT ON GRASS PLANET ---------- */
+  #corner{position:fixed;left:18px;bottom:8px;z-index:60;width:200px;height:210px;
+    pointer-events:none;}
+  .portrait{position:absolute;left:36px;bottom:74px;width:120px;height:120px;z-index:2;
+    border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.35);
+    background:repeating-conic-gradient(#b98a5e 0 8deg,#a9794d 8deg 16deg);
+    display:flex;align-items:flex-end;justify-content:center;}
+  .portrait .tag{font-size:10px;background:rgba(0,0,0,.55);color:#fff;width:100%;text-align:center;padding:2px;}
+  .grass-planet{position:absolute;left:0;bottom:-40px;width:200px;height:120px;
+    border-radius:50%;
+    background:radial-gradient(circle at 50% 35%, #7ec850 0%, #57a52f 45%, #2f6d1c 80%);
+    box-shadow:inset 0 6px 14px rgba(255,255,255,.35), 0 8px 18px rgba(0,0,0,.3);}
+
+  /* ---------- UFO (pixel art) ---------- */
+  #ufo{position:fixed;top:84px;right:13%;z-index:70;cursor:pointer;
+    animation:bob 3.4s ease-in-out infinite;}
+  #ufo svg{width:108px;height:auto;display:block;
+    filter:drop-shadow(0 6px 0 rgba(0,0,0,.18));}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-14px) rotate(1deg);}}
+  #ufo .lite{animation:blink 1.4s infinite;}
+  @keyframes blink{0%,100%{opacity:.25;}50%{opacity:1;}}
+
+  /* ---------- PIXEL SPEECH BUBBLE ---------- */
+  #bubble{position:fixed;z-index:75;display:none;max-width:230px;
+    font-family:"Press Start 2P",monospace;font-size:9px;line-height:1.7;color:var(--ink);
+    background:#fff;padding:12px 14px;
+    border:3px solid var(--px-black);
+    box-shadow:6px 6px 0 rgba(22,22,28,.45);
+    clip-path:polygon(0 9px,3px 9px,3px 6px,6px 6px,6px 3px,9px 3px,9px 0,
+      calc(100% - 9px) 0,calc(100% - 9px) 3px,calc(100% - 6px) 3px,calc(100% - 6px) 6px,
+      calc(100% - 3px) 6px,calc(100% - 3px) 9px,100% 9px,
+      100% calc(100% - 9px),calc(100% - 3px) calc(100% - 9px),calc(100% - 3px) calc(100% - 6px),
+      calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) calc(100% - 3px),calc(100% - 9px) calc(100% - 3px),
+      calc(100% - 9px) 100%,9px 100%,9px calc(100% - 3px),6px calc(100% - 3px),
+      6px calc(100% - 6px),3px calc(100% - 6px),3px calc(100% - 9px),0 calc(100% - 9px));}
+  #tail{position:fixed;z-index:74;display:none;width:24px;height:18px;}
+  #tail i{position:absolute;background:#fff;border-left:3px solid var(--px-black);border-right:3px solid var(--px-black);}
+  #tail i:nth-child(1){left:0;top:0;width:18px;height:9px;}
+  #tail i:nth-child(2){left:6px;top:9px;width:12px;height:6px;border-bottom:3px solid var(--px-black);}
+
+  .hint{position:fixed;bottom:6px;right:10px;z-index:80;font-size:10px;color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,.6);opacity:.8;}
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width:640px){
+    #icons{top:44px;left:12px;right:12px;width:auto;
+      grid-template-columns:repeat(3,1fr);gap:16px 6px;}
+    .folder{width:auto;}
+    .folder svg{width:58px;}
+    .folder .lbl{font-size:7px;}
+    #menubar{gap:10px;height:24px;}
+    #menubar .mi{display:none;}
+    #ufo{top:auto;bottom:170px;right:6%;}
+    #ufo svg{width:84px;}
+    #corner{transform:scale(.62);transform-origin:left bottom;left:8px;bottom:4px;}
+    .preview{width:min(300px,88vw);}
+    .case{width:94vw;max-height:80vh;}
+    .case .hero{height:120px;}
+    .hint{display:none;}
+  }
+</style>
+</head>
+<body>
+<div id="desktop">
+  <img class="bg" id="bgimg" alt="" aria-hidden="true">
+  <div id="icons"></div>
+</div>
+
+<!-- menu bar -->
+<div id="menubar">
+  <span class="logo">&#9673; GARRISON OS</span>
+  <span class="mi">File</span><span class="mi">Edit</span><span class="mi">View</span><span class="mi">Special</span>
+  <span class="clock" id="clock"></span>
+</div>
+
+<!-- bottom-left portrait + grass planet -->
+<div id="corner">
+  <div class="grass-planet"></div>
+  <div class="portrait"><span class="tag">pixel fisheye portrait &rarr;</span></div>
+</div>
+
+<!-- UFO + pixel speech bubble -->
+<div id="ufo" title="click me"></div>
+<div id="bubble">gleep zip zlorp</div>
+<div id="tail"><i></i><i></i></div>
+
+<div id="crt"></div>
+<div class="hint">v0.2 — pixel skin (portrait &amp; case art pending)</div>
+
+<script>
+/* ================= BACKGROUND (Higgsfield art w/ fallback) ================= */
+(function(){
+  const img=document.getElementById('bgimg');
+  const src=matchMedia('(max-width:640px) and (orientation:portrait)').matches
+    ? 'assets/bliss-mobile.jpg' : 'assets/bliss-desktop.jpg';
+  img.onerror=()=>img.remove();           // fall back to CSS gradient
+  img.src=src;
+})();
+
+/* ================= PIXEL ART HELPERS ================= */
+/* Render a grid of single-character "pixels" into SVG rects. */
+function pixelSVG(rows,palette,opts={}){
+  const cell=opts.cell||1;
+  const w=rows[0].length*cell, h=rows.length*cell;
+  let liteIdx=0, out='';
+  rows.forEach((row,y)=>{
+    for(let x=0;x<row.length;x++){
+      const ch=row[x];
+      if(ch==='.'||!palette[ch]) continue;
+      const cls=(ch==='Y')?` class="lite" style="animation-delay:${(liteIdx++%5)*0.28}s"`:'';
+      out+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="${palette[ch]}"${cls}/>`;
+    }
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">${out}</svg>`;
+}
+
+/* 8x8 white symbols drawn on the folder front */
+const SYMBOLS={
+  bolt:["....XX..","...XX...","..XXXX..","....XX..","...XX...","..XX....",".XX.....","XX......"],
+  bottle:["...XX...","...XX...","...XX...","..XXXX..","..XXXX..","..XXXX..","..XXXX..","..XXXX.."],
+  leaf:["....XXX.","...XXXX.","..XXXXX.",".XXXXX..",".XXXX...","XXXX....",".XX.....",".X......"],
+  house:["...XX...","..XXXX..",".XXXXXX.","XXXXXXXX",".XXXXXX.",".XX..XX.",".XX..XX.",".XXXXXX."],
+  mug:["........","XXXXXX..","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX..","........"],
+  fan:["XX....XX","XXX..XXX",".XXXXXX.","..XXXX..","..XXXX..",".XXXXXX.","XXX..XXX","XX....XX"],
+  inhaler:[".XX.....",".XX.....",".XX.....",".XX.....",".XX.....",".XXXXX..",".XXXXX..","........"]
+};
+
+/* Pixel folder: thick black outline, dark back+tab, colored front, white symbol */
+function folderSVG(fill,dark,symbol){
+  let s='<svg viewBox="0 0 32 27" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">';
+  s+=`<rect x="16" y="0" width="15" height="9" fill="#16161c"/>`;          // tab outline
+  s+=`<rect x="0" y="4" width="32" height="23" fill="#16161c"/>`;          // body outline
+  s+=`<rect x="17.5" y="1.5" width="12" height="6" fill="${dark}"/>`;      // tab
+  s+=`<rect x="1.5" y="5.5" width="29" height="4.5" fill="${dark}"/>`;     // back panel
+  s+=`<rect x="1.5" y="10" width="29" height="15.5" fill="${fill}"/>`;     // front panel
+  s+=`<rect x="1.5" y="10" width="29" height="1.2" fill="rgba(255,255,255,.35)"/>`; // top highlight
+  const px=SYMBOLS[symbol]||[];
+  const cell=1.9, ox=(32-8*cell)/2, oy=11.6;
+  px.forEach((row,y)=>{for(let x=0;x<8;x++){if(row[x]==='X')
+    s+=`<rect x="${(ox+x*cell).toFixed(2)}" y="${(oy+y*cell).toFixed(2)}" width="${cell}" height="${cell}" fill="#fff"/>`;}});
+  return s+'</svg>';
+}
+
+/* ================= UFO pixel art (saucer + visible alien) ================= */
+const UFO_ROWS=[
+".........KKKKKK.........",
+"........KDDDDDDK........",
+".......KDDGGGGDDK.......",
+".......KDDGGGGDDK.......",
+".......KDGgGGgGDK.......",
+"......KDDGGGGGGDDK......",
+".....KSDDDDDDDDDDSK.....",
+"...KKSSSSSSSSSSSSSSKK...",
+".KKSSSSSSSSSSSSSSSSSSKK.",
+"KSSSSSSSSSSSSSSSSSSSSSSK",
+"KssYssYssYssYssYssYssssK",
+".KKssssssssssssssssssKK.",
+"...KKssssssssssssssKK...",
+".....KKKssssssssKKK.....",
+"........KKKKKKKK........"
+];
+const UFO_PAL={K:"#16161c",D:"#aee2ff",d:"#79b8e8",G:"#58c93a",g:"#1d4d12",
+               S:"#c9ced6",s:"#7e8794",Y:"#ffd34d"};
+document.getElementById('ufo').innerHTML=pixelSVG(UFO_ROWS,UFO_PAL);
+
+/* ================= PROJECT DATA (placeholder copy) ================= */
+const PROJECTS=[
+  {id:"alani", name:"Alani Nu", color:"#ff7bac", dark:"#c2417e", sym:"bolt",
+    one:"Nootropic functional-beverage concept — market research → brand system → packaging.",
+    role:"Brand & Packaging Design", year:"2023 → refreshed 2026",
+    challenge:"Position a new nootropic beverage in a crowded functional-drink market.",
+    process:"Trend research, competitive audit, naming, can system across multiple SKUs, retail + social art direction.",
+    outcome:"A pitch-ready brand world demonstrating strategy, not just visuals. [Tier 1 — full refresh planned]"},
+  {id:"korbel", name:"Korbel", color:"#f2b531", dark:"#b57f12", sym:"bottle",
+    one:"Heritage champagne rebrand — reimagining a legacy spirits brand for a modern shelf.",
+    role:"Brand Direction / Packaging", year:"2023 → refreshed 2026",
+    challenge:"Modernize a legacy California champagne house without losing its heritage.",
+    process:"Logo rework, campaign art direction, packaging renders, environmental mockups.",
+    outcome:"A rebrand story relevant to Sazerac / Brown-Forman / Diageo. [Tier 1 — imagery regen planned]"},
+  {id:"eden", name:"EDEN", color:"#6dc24b", dark:"#3c8521", sym:"leaf",
+    one:"Marketplace app concept — UX flows, business model, pitch-ready product thinking.",
+    role:"Product / UI-UX Design", year:"2021 → refreshed 2026",
+    challenge:"Design an end-to-end marketplace concept from problem to product.",
+    process:"User journeys, UI screens, business-model diagramming, pitch deck.",
+    outcome:"Demonstrates product thinking and end-to-end concept development. [Tier 1]"},
+  {id:"marian", name:"Marian Group", color:"#5b8def", dark:"#2f59b5", sym:"house",
+    one:"Real-world professional design output at scale for a real estate group.",
+    role:"In-house Design", year:"2021–2024",
+    challenge:"Sustain high-volume, on-brand creative across a professional org.",
+    process:"Identity, marketing collateral, web, large asset library.",
+    outcome:"Proof of professional output and consistency at volume. [Curate to strongest pieces]"},
+  {id:"cbh", name:"CBH Handles", color:"#f28c33", dark:"#b85d10", sym:"mug",
+    one:"3D product visualization — dozens of tap-handle & display concepts.",
+    role:"Industrial Design / 3D Viz", year:"2018–2020",
+    challenge:"Produce a high volume of manufacturable product concepts and renders.",
+    process:"CAD modeling, rendering, concept iteration across many brewery clients.",
+    outcome:"Shows range and 3D craft. [Curate hard from 90+ images]"},
+  {id:"verve", name:"VERVE", color:"#3fc1c9", dark:"#1d878e", sym:"fan",
+    one:"Ceiling-fan industrial design — solid problem framing & process docs.",
+    role:"Industrial Design", year:"2017",
+    challenge:"Rethink the ceiling fan as a designed object.",
+    process:"Sketch → CAD → renders, with a documented design process.",
+    outcome:"One of the stronger existing writeups. [Keep, light refresh]"},
+  {id:"shift", name:"SHIFT", color:"#a06ee0", dark:"#6c3cab", sym:"inhaler",
+    one:"Inhaler / DPI product concept — clear problem statement and renders.",
+    role:"Industrial Design", year:"2017",
+    challenge:"Design a dry-powder inhaler concept with a clear use case.",
+    process:"Research, sketching, CAD, exploded renders, poster.",
+    outcome:"Strong problem-led ID story. [Keep, light refresh]"}
+];
+
+/* ================= BUILD FOLDERS ================= */
+const icons=document.getElementById('icons');
+PROJECTS.forEach(p=>{
+  const el=document.createElement('div');
+  el.className='folder';
+  el.innerHTML=folderSVG(p.color,p.dark,p.sym)+`<div class="lbl">${p.name}</div>`;
+  el.addEventListener('click',()=>openPreview(p,el));
+  icons.appendChild(el);
+});
+
+/* ================= WINDOWS ================= */
+let z=40;
+function makeWin(cls){
+  const w=document.createElement('div');
+  w.className='win '+cls;
+  document.body.appendChild(w);
+  return w;
+}
+function bringFront(w){ w.style.zIndex=(++z); }
+function placeNear(w,x,y){
+  const vw=innerWidth,vh=innerHeight,r=w.getBoundingClientRect();
+  w.style.left=Math.max(8,Math.min(x,vw-r.width-8))+'px';
+  w.style.top =Math.max(32,Math.min(y,vh-r.height-8))+'px';
+}
+
+function openPreview(p,anchor){
+  let w=document.getElementById('prev-'+p.id);
+  if(!w){
+    w=makeWin('preview'); w.id='prev-'+p.id;
+    w.innerHTML=`
+      <div class="titlebar"><div class="closebox"></div><div class="title">${p.name}</div></div>
+      <div class="winbody">
+        <div class="cover">[ cover image ]</div>
+        <div class="one">${p.one}</div>
+        <button class="btn">OPEN PROJECT &rarr;</button>
+      </div>`;
+    wireWindow(w);
+    w.querySelector('.btn').addEventListener('click',()=>openCase(p));
+  }
+  w.classList.add('open'); bringFront(w);
+  const a=anchor.getBoundingClientRect();
+  if(innerWidth<=640){ placeNear(w,(innerWidth-w.getBoundingClientRect().width)/2,a.bottom+10); }
+  else placeNear(w,a.right+12,a.top);
+}
+
+function openCase(p){
+  let w=document.getElementById('case-'+p.id);
+  if(!w){
+    w=makeWin('case'); w.id='case-'+p.id;
+    w.innerHTML=`
+      <div class="titlebar"><div class="closebox"></div><div class="title">${p.name} — CASE STUDY</div></div>
+      <div class="winbody">
+        <div class="hero">[ refreshed hero image — Higgsfield ]</div>
+        <h2>${p.name}</h2>
+        <div class="meta">${p.role} · ${p.year}</div>
+        <h3>THE CHALLENGE</h3><p>${p.challenge}</p>
+        <h3>PROCESS</h3><p>${p.process}</p>
+        <h3>OUTCOME</h3><p>${p.outcome}</p>
+        <h3>GALLERY</h3><p style="color:#888">[ curated images load here ]</p>
+      </div>`;
+    wireWindow(w);
+  }
+  w.classList.add('open'); bringFront(w);
+  placeNear(w,innerWidth/2-Math.min(320,innerWidth*.47),70);
+}
+
+/* close + drag (pointer events: mouse + touch) */
+function wireWindow(w){
+  w.querySelector('.closebox').addEventListener('click',()=>w.classList.remove('open'));
+  const bar=w.querySelector('.titlebar');
+  bar.addEventListener('pointerdown',e=>{
+    if(e.target.classList.contains('closebox')) return;
+    bringFront(w); bar.classList.add('drag');
+    bar.setPointerCapture(e.pointerId);
+    const r=w.getBoundingClientRect(), ox=e.clientX-r.left, oy=e.clientY-r.top;
+    function mv(ev){ w.style.left=(ev.clientX-ox)+'px'; w.style.top=Math.max(28,ev.clientY-oy)+'px'; }
+    function up(){ bar.removeEventListener('pointermove',mv); bar.removeEventListener('pointerup',up); bar.classList.remove('drag'); }
+    bar.addEventListener('pointermove',mv); bar.addEventListener('pointerup',up);
+  });
+  w.addEventListener('pointerdown',()=>bringFront(w));
+}
+
+/* ================= UFO SPEECH BUBBLE ================= */
+const LINES=["gleep zip zlorp","beep boop... hire him","take me to your art director","i come in peace (and pixels)"];
+const ufo=document.getElementById('ufo'), bubble=document.getElementById('bubble'), tail=document.getElementById('tail');
+let li=0;
+ufo.addEventListener('click',()=>{
+  const r=ufo.getBoundingClientRect();
+  bubble.textContent=LINES[li++%LINES.length];
+  bubble.style.display='block';
+  // position above the UFO, clamped to viewport
+  const bw=bubble.getBoundingClientRect();
+  let bx=Math.max(8,Math.min(r.left-40,innerWidth-bw.width-8));
+  let by=Math.max(34,r.top-bw.height-22);
+  bubble.style.left=bx+'px'; bubble.style.top=by+'px';
+  tail.style.display='block';
+  tail.style.left=Math.max(bx+18,Math.min(r.left+r.width/2-12,bx+bw.width-40))+'px';
+  tail.style.top=(by+bubble.getBoundingClientRect().height-2)+'px';
+  clearTimeout(ufo._t);
+  ufo._t=setTimeout(()=>{bubble.style.display='none';tail.style.display='none';},2400);
+});
+
+/* ================= CLOCK ================= */
+function tick(){
+  const d=new Date();
+  document.getElementById('clock').textContent=
+    d.toLocaleDateString(undefined,{weekday:'short'})+' '+
+    d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>
