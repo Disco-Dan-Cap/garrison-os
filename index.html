@@ -243,7 +243,8 @@ const SYMBOLS={
   mug:["........","XXXXXX..","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX..","........"],
   fan:["XX....XX","XXX..XXX",".XX..XX.","...XX...","...XX...",".XX..XX.","XXX..XXX","XX....XX"],
   inhaler:[".XXXXXX.","X.....XX","X....X.X","X...X..X","X..X...X","X.X....X","XX.....X",".XXXXXX."],
-  disco:["...XX...","..XXXX..",".X.XX.X.",".XX..XX.",".X.XX.X.","..XXXX..","........","........"],
+  /* disco ball: multicolor checkered facets + hanger (W white, C ice blue, L lavender, Y gold, K black) */
+  disco:["....KK....","...WCWL...","..CWLYWC..",".WLYWCWLY.",".YWCLWYCW.",".WCWYCWLC.",".LYWCWLWY.","..WCLYWC..","...LWCW..."],
   apple:["....XX..","...XX...",".XXXXXX.","XXXXXXXX","XXXXXXXX","XXXXXXXX",".XXXXXX.","..XXXX.."]
 };
 
@@ -257,16 +258,18 @@ function folderSVG(fill,dark,symbol){
   s+=`<rect x="1.5" y="10" width="29" height="15.5" fill="${fill}"/>`;     // front panel
   s+=`<rect x="1.5" y="10" width="29" height="1.2" fill="rgba(255,255,255,.35)"/>`; // top highlight
   const px=SYMBOLS[symbol]||[];
+  /* symbol pixels: X/W white, plus accent colors for multicolor glyphs */
+  const SYMC={X:'#fff',W:'#fff',C:'#aee2ff',L:'#c9a6f0',Y:'#ffd34d',K:'#16161c'};
   /* center the symbol's actual inked bounding box on the folder front panel */
   const cell=1.6;
-  let x0=8,x1=-1,y0=8,y1=-1;
-  px.forEach((row,y)=>{for(let x=0;x<8;x++){if(row[x]==='X'){
+  let x0=99,x1=-1,y0=99,y1=-1;
+  px.forEach((row,y)=>{for(let x=0;x<row.length;x++){if(SYMC[row[x]]){
     if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;}}});
   const gw=(x1-x0+1)*cell, gh=(y1-y0+1)*cell;
   const ox=16-gw/2-x0*cell;                 /* folder is 32 wide */
   const oy=10+(15.5-gh)/2-y0*cell;          /* front panel: y 10..25.5 */
-  px.forEach((row,y)=>{for(let x=0;x<8;x++){if(row[x]==='X')
-    s+=`<rect x="${(ox+x*cell).toFixed(2)}" y="${(oy+y*cell).toFixed(2)}" width="${cell}" height="${cell}" fill="#fff"/>`;}});
+  px.forEach((row,y)=>{for(let x=0;x<row.length;x++){if(SYMC[row[x]])
+    s+=`<rect x="${(ox+x*cell).toFixed(2)}" y="${(oy+y*cell).toFixed(2)}" width="${cell}" height="${cell}" fill="${SYMC[row[x]]}"/>`;}});
   return s+'</svg>';
 }
 
