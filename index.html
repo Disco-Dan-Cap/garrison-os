@@ -70,6 +70,9 @@
   /* ---------- FOLDERS ---------- */
   #icons{position:absolute;top:52px;left:22px;display:grid;
     grid-template-columns:repeat(auto-fill,96px);gap:18px 10px;width:340px;}
+  /* newest projects — center stage */
+  #icons-center{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);
+    display:flex;gap:34px;}
   .folder{width:96px;text-align:center;cursor:pointer;color:#fff;}
   .folder svg{width:68px;height:auto;display:block;margin:0 auto 5px;
     filter:drop-shadow(0 3px 0 rgba(0,0,0,.25));}
@@ -160,12 +163,13 @@
   @media (max-width:640px){
     #icons{top:44px;left:12px;right:12px;width:auto;
       grid-template-columns:repeat(3,1fr);gap:16px 6px;}
+    #icons-center{top:47vh;left:42%;gap:18px;}
     .folder{width:auto;}
     .folder svg{width:58px;}
     .folder .lbl{font-size:7px;}
     #menubar{gap:10px;height:24px;}
     #menubar .mi{display:none;}
-    #ufo{top:44vh;bottom:auto;right:7%;}
+    #ufo{top:58vh;bottom:auto;right:9%;}
     #ufo svg{width:84px;}
     #garrison{left:5vw;bottom:6vh;height:24vh;}
     #garrison-shadow{left:calc(5vw + 2.5vh);bottom:5.5vh;width:12vh;height:2.2vh;}
@@ -180,6 +184,7 @@
 <div id="desktop">
   <img class="bg" id="bgimg" alt="" aria-hidden="true">
   <div id="icons"></div>
+  <div id="icons-center"></div>
 </div>
 
 <!-- menu bar -->
@@ -235,7 +240,9 @@ const SYMBOLS={
   house:["...XX...","..XXXX..",".XXXXXX.","XXXXXXXX",".XXXXXX.",".XX..XX.",".XX..XX.",".XXXXXX."],
   mug:["........","XXXXXX..","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX..","........"],
   fan:["XX....XX","XXX..XXX",".XX..XX.","...XX...","...XX...",".XX..XX.","XXX..XXX","XX....XX"],
-  inhaler:[".XXXXXX.","X.....XX","X....X.X","X...X..X","X..X...X","X.X....X","XX.....X",".XXXXXX."]
+  inhaler:[".XXXXXX.","X.....XX","X....X.X","X...X..X","X..X...X","X.X....X","XX.....X",".XXXXXX."],
+  disco:["...XX...","..XXXX..",".X.XX.X.",".XX..XX.",".X.XX.X.","..XXXX..","........","........"],
+  apple:["....XX..","...XX...",".XXXXXX.","XXXXXXXX","XXXXXXXX","XXXXXXXX",".XXXXXX.","..XXXX.."]
 };
 
 /* Pixel folder: thick black outline, dark back+tab, colored front, white symbol */
@@ -297,12 +304,18 @@ const PROJECTS=[
     challenge:"Modernize a legacy California champagne house without losing its heritage.",
     process:"Logo rework, campaign art direction, packaging renders, environmental mockups.",
     outcome:"A rebrand story relevant to Sazerac / Brown-Forman / Diageo. [Tier 1 — imagery regen planned]"},
-  {id:"eden", name:"EDEN", color:"#6dc24b", dark:"#3c8521", sym:"leaf",
-    one:"Marketplace app concept — UX flows, business model, pitch-ready product thinking.",
-    role:"Product / UI-UX Design", year:"2021 → refreshed 2026",
-    challenge:"Design an end-to-end marketplace concept from problem to product.",
-    process:"User journeys, UI screens, business-model diagramming, pitch deck.",
-    outcome:"Demonstrates product thinking and end-to-end concept development. [Tier 1]"},
+  {id:"disco", name:"Disco Capital", color:"#ff2d95", dark:"#b80f66", sym:"disco", center:true,
+    one:"Brand world & pitch system for a venture capital concept. [placeholder copy]",
+    role:"Brand Identity / Pitch Design", year:"2025–2026",
+    challenge:"[Garrison to supply — challenge/brief]",
+    process:"[Garrison to supply — process]",
+    outcome:"[Garrison to supply — outcome]"},
+  {id:"copia", name:"Copia", color:"#8ee6b8", dark:"#3fa97c", sym:"apple", center:true,
+    one:"Peer-to-peer marketplace for local fresh produce — the Airbnb for farmers markets. [placeholder copy]",
+    role:"Product Design / Full-stack Concept", year:"2026",
+    challenge:"[Garrison to supply — challenge/brief]",
+    process:"iPhone-first PWA. Next.js · Tailwind · Supabase · Mapbox · Claude. [expand]",
+    outcome:"[Garrison to supply — outcome]"},
   {id:"marian", name:"Marian Group", color:"#5b8def", dark:"#2f59b5", sym:"house",
     one:"Real-world professional design output at scale for a real estate group.",
     role:"In-house Design", year:"2021–2024",
@@ -331,12 +344,13 @@ const PROJECTS=[
 
 /* ================= BUILD FOLDERS ================= */
 const icons=document.getElementById('icons');
+const iconsCenter=document.getElementById('icons-center');
 PROJECTS.forEach(p=>{
   const el=document.createElement('div');
   el.className='folder';
   el.innerHTML=folderSVG(p.color,p.dark,p.sym)+`<div class="lbl">${p.name}</div>`;
   el.addEventListener('click',()=>openPreview(p,el));
-  icons.appendChild(el);
+  (p.center?iconsCenter:icons).appendChild(el);
 });
 
 /* ================= WINDOWS ================= */
