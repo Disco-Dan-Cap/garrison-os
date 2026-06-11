@@ -107,6 +107,15 @@
     display:flex;align-items:center;justify-content:center;color:#5a5a5a;font-size:12px;}
   .preview .cover img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto;}
   .preview .one{font-size:13px;margin:10px 0 12px;line-height:1.45;}
+  /* large preview (copia flagship) — ~2x, wide 3-up cover shown uncropped on cream */
+  .preview.large{width:min(600px,92vw);}
+  .preview.large .cover{height:200px;background:#FAF6EE;}
+  .preview.large .cover img{object-fit:contain;}
+  .preview.large .one{font-size:16px;margin:14px 0 10px;line-height:1.5;}
+  .preview .link{display:inline-block;font-size:14px;margin:0 0 12px;font-weight:bold;
+    color:#1C664D;text-decoration:none;word-break:break-word;}
+  .preview .link:hover{color:#1E3D30;text-decoration:underline;}
+  .preview .note{font-size:12px;color:#777;line-height:1.55;margin:0 0 14px;}
   .btn{font-family:"Press Start 2P",monospace;font-size:8px;padding:7px 12px;cursor:pointer;
     background:linear-gradient(#fff,#dcdcdc);border:2px solid var(--px-black);
     box-shadow:2px 2px 0 var(--px-black);}
@@ -361,8 +370,11 @@ const PROJECTS=[
     process:"[Garrison to supply — process]",
     outcome:"[Garrison to supply — outcome]"},
   {id:"copia", name:"Copia", color:"#8ee6b8", dark:"#3fa97c", sym:"leaf", center:true,
-    one:"The farmers-market marketplace I couldn't build in 2021 — so I rebuilt it solo in 2026, directing AI.",
-    cover:"assets/copia/hero-home.webp",
+    one:"Copia is for buying food from your neighbors, the people who grow it — built the way a farmers market feels: calm, personal, unhurried.",
+    cover:"assets/copia/preview-trio.png",
+    previewLarge:true,
+    link:"https://copia-virid.vercel.app/",
+    note:"Open it on your phone. Put a few things from the growers in your basket and settle up. For the full effect, add it to your home screen.",
     role:"Product Design / Full-stack Concept", year:"2026",
     /* finished, self-contained case-study page — opened full-screen inside an iframe */
     embed:"case-studies/copia/index.html"},
@@ -421,18 +433,24 @@ function placeNear(w,x,y){
 function openPreview(p,anchor){
   let w=document.getElementById('prev-'+p.id);
   if(!w){
-    w=makeWin('preview'); w.id='prev-'+p.id;
+    w=makeWin('preview'+(p.previewLarge?' large':'')); w.id='prev-'+p.id;
+    const cover=p.cover?`<img src="${p.cover}" alt="${p.name} cover">`:'[ cover image ]';
+    const link=p.link?`<a class="link" href="${p.link}" target="_blank" rel="noopener">${p.link}</a>`:'';
+    const note=p.note?`<div class="note">${p.note}</div>`:'';
     w.innerHTML=`
       <div class="titlebar"><div class="closebox"></div><div class="title">${p.name}</div></div>
       <div class="winbody">
-        <div class="cover">${p.cover?`<img src="${p.cover}" alt="${p.name} cover">`:'[ cover image ]'}</div>
+        <div class="cover">${cover}</div>
         <div class="one">${p.one}</div>
+        ${link}
+        ${note}
         <button class="btn">OPEN PROJECT &rarr;</button>
       </div>`;
     wireWindow(w);
     w.querySelector('.btn').addEventListener('click',()=>openCase(p));
   }
   w.classList.add('open'); bringFront(w);
+  if(p.previewLarge){ centerCase(w); return; }
   const a=anchor.getBoundingClientRect();
   if(innerWidth<=640){ placeNear(w,(innerWidth-w.getBoundingClientRect().width)/2,a.bottom+10); }
   else placeNear(w,a.right+12,a.top);
