@@ -102,9 +102,10 @@
 
   /* preview window */
   .preview{width:300px;}
-  .preview .cover{height:130px;border:2px solid var(--px-black);
+  .preview .cover{height:130px;border:2px solid var(--px-black);overflow:hidden;
     background:linear-gradient(135deg,#cfe0f5,#e9d8b6);
     display:flex;align-items:center;justify-content:center;color:#5a5a5a;font-size:12px;}
+  .preview .cover img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto;}
   .preview .one{font-size:13px;margin:10px 0 12px;line-height:1.45;}
   .btn{font-family:"Press Start 2P",monospace;font-size:8px;padding:7px 12px;cursor:pointer;
     background:linear-gradient(#fff,#dcdcdc);border:2px solid var(--px-black);
@@ -121,6 +122,47 @@
   .case .winbody h3{font-family:"Press Start 2P",monospace;font-size:9px;
     color:var(--accent);margin:18px 0 5px;}
   .case .winbody p{font-size:14px;line-height:1.55;margin:0 0 6px;}
+
+  /* ---------- DEEP FLAGSHIP CASE (near full-screen) ---------- */
+  .case.deep{width:min(1100px,90vw);height:90vh;max-height:90vh;max-width:1100px;}
+  .case.deep .winbody{flex:1;min-height:0;padding:0;overflow:auto;
+    background:#fbfbf8;border-radius:0 0 2px 2px;}
+  .case.deep .heroimg{width:100%;display:block;height:40vh;
+    border-bottom:2px solid var(--px-black);object-fit:cover;object-position:center top;}
+  .deepwrap{max-width:760px;margin:0 auto;padding:24px 34px 64px;}
+  .deepwrap h2{margin:.1em 0 .15em;font-family:"Press Start 2P",monospace;
+    font-size:22px;line-height:1.3;}
+  .deepwrap .meta{color:#666;font-size:12px;font-family:"Press Start 2P",monospace;
+    line-height:1.7;margin:6px 0 6px;}
+  .deepwrap section{padding:18px 0;border-top:2px solid #e2e2d8;}
+  .deepwrap section:first-of-type{border-top:none;}
+  .deepwrap h3{font-family:"Press Start 2P",monospace;font-size:11px;
+    color:var(--accent);margin:4px 0 12px;line-height:1.5;}
+  .deepwrap p{font-size:15px;line-height:1.62;margin:0 0 12px;max-width:64ch;}
+  .deepwrap p.stack{font-family:"Press Start 2P",monospace;font-size:9px;
+    line-height:1.9;color:#444;background:#eee;border:2px solid var(--px-black);
+    padding:10px 12px;max-width:none;}
+  /* figures: framed to the OS chrome */
+  .deepwrap figure{margin:14px 0;background:#fff;border:2px solid var(--px-black);
+    box-shadow:3px 3px 0 rgba(22,22,28,.18);}
+  /* Screenshots vary wildly in length (some are 10x tall); present each as a
+     consistent "device viewport" — cover-crop to the top of the screen so a row
+     of them lines up. Captions carry the meaning. */
+  .deepwrap figure img{display:block;width:100%;height:auto;
+    object-fit:cover;object-position:center top;}
+  .deepwrap figure.single{width:min(360px,100%);margin-left:auto;margin-right:auto;}
+  .deepwrap figure.single img{height:56vh;}
+  .deepwrap figcaption{font-family:"Geneva","Tahoma",monospace;font-size:11px;
+    color:#555;padding:7px 10px;border-top:2px solid var(--px-black);background:#f3f3ee;}
+  .deepwrap .figgrid{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0;
+    align-items:flex-start;justify-content:center;}
+  .deepwrap .figgrid figure{flex:1 1 0;min-width:150px;max-width:240px;margin:0;}
+  .deepwrap .figgrid figure img{height:44vh;}
+  .deepwrap .figcap{font-family:"Geneva","Tahoma",monospace;font-size:11px;
+    color:#666;margin:-4px 0 14px;}
+  .deepwrap .trybtn{display:inline-block;margin:6px 0 10px;text-decoration:none;
+    color:var(--ink);background:linear-gradient(#fff,#dcdcdc);}
+  .deepwrap .trybtn:hover{background:linear-gradient(#fff,#cfe0d6);}
 
   /* ---------- BOTTOM-LEFT: GARRISON (fisheye) STANDING ON THE PLANET CURVE ---------- */
   #garrison{position:fixed;left:4vw;bottom:9.5vh;z-index:60;height:38vh;width:auto;
@@ -178,6 +220,15 @@
     .preview{width:min(300px,88vw);}
     .case{width:94vw;max-height:80vh;}
     .case .hero{height:120px;}
+    .case.deep{width:94vw;height:90vh;max-height:90vh;}
+    .case.deep .heroimg{max-height:38vh;}
+    .deepwrap{padding:18px 16px 56px;}
+    .deepwrap h2{font-size:17px;}
+    .deepwrap figure.single{width:min(280px,100%);}
+    .deepwrap figure.single img{height:48vh;}
+    .deepwrap .figgrid{gap:8px;}
+    .deepwrap .figgrid figure{min-width:92px;}
+    .deepwrap .figgrid figure img{height:32vh;}
     .hint{display:none;}
   }
 </style>
@@ -348,8 +399,40 @@ const PROJECTS=[
     process:"[Garrison to supply — process]",
     outcome:"[Garrison to supply — outcome]"},
   {id:"copia", name:"Copia", color:"#8ee6b8", dark:"#3fa97c", sym:"leaf", center:true,
-    one:"Peer-to-peer marketplace for local fresh produce — the Airbnb for farmers markets. [placeholder copy]",
+    one:"The farmers-market marketplace I couldn't build in 2021 — so I rebuilt it solo in 2026, directing AI.",
+    cover:"assets/copia/hero-home.webp",
     role:"Product Design / Full-stack Concept", year:"2026",
+    deep:{
+      hero:"assets/copia/hero-home.webp",
+      title:"Copia",
+      meta:"Founder · Brand & Product Design · Solo build, directing AI — 2021 (as EDEN) → rebuilt 2026",
+      sections:[
+        {h:"THE STORY",
+         body:[`I founded Copia in 2021 as EDEN, pitched VCs, and was offered $1.2M. I turned it down — I was the only founder all-in, with no technical co-founder to build it. The idea outran our ability to make it, and it went in a drawer. By 2026, AI had removed that barrier, so I took it back out and rebuilt the whole thing — brand, product, and live software — alone.`],
+         figures:[{grid:[{src:"2021-eden.jpg"},{src:"2026-home.png"}],
+           cap:"2021 wireframe → 2026 product. Same mint, same gummy wordmark; the discipline is new."}]},
+        {h:"THE BRAND",
+         body:[`Neo-Natural: a retro-natural identity wrapped around a premium-editorial product. I recovered the best of the 2021 brand — the gummy COPIA wordmark on retro mint — and built the system underneath it: a ten-value palette pulled from the logo itself, three type lanes, a logo system at three pressure levels, and a Leaf Wave motif invented from the mark's own paths. Every rule shipped with its rationale, documented like an Apple or Pentagram guidelines book. For a brand lead, the system documentation is the deliverable.`],
+         figures:[{src:"splash.webp", cap:"The wordmark assembles itself on launch."}]},
+        {h:"THE PRODUCT",
+         body:[`The method, in one line: for every screen, find the generic SaaS default and refuse it for something from the world of real markets. Checkout isn't a five-step wizard — it's one calm page that reads your plan back as a sentence ("You'll collect the heirloom tomatoes from Mira at the Mueller market Saturday morning"). The seller calendar refuses the month grid, because nobody buys squash a month out. Analytics is a grower's almanac, built with no charting library at all.`],
+         figures:[{grid:[
+           {src:"settling-up-multi.png", cap:"One calm page, not a wizard."},
+           {src:"calendar.png", cap:"An agenda, not a month grid."},
+           {src:"analytics.png", cap:"An almanac, not analytics."}]}]},
+        {h:"THE AI",
+         body:[`The Growing Coach reads a seller's actual plot — orders, listings, the forecast, what neighbors are searching — and writes them a weekly letter, in the product's own voice, with no "Powered by" badge. And the checkout's smartest move — noticing two growers share a market day and suggesting one trip — deliberately isn't AI at all; it's geometry. Knowing where not to reach for the model is part of the craft.`],
+         figures:[{src:"coach.png", cap:"AI as a letter from a neighbor, not a chatbot."}]},
+        {h:"THE BUILD",
+         body:[`I directed AI the way a creative director runs a studio. A written design directive — including a NEVER list of every generic-app default to refuse — governed every screen across seventeen build days. Nothing shipped unreviewed; every word of copy was checked against a voice directive before it merged. The barrier that killed Copia in 2021 is the one AI removed in 2026.`],
+         note:"Stack: Next.js · TypeScript · Tailwind · Supabase · Mapbox · Claude SDK · Vercel."},
+        {h:"TRY IT",
+         body:[`Live, installable, in production — open it in Safari on an iPhone and add it to your home screen.`],
+         link:"https://copia-virid.vercel.app", linkLabel:"copia-virid.vercel.app",
+         figures:[{grid:[{src:"device-invite.webp"},{src:"device-add-step.webp"},{src:"device-icon.webp"}],
+           cap:"Installs in ten seconds — real device."}]}
+      ]
+    },
     challenge:"[Garrison to supply — challenge/brief]",
     process:"iPhone-first PWA. Next.js · Tailwind · Supabase · Mapbox · Claude. [expand]",
     outcome:"[Garrison to supply — outcome]"},
@@ -412,7 +495,7 @@ function openPreview(p,anchor){
     w.innerHTML=`
       <div class="titlebar"><div class="closebox"></div><div class="title">${p.name}</div></div>
       <div class="winbody">
-        <div class="cover">[ cover image ]</div>
+        <div class="cover">${p.cover?`<img src="${p.cover}" alt="${p.name} cover">`:'[ cover image ]'}</div>
         <div class="one">${p.one}</div>
         <button class="btn">OPEN PROJECT &rarr;</button>
       </div>`;
@@ -425,25 +508,72 @@ function openPreview(p,anchor){
   else placeNear(w,a.right+12,a.top);
 }
 
+/* render one figure block (single image or a shared-caption grid) for a deep case */
+function figHTML(f){
+  const base='assets/copia/';
+  if(f.grid){
+    const cells=f.grid.map(g=>
+      `<figure><img loading="lazy" src="${base}${g.src}" alt="">`+
+      (g.cap?`<figcaption>${g.cap}</figcaption>`:'')+`</figure>`).join('');
+    return `<div class="figgrid">${cells}</div>`+(f.cap?`<div class="figcap">${f.cap}</div>`:'');
+  }
+  return `<figure><img loading="lazy" src="${base}${f.src}" alt="">`+
+    (f.cap?`<figcaption>${f.cap}</figcaption>`:'')+`</figure>`;
+}
+
+/* build the full near-full-screen flagship case body */
+function renderDeep(p){
+  const d=p.deep;
+  const sections=d.sections.map(s=>{
+    const body=s.body.map(t=>`<p>${t}</p>`).join('');
+    const note=s.note?`<p class="stack">${s.note}</p>`:'';
+    const link=s.link?`<a class="btn trybtn" href="${s.link}" target="_blank" rel="noopener noreferrer">${s.linkLabel||'OPEN LIVE SITE'} &rarr;</a>`:'';
+    const figs=(s.figures||[]).map(figHTML).join('');
+    return `<section><h3>${s.h}</h3>${body}${note}${link}${figs}</section>`;
+  }).join('');
+  return `
+    <div class="titlebar"><div class="closebox"></div><div class="title">${p.name} — CASE STUDY</div></div>
+    <div class="winbody">
+      <img class="heroimg" src="${d.hero}" alt="${p.name}">
+      <div class="deepwrap">
+        <h2>${d.title||p.name}</h2>
+        <div class="meta">${d.meta}</div>
+        ${sections}
+      </div>
+    </div>`;
+}
+
+function centerCase(w){
+  const r=w.getBoundingClientRect();
+  w.style.left=Math.max(8,(innerWidth-r.width)/2)+'px';
+  w.style.top =Math.max(30,(innerHeight-r.height)/2)+'px';
+}
+
 function openCase(p){
   let w=document.getElementById('case-'+p.id);
   if(!w){
-    w=makeWin('case'); w.id='case-'+p.id;
-    w.innerHTML=`
-      <div class="titlebar"><div class="closebox"></div><div class="title">${p.name} — CASE STUDY</div></div>
-      <div class="winbody">
-        <div class="hero">[ refreshed hero image — Higgsfield ]</div>
-        <h2>${p.name}</h2>
-        <div class="meta">${p.role} · ${p.year}</div>
-        <h3>THE CHALLENGE</h3><p>${p.challenge}</p>
-        <h3>PROCESS</h3><p>${p.process}</p>
-        <h3>OUTCOME</h3><p>${p.outcome}</p>
-        <h3>GALLERY</h3><p style="color:#888">[ curated images load here ]</p>
-      </div>`;
+    if(p.deep){
+      w=makeWin('case deep'); w.id='case-'+p.id;
+      w.innerHTML=renderDeep(p);
+    }else{
+      w=makeWin('case'); w.id='case-'+p.id;
+      w.innerHTML=`
+        <div class="titlebar"><div class="closebox"></div><div class="title">${p.name} — CASE STUDY</div></div>
+        <div class="winbody">
+          <div class="hero">[ refreshed hero image — Higgsfield ]</div>
+          <h2>${p.name}</h2>
+          <div class="meta">${p.role} · ${p.year}</div>
+          <h3>THE CHALLENGE</h3><p>${p.challenge}</p>
+          <h3>PROCESS</h3><p>${p.process}</p>
+          <h3>OUTCOME</h3><p>${p.outcome}</p>
+          <h3>GALLERY</h3><p style="color:#888">[ curated images load here ]</p>
+        </div>`;
+    }
     wireWindow(w);
   }
   w.classList.add('open'); bringFront(w);
-  placeNear(w,innerWidth/2-Math.min(320,innerWidth*.47),70);
+  if(p.deep) centerCase(w);
+  else placeNear(w,innerWidth/2-Math.min(320,innerWidth*.47),70);
 }
 
 /* close + drag (pointer events: mouse + touch) */
