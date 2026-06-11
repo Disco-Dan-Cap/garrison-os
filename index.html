@@ -68,10 +68,10 @@
   #menubar .clock{margin-left:auto;font-variant-numeric:tabular-nums;}
 
   /* ---------- FOLDERS ---------- */
-  #icons{position:absolute;top:52px;left:22px;display:grid;
+  #icons{position:absolute;top:52px;left:22px;display:grid;z-index:20;
     grid-template-columns:repeat(auto-fill,124px);gap:20px 12px;width:420px;}
   /* newest projects — center stage */
-  #icons-center{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);
+  #icons-center{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);z-index:20;
     display:flex;gap:34px;}
   .folder{width:124px;text-align:center;cursor:pointer;color:#fff;}
   .folder svg{width:94px;height:auto;display:block;margin:0 auto 5px;
@@ -140,7 +140,9 @@
     background:radial-gradient(closest-side, rgba(10,30,5,.42), rgba(10,30,5,0) 70%);}
 
   /* ---------- UFO (pixel art) ---------- */
-  #ufo{position:fixed;top:84px;right:13%;z-index:70;cursor:pointer;
+  /* z-index sits in the background layer: above wallpaper, below the desktop
+     icons (z20) and every window (z40+), so windows always cover it. */
+  #ufo{position:fixed;top:84px;right:13%;z-index:5;cursor:pointer;
     animation:bob 3.4s ease-in-out infinite;}
   #ufo svg{width:108px;height:auto;display:block;
     filter:drop-shadow(0 6px 0 rgba(0,0,0,.18));}
