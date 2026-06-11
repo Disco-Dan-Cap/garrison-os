@@ -131,11 +131,13 @@
     background:#fff;border-radius:0 0 2px 2px;}
 
   /* ---------- BOTTOM-LEFT: GARRISON (fisheye) STANDING ON THE PLANET CURVE ---------- */
-  #garrison{position:fixed;left:4vw;bottom:9.5vh;z-index:60;height:38vh;width:auto;
+  /* z-index sits in the background layer with the UFO: above wallpaper, below the
+     desktop icons (z20) and every window (z40+), so windows always cover it. */
+  #garrison{position:fixed;left:4vw;bottom:9.5vh;z-index:5;height:38vh;width:auto;
     pointer-events:none;user-select:none;-webkit-user-drag:none;
     transform:rotate(-20deg);transform-origin:50% 96%;
     filter:drop-shadow(0 6px 8px rgba(10,30,5,.35));}
-  #garrison-shadow{position:fixed;left:calc(4vw + 4vh);bottom:8.6vh;z-index:59;
+  #garrison-shadow{position:fixed;left:calc(4vw + 4vh);bottom:8.6vh;z-index:4;
     width:18vh;height:3.4vh;border-radius:50%;pointer-events:none;
     background:radial-gradient(closest-side, rgba(10,30,5,.42), rgba(10,30,5,0) 70%);}
 
