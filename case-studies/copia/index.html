@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copia — Case Study · Garrison Bullock</title>
+<meta name="description" content="Copia: a peer-to-peer marketplace for local fresh produce, founded in 2021 as EDEN and rebuilt in 2026 as an iPhone-first PWA. A portfolio case study by Garrison Bullock.">
+
+<!-- Display: Aptly Medium via the project's Adobe Fonts (Typekit) kit — the same kit the live product loads. -->
+<link rel="stylesheet" href="https://use.typekit.net/itz7grm.css">
+<!-- Body is the documented Söhne stand-in (Inter) — TEMPORARY, brand-artifact only, never ships to production.
+     JetBrains Mono carries the chrome. Fraunces italic is the sanctioned editorial-emphasis accent (Aptly has no italic in the kit). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* Palette — extracted from the logo SVGs (brand/copia-palette-card.html) */
+    --deepest-forest: #1E3D30;
+    --forest:         #1C664D;
+    --mid-forest:     #30594A;
+    --sage-shadow:    #4E8472;
+    --sage:           #509982;
+    --light-sage:     #74B5A1;
+    --mint:           #9CE5D0;
+    --cream:          #FAF6EE;
+    --cream-warm:     #F4EEDF;
+    --charcoal:       #1A1A1A;
+    --terracotta:     #C46A4F;
+
+    --hair: color-mix(in oklab, var(--forest) 30%, transparent);
+    --hair-soft: color-mix(in oklab, var(--forest) 14%, transparent);
+
+    /* Type lanes — Aptly speaks the brand, Söhne carries the message,
+       mono carries the metadata, Fraunces italic is the rare emphasis. */
+    --display: "aptly", "Inter", system-ui, sans-serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif; /* TEMP: Söhne stand-in */
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --serif: "Fraunces", Georgia, serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    position: relative;
+  }
+  /* Paper, not screen — a faint grain on the cream surface (~3.5%). */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 56px 48px 120px; position: relative; z-index: 1; }
+  @media (max-width: 700px) { .wrap { padding: 40px 22px 80px; } }
+
+  a { color: var(--forest); text-decoration: none; }
+  a:hover { color: var(--deepest-forest); }
+
+  em { font-family: var(--serif); font-style: italic; font-weight: 400; }
+
+  /* ── Masthead ───────────────────────────────────────── */
+  header.masthead {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap; padding-bottom: 28px; border-bottom: 1px solid var(--forest);
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand-mark { width: 34px; height: 47px; color: var(--forest); flex: none; }
+  .brand-name { font-family: var(--display); font-size: 27px; line-height: 0.9; letter-spacing: 0.01em; color: var(--forest); }
+  .brand-sub { font-family: var(--mono); font-size: 10.5px; color: var(--mid-forest); text-transform: uppercase; letter-spacing: 0.16em; margin-top: 7px; }
+  .doc-meta { font-family: var(--mono); font-size: 10.5px; color: var(--mid-forest); text-transform: uppercase; letter-spacing: 0.14em; text-align: right; }
+  .doc-meta div + div { margin-top: 5px; }
+
+  /* ── Eyebrows / section frame ───────────────────────── */
+  .eyebrow { font-family: var(--mono); font-size: 11.5px; color: var(--forest); text-transform: uppercase; letter-spacing: 0.18em; }
+  section { padding: 64px 0; border-top: 1px solid var(--hair); }
+  .sec-head { margin-bottom: 38px; }
+  .sec-title {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(30px, 4.4vw, 46px); line-height: 1.04; letter-spacing: 0.004em;
+    color: var(--deepest-forest); margin: 16px 0 0; max-width: 18ch;
+  }
+
+  /* ── Hero ───────────────────────────────────────────── */
+  .hero { padding: 60px 0 72px; }
+  @media (max-width: 760px) { .hero { padding: 40px 0 56px; } }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 38px; }
+  .chip {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--forest); border: 1px solid var(--hair); border-radius: 999px; padding: 7px 13px;
+    display: inline-flex; align-items: center; gap: 8px; background: var(--cream-warm);
+  }
+  .chip .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--terracotta); flex: none; }
+  .hero-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 56px; align-items: center; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; gap: 44px; } }
+  .hero-sentence {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(34px, 5.6vw, 62px); line-height: 1.07; letter-spacing: 0.004em;
+    color: var(--deepest-forest); margin: 0;
+  }
+
+  /* ── Phone frame (slim deepest-forest bezel, warm shadow) ─ */
+  .phone {
+    --ar: 9 / 19.5;
+    width: 100%; max-width: 300px; margin: 0 auto;
+    background: var(--deepest-forest);
+    border-radius: 38px; padding: 7px;
+    box-shadow: 0 22px 50px rgba(30,61,48,0.20), 0 5px 14px rgba(30,61,48,0.12);
+  }
+  .phone .screen { aspect-ratio: var(--ar); border-radius: 31px; overflow: hidden; background: var(--cream); }
+  .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .hero-phone { max-width: 312px; }
+
+  figure { margin: 0; }
+  .fig-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--mid-forest); text-align: center; margin-top: 16px; }
+
+  /* ── At a glance — typographic definition grid ──────── */
+  .glance { display: grid; grid-template-columns: max-content 1fr; gap: 0 40px; max-width: 760px; }
+  @media (max-width: 560px) { .glance { grid-template-columns: 1fr; gap: 0; } }
+  .glance dt {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--mid-forest); padding: 18px 0 18px; align-self: baseline;
+    border-top: 1px solid var(--hair-soft);
+  }
+  .glance dd {
+    margin: 0; padding: 18px 0; font-size: 17.5px; color: var(--charcoal);
+    border-top: 1px solid var(--hair-soft);
+  }
+  .glance dt:first-of-type, .glance dd:first-of-type { border-top: none; }
+  @media (max-width: 560px) {
+    .glance dt { padding: 16px 0 2px; border-top: 1px solid var(--hair-soft); }
+    .glance dd { padding: 2px 0 16px; border-top: none; }
+    .glance dt:first-of-type { border-top: none; }
+  }
+
+  /* ── Prose blocks ───────────────────────────────────── */
+  .prose { font-size: 18px; line-height: 1.66; max-width: 64ch; color: var(--charcoal); }
+  .prose.lede { font-size: clamp(19px, 2.2vw, 22px); line-height: 1.6; max-width: 60ch; }
+  .prose strong { font-weight: 600; color: var(--deepest-forest); }
+
+  /* ── Research findings ──────────────────────────────── */
+  .findings { display: grid; gap: 30px; max-width: 70ch; }
+  .finding { display: grid; gap: 4px; }
+  .finding b { font-weight: 600; color: var(--deepest-forest); font-size: 19px; }
+  .finding span { font-size: 17.5px; line-height: 1.6; }
+  .surprise {
+    margin-top: 38px; padding-top: 30px; border-top: 1px solid var(--hair-soft);
+    font-size: 18.5px; line-height: 1.6; max-width: 66ch; color: var(--charcoal);
+  }
+
+  /* ── Decisions ──────────────────────────────────────── */
+  .decision { display: grid; grid-template-columns: 360px 1fr; gap: 56px; align-items: center; padding: 52px 0; border-top: 1px solid var(--hair-soft); }
+  .decision:first-of-type { border-top: none; padding-top: 8px; }
+  .decision.flip { grid-template-columns: 1fr 360px; }
+  .decision.flip .decision-figure { order: 2; }
+  @media (max-width: 820px) {
+    .decision, .decision.flip { grid-template-columns: 1fr; gap: 30px; }
+    .decision.flip .decision-figure { order: 0; }
+  }
+  .decision-body h3 { font-family: var(--sans); font-weight: 600; font-size: clamp(21px, 2.6vw, 26px); line-height: 1.18; letter-spacing: -0.01em; color: var(--deepest-forest); margin: 0 0 12px; }
+  .decision-body p { margin: 0; font-size: 17.5px; line-height: 1.62; color: var(--charcoal); }
+
+  /* two phones side by side for the 2021 / 2026 unit */
+  .pair { display: flex; gap: 18px; justify-content: center; align-items: flex-start; }
+  .pair .phone { max-width: 168px; padding: 5px; border-radius: 26px; }
+  .pair .phone .screen { border-radius: 21px; }
+  .pair-col { display: flex; flex-direction: column; }
+
+  /* focused detail crop (proximity line) */
+  .detail-frame { border-radius: 16px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--forest) 20%, transparent); box-shadow: 0 12px 30px rgba(30,61,48,0.10); background: var(--cream); }
+  .detail-frame img { width: 100%; display: block; }
+
+  /* ── On the home screen (install proof) ─────────────── */
+  .install-strip { display: flex; gap: 18px; justify-content: center; align-items: flex-start; }
+  .install-strip .phone { flex: 1 1 0; max-width: 184px; padding: 5px; border-radius: 26px; }
+  .install-strip .phone .screen { border-radius: 21px; }
+  .install-caption { font-size: 16.5px; line-height: 1.62; max-width: 62ch; color: var(--charcoal); margin: 28px auto 0; text-align: center; }
+  @media (max-width: 480px) {
+    .install-strip { gap: 8px; }
+    .install-strip .phone { padding: 3px; border-radius: 15px; }
+    .install-strip .phone .screen { border-radius: 12px; }
+    .install-caption { text-align: left; }
+  }
+
+  /* ── Try it ─────────────────────────────────────────── */
+  .tryit-url { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 5.2vw, 56px); line-height: 1.05; letter-spacing: 0.004em; color: var(--forest); display: inline-block; }
+  .tryit-url:hover { color: var(--deepest-forest); }
+  .tryit { display: grid; grid-template-columns: 1fr 196px; gap: 48px; align-items: center; }
+  .tryit .phone { max-width: 196px; }
+  @media (max-width: 700px) { .tryit { grid-template-columns: 1fr; gap: 32px; } }
+
+  /* ── Footer ─────────────────────────────────────────── */
+  footer { margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--hair); display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+  .foot-mark { width: 22px; height: 31px; color: var(--sage); flex: none; }
+  .foot-line { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--mid-forest); }
+  .foot-line + .foot-line { text-align: right; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    a, .phone { transition: color .2s ease, transform .25s ease; }
+    .phone:hover { transform: translateY(-3px); }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- ══════════ MASTHEAD ══════════ -->
+    <header class="masthead">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 634.53 883.74" fill="currentColor" aria-hidden="true">
+          <path d="M510.42,182.26c5.32-12.33,10.29-23.1,12.68-36.18-14.8,32.74-31.44,63.95-52.66,93.08-13.8,18.95-27.9,36.37-43.76,53.67-28.09,30.64-57.76,58.9-90.07,85.46-1.7-1.45-.99-3.3-.35-5.03,9.9-26.74,13.49-54.16,11.64-82.52l-5.09-46.65c-2.07-18.98-4.62-37.23-3.72-56.37.95-20.14,5.32-39.27,15.15-56.94,11.6-20.85,29.96-36.59,52.14-44.95l33.42-12.61c17.78-6.71,34.43-14.49,50.9-24.06,20.1-11.69,37.73-25.71,53.24-43.02,2.68-2.99,5.96-5.74,10.04-6.09,5.1-.44,9.79,3.09,11.97,7.68l11.02,23.11c18.95,44.77,33.17,90.96,42.78,138.67,3.25,16.16,5.42,31.57,6.45,47.9,3.03,47.68-12.48,90.61-52.95,117.61-18.18,12.14-37.79,20.34-58.95,26.18-18.27,5.04-36.19,8.56-54.88,11.68l-39.25,6.55c-22.88,3.82-44.87,9.16-67.01,16-1.08.33-2.21.06-2.65-.55-.7-.95-.22-1.9.85-2.94l38.09-37.05c24.14-23.48,45.22-48.92,65.09-76.25,21.98-30.22,40.92-61.75,55.88-96.39Z"/>
+          <path d="M121.15,879c-7.12,5.18-15.32,7.85-19.22-1.27-1.81-4.25-2.65-20.37-1.96-31.36,4.78-75.66-4.46-50.45,7.24-106.53l6.91-21.87c5.37-17,10.91-33.04,18.69-49.06,17.55-36.17,43.45-64.62,80-81.78,35.84-16.83,74.88-22.05,114.35-22.1l54.93,1.97,57.67,2.19c22.8.87,44.85-1.34,67.21-5.84,23.35-4.7,45.04-13.03,65.2-25.51l9.18-5.09c2.4-1.33,5.43-1.03,7.42.61,1.79,1.48,3.15,4.85,2.17,7.76-3.28,9.68-7.85,18.42-12.92,27.49-11.95,21.38-25.73,40.95-41.86,59.45-34.28,39.32-76.73,67.81-127.01,82.37-23.18,6.71-46.46,10.29-70.58,11.69l-54.15.77-36.74.11c-18.04.05-36.08.21-52.92,6.63-68.46,26.14-59.2,79.44-64.95,120.24-.68,4.82-4.91,26.39-8.66,29.12Z"/>
+          <path d="M303.51,546.52c-45.79,2.46-88.35,12.87-126.13,39.5-1.02.72-2.55-.3-2.86-.93-.53-1.09-.59-2.2.18-4.04,27.56-43.62,60.59-83.85,99.41-118.04,28.86-25.42,62.32-43.96,99.17-54.29,17.24-4.84,33.81-8.14,51.35-11.14l52.95-9.06c21.8-3.73,42.44-9.37,63.01-17.4,34.65-13.5,64.58-33.48,83.84-65.84,1.18-1.98,3.73-2.64,5.36-2.26,1.45.34,4.17,2.03,4.27,4.39,1.5,37.88-.41,75.58-7.95,113.03-9.77,48.55-30.77,88.12-76.22,110.04-20.32,9.8-41.52,15.46-64.05,17.92-23.56,2.58-46.49,2.72-70.18,1.45l-55.49-2.98-56.67-.34Z"/>
+          <path d="M207.37,497.21c-12.71,13.59-22.23,27.32-34.43,42.85,5.13-35.53,4.54-69.13-2.75-103.44-5.18-24.38-11.78-47.57-18.81-71.45-8.57-29.12-16.97-62.69-17.06-92.77-.14-47.85,20.95-90.16,63.72-112.64l8.11-4.73c22.84-11.15,46.01-20.24,70.25-28.27,19.52-6.46,38.35-12.64,58.13-17.81,2.72-.71,5.36.26,6.83,2.19,1.38,1.8,1.65,4.66.17,7.11-11.76,19.48-18.27,40.87-20.18,63.63-1.11,13.32-1,25.97.47,39.22l4.47,40.35,3.27,35.11c2.1,46.79-9.9,84.04-41.23,119.04l-31.83,31.68c-16.66,16.58-33.27,32.03-49.15,49.93Z"/>
+          <path d="M85.44,726.7c-.57,1.96-4.29.75-4.75-.14-.46-.9-1.45-1.97-1.59-3.79-1.88-26.24-6.71-51.55-14.62-76.77-6.1-19.45-13.91-37.34-21.68-56.12l-20.94-50.62c-7.1-19.64-12.76-38.92-16.71-59.48-12.15-63.26-3.05-125.73,29.35-181.94,20.46-35.5,48.51-65.38,81.93-88.71,2.46-1.72,4.83-2.07,7.1-.97,1.88.92,4.04,4.01,2.98,6.93-17.02,46.86-10.96,93.22,2.26,140.4l14.26,50.89c4.84,17.27,8.66,33.94,11.52,51.67,6.3,39.13,2.61,78.04-10.81,115.47l-21.41,52.69c-14.58,32.82-26.8,65.69-36.9,100.51Z"/>
+        </svg>
+        <div>
+          <div class="brand-name">Copia</div>
+          <div class="brand-sub">Case Study</div>
+        </div>
+      </div>
+      <div class="doc-meta">
+        <div>Portfolio · Garrison Bullock</div>
+        <div>2026 · Austin, TX</div>
+      </div>
+    </header>
+
+    <!-- ══════════ 01 · HERO ══════════ -->
+    <div class="hero">
+      <div class="chips">
+        <span class="chip"><span class="live-dot"></span>Live</span>
+        <span class="chip">iPhone-first PWA</span>
+        <span class="chip">2026</span>
+      </div>
+      <div class="hero-grid">
+        <p class="hero-sentence">Copia is for buying food from your neighbors, the people who grow it — built the way a farmers market feels: calm, personal, unhurried.</p>
+        <figure>
+          <div class="phone hero-phone">
+            <div class="screen"><img src="assets/hero-home.webp" alt="The Copia home on a real iPhone: a cream masthead, the headline 'Peaches are early this year,' and a strip of what's ripening this week."></div>
+          </div>
+          <figcaption class="fig-label">Buyer · Home</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ══════════ 02 · AT A GLANCE ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">02 — At a glance</div>
+        <h2 class="sec-title">At a glance</h2>
+      </div>
+      <dl class="glance">
+        <dt>Role</dt><dd>Founder · sole designer &amp; builder</dd>
+        <dt>Founded</dt><dd>2021 (as EDEN) · rebuilt 2026</dd>
+        <dt>Build</dt><dd>17 days, directing AI</dd>
+        <dt>Stack</dt><dd>Next.js · TypeScript · Supabase · Mapbox · Claude · Vercel</dd>
+        <dt>Shipped</dt><dd>9 seller surfaces · full buyer flow · 1 production AI feature</dd>
+        <dt>Live</dt><dd><a href="https://copia-virid.vercel.app">copia-virid.vercel.app</a></dd>
+      </dl>
+    </section>
+
+    <!-- ══════════ 03 · THE SHORT VERSION ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">03 — The short version</div>
+        <h2 class="sec-title">The short version</h2>
+      </div>
+      <p class="prose lede">I founded Copia in my MBA in 2021, as EDEN. We pitched VCs and were offered $1.2M. I declined: I was the only founder all-in, and I had no technical co-founder to build with. By 2026, AI had removed that barrier — so I went back and built what I’d envisioned all along, alone, directing AI through every screen and every sentence. Seventeen build days, live in production.</p>
+    </section>
+
+    <!-- ══════════ 04 · RESEARCH ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">04 — Research</div>
+        <h2 class="sec-title">What 47 interviews said (2021)</h2>
+      </div>
+      <div class="findings">
+        <div class="finding"><b>Convenience decides.</b><span>Buyers mean it when they say “support local” — and defect the moment local gets complicated.</span></div>
+        <div class="finding"><b>Sellers need help after the harvest.</b><span>Analytics, marketing, and the final mile. Not growing advice.</span></div>
+        <div class="finding"><b>Buyers are latent sellers.</b><span>The person buying tomatoes has a yard, and a notion.</span></div>
+      </div>
+      <p class="surprise">And the surprise: people value <em>local</em> over <em>organic</em>. Some actively avoid the organic label.</p>
+    </section>
+
+    <!-- ══════════ 05 · DECISIONS ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">05 — Decisions</div>
+        <h2 class="sec-title">Decisions</h2>
+      </div>
+
+      <!-- 1 · 2021 next to 2026 -->
+      <div class="decision">
+        <div class="decision-figure">
+          <div class="pair">
+            <figure class="pair-col">
+              <div class="phone" style="--ar: 760 / 1647;">
+                <div class="screen"><img src="assets/eden-2021-home.jpg" alt="The 2021 EDEN prototype: a map of listings, the line '150 sellers in your area!', and a tab bar with a Cart."></div>
+              </div>
+              <figcaption class="fig-label">2021 · EDEN</figcaption>
+            </figure>
+            <figure class="pair-col">
+              <div class="phone">
+                <div class="screen"><img src="assets/home.png" alt="The 2026 Copia home: a calm cream feed of neighboring growers, no cart, no exclamation."></div>
+              </div>
+              <figcaption class="fig-label">2026 · Copia</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="decision-body">
+          <h3>2021 next to 2026.</h3>
+          <p>The 2021 wireframe says “cart” and “150 sellers in your area!” The 2026 product contains neither the word nor the punctuation. The rebuild kept the mint and the gummy wordmark; the discipline is new.</p>
+        </div>
+      </div>
+
+      <!-- 2 · One calm page -->
+      <div class="decision flip">
+        <div class="decision-figure">
+          <figure>
+            <div class="phone">
+              <div class="screen"><img src="assets/settling-up-multi.png" alt="The Copia checkout, 'Settling up': one page that opens by narrating the whole pickup plan as a sentence, then lists each grower's items."></div>
+            </div>
+            <figcaption class="fig-label">Buyer · Settling up</figcaption>
+          </figure>
+        </div>
+        <div class="decision-body">
+          <h3>One calm page instead of the checkout wizard.</h3>
+          <p>Every grower group picks pickup or delivery; deliveries consolidate into one courier run with one fee. The whole plan reads back as a sentence: <em>“You’ll collect the heirloom tomatoes from Mira at the Mueller market Saturday morning.”</em></p>
+        </div>
+      </div>
+
+      <!-- 3 · Calendar -->
+      <div class="decision">
+        <div class="decision-figure">
+          <figure>
+            <div class="phone">
+              <div class="screen"><img src="assets/calendar.png" alt="The seller calendar: a four-week agenda of pickups and market days, not a month grid."></div>
+            </div>
+            <figcaption class="fig-label">Seller · Calendar</figcaption>
+          </figure>
+        </div>
+        <div class="decision-body">
+          <h3>A calendar that refuses the month grid.</h3>
+          <p>Nobody buys squash a month out, so the seller calendar is an agenda bounded at four weeks. The genre default would have fought how fresh food is actually bought.</p>
+        </div>
+      </div>
+
+      <!-- 4 · Almanac -->
+      <div class="decision flip">
+        <div class="decision-figure">
+          <figure>
+            <div class="phone">
+              <div class="screen"><img src="assets/analytics.png" alt="The seller almanac: editorial figures and plain-language read-outs of the week, built with no charting library."></div>
+            </div>
+            <figcaption class="fig-label">Seller · Almanac</figcaption>
+          </figure>
+        </div>
+        <div class="decision-body">
+          <h3>An almanac, not analytics.</h3>
+          <p>Built with no charting library. A grower’s question isn’t “what’s my trend line” — it’s “what happened, and what should I do Saturday.”</p>
+        </div>
+      </div>
+
+      <!-- 5 · Coach -->
+      <div class="decision">
+        <div class="decision-figure">
+          <figure>
+            <div class="phone">
+              <div class="screen"><img src="assets/coach.png" alt="The AI Growing Coach: a dated, addressed weekly letter to the grower, signed by the Coach — no chat bubbles, no badge."></div>
+            </div>
+            <figcaption class="fig-label">Seller · Growing Coach</figcaption>
+          </figure>
+        </div>
+        <div class="decision-body">
+          <h3>AI as a letter, not a chatbot.</h3>
+          <p>The Coach reads your plot — orders, listings, the forecast, what neighbors are searching — and writes you a weekly note. Disclosed in the product’s own voice; no “Powered by” badge.</p>
+        </div>
+      </div>
+
+      <!-- 6 · Where AI isn't -->
+      <div class="decision flip">
+        <div class="decision-figure">
+          <figure>
+            <div class="detail-frame">
+              <img src="assets/proximity-line.png" alt="A line on the checkout page: 'Mira, Cherrywood Backyard, and Mueller Microgreens are all at the Mueller market Saturday — one trip gets all of them.'">
+            </div>
+            <figcaption class="fig-label">Checkout · Market-day suggestion</figcaption>
+          </figure>
+        </div>
+        <div class="decision-body">
+          <h3>Where AI isn’t.</h3>
+          <p>When two growers share a market day, the page suggests one trip. That’s geometry, not a model — knowing where <em>not</em> to use AI is part of AI design.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 06 · HOW IT WAS BUILT ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">06 — How it was built</div>
+        <h2 class="sec-title">How it was built</h2>
+      </div>
+      <p class="prose">I directed Claude Code the way a creative director runs a studio: a written design directive with a NEVER list banning the generic-app vocabulary, a paste-ready brief for each build day, and every word of copy reviewed before merge. Every brief is committed alongside the code. One engineering proof: the Coach’s cold first paint went from 16 seconds to 0.26, by fetching the letter behind the brand’s leaf-draw animation.</p>
+    </section>
+
+    <!-- ══════════ 07 · REFLECTION ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">07 — Reflection</div>
+        <h2 class="sec-title">Reflection</h2>
+      </div>
+      <p class="prose">The hardest part wasn’t building — it was refusing: the month grid, the progress bars, the trust badges, the sparkle. Next would be real payments (Stripe for cards; USDC settlement matters most where the local currency doesn’t hold), and the long thread from my 2020 notes: robot-tended backyards removing the last labor barrier between “I’d like to sell some tomatoes” and “I am, in fact, selling tomatoes.”</p>
+    </section>
+
+    <!-- ══════════ 08 · ON THE HOME SCREEN ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">08 — On the home screen</div>
+        <h2 class="sec-title">On the home screen</h2>
+      </div>
+      <div class="install-strip">
+        <figure class="pair-col">
+          <div class="phone">
+            <div class="screen"><img src="assets/device-invite.webp" alt="Copia open in Safari, with its own invitation card: 'Keep Copia on your home screen,' pointing to the share menu's Add to Home Screen."></div>
+          </div>
+          <figcaption class="fig-label">The invitation</figcaption>
+        </figure>
+        <figure class="pair-col">
+          <div class="phone">
+            <div class="screen"><img src="assets/device-add-step.webp" alt="The iOS Add to Home Screen sheet, showing the Copia leaf icon, the name Copia, and 'Open as Web App' switched on."></div>
+          </div>
+          <figcaption class="fig-label">Add to Home Screen</figcaption>
+        </figure>
+        <figure class="pair-col">
+          <div class="phone">
+            <div class="screen"><img src="assets/device-icon.webp" alt="An iPhone home screen with the Copia leaf icon sitting among the other apps."></div>
+          </div>
+          <figcaption class="fig-label">Among the apps</figcaption>
+        </figure>
+      </div>
+      <p class="install-caption">Add to Home Screen from Safari and the leaf joins the other apps. The real iPhone status bars are the point — a genuine install, not a mockup of one.</p>
+    </section>
+
+    <!-- ══════════ 09 · TRY IT ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">09 — Try it</div>
+        <h2 class="sec-title">Try it</h2>
+      </div>
+      <div class="tryit">
+        <div>
+          <p style="margin: 0 0 22px;"><a class="tryit-url" href="https://copia-virid.vercel.app">copia-virid.vercel.app</a></p>
+          <p class="prose">— open it in Safari on an iPhone. Put three things from three growers in your basket and settle up. For the full effect, add it to your home screen: the wordmark assembles itself on the way in.</p>
+        </div>
+        <figure>
+          <div class="phone">
+            <div class="screen"><img src="assets/splash.webp" alt="The Copia launch splash on a real iPhone: the gummy COPIA wordmark with the leaf on the P, on retro mint."></div>
+          </div>
+          <figcaption class="fig-label">Launch · Splash</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer>
+      <svg class="foot-mark" viewBox="0 0 634.53 883.74" fill="currentColor" aria-hidden="true">
+        <path d="M510.42,182.26c5.32-12.33,10.29-23.1,12.68-36.18-14.8,32.74-31.44,63.95-52.66,93.08-13.8,18.95-27.9,36.37-43.76,53.67-28.09,30.64-57.76,58.9-90.07,85.46-1.7-1.45-.99-3.3-.35-5.03,9.9-26.74,13.49-54.16,11.64-82.52l-5.09-46.65c-2.07-18.98-4.62-37.23-3.72-56.37.95-20.14,5.32-39.27,15.15-56.94,11.6-20.85,29.96-36.59,52.14-44.95l33.42-12.61c17.78-6.71,34.43-14.49,50.9-24.06,20.1-11.69,37.73-25.71,53.24-43.02,2.68-2.99,5.96-5.74,10.04-6.09,5.1-.44,9.79,3.09,11.97,7.68l11.02,23.11c18.95,44.77,33.17,90.96,42.78,138.67,3.25,16.16,5.42,31.57,6.45,47.9,3.03,47.68-12.48,90.61-52.95,117.61-18.18,12.14-37.79,20.34-58.95,26.18-18.27,5.04-36.19,8.56-54.88,11.68l-39.25,6.55c-22.88,3.82-44.87,9.16-67.01,16-1.08.33-2.21.06-2.65-.55-.7-.95-.22-1.9.85-2.94l38.09-37.05c24.14-23.48,45.22-48.92,65.09-76.25,21.98-30.22,40.92-61.75,55.88-96.39Z"/>
+        <path d="M121.15,879c-7.12,5.18-15.32,7.85-19.22-1.27-1.81-4.25-2.65-20.37-1.96-31.36,4.78-75.66-4.46-50.45,7.24-106.53l6.91-21.87c5.37-17,10.91-33.04,18.69-49.06,17.55-36.17,43.45-64.62,80-81.78,35.84-16.83,74.88-22.05,114.35-22.1l54.93,1.97,57.67,2.19c22.8.87,44.85-1.34,67.21-5.84,23.35-4.7,45.04-13.03,65.2-25.51l9.18-5.09c2.4-1.33,5.43-1.03,7.42.61,1.79,1.48,3.15,4.85,2.17,7.76-3.28,9.68-7.85,18.42-12.92,27.49-11.95,21.38-25.73,40.95-41.86,59.45-34.28,39.32-76.73,67.81-127.01,82.37-23.18,6.71-46.46,10.29-70.58,11.69l-54.15.77-36.74.11c-18.04.05-36.08.21-52.92,6.63-68.46,26.14-59.2,79.44-64.95,120.24-.68,4.82-4.91,26.39-8.66,29.12Z"/>
+        <path d="M303.51,546.52c-45.79,2.46-88.35,12.87-126.13,39.5-1.02.72-2.55-.3-2.86-.93-.53-1.09-.59-2.2.18-4.04,27.56-43.62,60.59-83.85,99.41-118.04,28.86-25.42,62.32-43.96,99.17-54.29,17.24-4.84,33.81-8.14,51.35-11.14l52.95-9.06c21.8-3.73,42.44-9.37,63.01-17.4,34.65-13.5,64.58-33.48,83.84-65.84,1.18-1.98,3.73-2.64,5.36-2.26,1.45.34,4.17,2.03,4.27,4.39,1.5,37.88-.41,75.58-7.95,113.03-9.77,48.55-30.77,88.12-76.22,110.04-20.32,9.8-41.52,15.46-64.05,17.92-23.56,2.58-46.49,2.72-70.18,1.45l-55.49-2.98-56.67-.34Z"/>
+        <path d="M207.37,497.21c-12.71,13.59-22.23,27.32-34.43,42.85,5.13-35.53,4.54-69.13-2.75-103.44-5.18-24.38-11.78-47.57-18.81-71.45-8.57-29.12-16.97-62.69-17.06-92.77-.14-47.85,20.95-90.16,63.72-112.64l8.11-4.73c22.84-11.15,46.01-20.24,70.25-28.27,19.52-6.46,38.35-12.64,58.13-17.81,2.72-.71,5.36.26,6.83,2.19,1.38,1.8,1.65,4.66.17,7.11-11.76,19.48-18.27,40.87-20.18,63.63-1.11,13.32-1,25.97.47,39.22l4.47,40.35,3.27,35.11c2.1,46.79-9.9,84.04-41.23,119.04l-31.83,31.68c-16.66,16.58-33.27,32.03-49.15,49.93Z"/>
+        <path d="M85.44,726.7c-.57,1.96-4.29.75-4.75-.14-.46-.9-1.45-1.97-1.59-3.79-1.88-26.24-6.71-51.55-14.62-76.77-6.1-19.45-13.91-37.34-21.68-56.12l-20.94-50.62c-7.1-19.64-12.76-38.92-16.71-59.48-12.15-63.26-3.05-125.73,29.35-181.94,20.46-35.5,48.51-65.38,81.93-88.71,2.46-1.72,4.83-2.07,7.1-.97,1.88.92,4.04,4.01,2.98,6.93-17.02,46.86-10.96,93.22,2.26,140.4l14.26,50.89c4.84,17.27,8.66,33.94,11.52,51.67,6.3,39.13,2.61,78.04-10.81,115.47l-21.41,52.69c-14.58,32.82-26.8,65.69-36.9,100.51Z"/>
+      </svg>
+      <div class="foot-line">Copia · Designed &amp; built by Garrison Bullock</div>
+      <div class="foot-line">© 2026 Garrison Bullock</div>
+    </footer>
+
+  </div>
+</body>
+</html>
