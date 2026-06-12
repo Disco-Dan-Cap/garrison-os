@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Korbel · Chalet Elixir — Case Study · Garrison Bullock</title>
+<meta name="description" content="Korbel 'Chalet Elixir': a 1960s alpine ski-resort concept rebrand, art-directed with DALL-E 2 and early Midjourney in 2023, then re-executed with 2026 AI tooling. Same art direction, three years of tools. A case study by Garrison Bullock.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* Chalet Elixir palette — pine, persimmon, cream */
+    --pine-deep:  #16382B;
+    --pine:       #1F5240;
+    --pine-mid:   #34604F;
+    --persimmon:  #E0622E;
+    --persimmon-deep: #B8481C;
+    --cream:      #F7F1E3;
+    --cream-warm: #F0E7D2;
+    --charcoal:   #1C1A17;
+
+    --hair: color-mix(in oklab, var(--pine) 30%, transparent);
+    --hair-soft: color-mix(in oklab, var(--pine) 14%, transparent);
+
+    --display: "Fraunces", Georgia, serif;
+    --sans: "Inter", -apple-system, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    position: relative;
+  }
+  /* faint paper grain, as on the Copia page */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 56px 48px 120px; position: relative; z-index: 1; }
+  @media (max-width: 700px) { .wrap { padding: 40px 22px 80px; } }
+
+  a { color: var(--pine); text-decoration: none; }
+  a:hover { color: var(--pine-deep); }
+
+  /* ── Masthead ── */
+  header.masthead {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap; padding-bottom: 28px; border-bottom: 1px solid var(--pine);
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand-mark { width: 38px; height: 38px; flex: none; }
+  .brand-name { font-family: var(--display); font-weight: 500; font-size: 27px; line-height: 0.95; color: var(--pine); }
+  .brand-sub { font-family: var(--mono); font-size: 10.5px; color: var(--pine-mid); text-transform: uppercase; letter-spacing: 0.16em; margin-top: 7px; }
+  .doc-meta { font-family: var(--mono); font-size: 10.5px; color: var(--pine-mid); text-transform: uppercase; letter-spacing: 0.14em; text-align: right; }
+  .doc-meta div + div { margin-top: 5px; }
+
+  /* ── Section frame ── */
+  .eyebrow { font-family: var(--mono); font-size: 11.5px; color: var(--persimmon-deep); text-transform: uppercase; letter-spacing: 0.18em; }
+  section { padding: 64px 0; border-top: 1px solid var(--hair); }
+  .sec-head { margin-bottom: 38px; }
+  .sec-title {
+    font-family: var(--display); font-weight: 500;
+    font-size: clamp(30px, 4.4vw, 46px); line-height: 1.06;
+    color: var(--pine-deep); margin: 16px 0 0; max-width: 20ch;
+  }
+
+  /* ── Hero ── */
+  .hero { padding: 60px 0 72px; }
+  @media (max-width: 760px) { .hero { padding: 40px 0 56px; } }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 38px; }
+  .chip {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--pine); border: 1px solid var(--hair); border-radius: 999px; padding: 7px 13px;
+    display: inline-flex; align-items: center; gap: 8px; background: var(--cream-warm);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: center; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; gap: 44px; } }
+  .hero-sentence {
+    font-family: var(--display); font-weight: 500;
+    font-size: clamp(32px, 5.2vw, 56px); line-height: 1.1;
+    color: var(--pine-deep); margin: 0;
+  }
+  .hero-sentence em { font-style: italic; font-weight: 400; color: var(--persimmon-deep); }
+
+  figure { margin: 0; }
+  .frame {
+    border-radius: 14px; overflow: hidden; background: var(--cream-warm);
+    border: 1px solid var(--hair-soft);
+    box-shadow: 0 18px 40px rgba(22,56,43,0.14), 0 4px 12px rgba(22,56,43,0.08);
+  }
+  .frame img { width: 100%; display: block; }
+  .fig-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--pine-mid); text-align: center; margin-top: 14px; }
+
+  /* ── At a glance ── */
+  .glance { display: grid; grid-template-columns: max-content 1fr; gap: 0 40px; max-width: 760px; }
+  @media (max-width: 560px) { .glance { grid-template-columns: 1fr; } }
+  .glance dt {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--pine-mid); padding: 18px 0; border-top: 1px solid var(--hair-soft); align-self: baseline;
+  }
+  .glance dd { margin: 0; padding: 18px 0; font-size: 17.5px; border-top: 1px solid var(--hair-soft); }
+  .glance dt:first-of-type, .glance dd:first-of-type { border-top: none; }
+  @media (max-width: 560px) {
+    .glance dt { padding: 16px 0 2px; border-top: 1px solid var(--hair-soft); }
+    .glance dd { padding: 2px 0 16px; border-top: none; }
+    .glance dt:first-of-type { border-top: none; }
+  }
+
+  .prose { font-size: 18px; line-height: 1.66; max-width: 64ch; }
+  .prose.lede { font-size: clamp(19px, 2.2vw, 22px); line-height: 1.6; max-width: 60ch; }
+  .prose strong { font-weight: 600; color: var(--pine-deep); }
+  .prose em { font-family: var(--display); font-style: italic; }
+
+  /* ── Then & Now pairs ── */
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+  @media (max-width: 640px) { .pair { grid-template-columns: 1fr; } }
+  .pair .frame.then { filter: saturate(0.96); }
+  .pair-note { margin: 26px 0 0; font-size: 17.5px; line-height: 1.62; max-width: 66ch; }
+  .then-now { padding: 44px 0; border-top: 1px solid var(--hair-soft); }
+  .then-now:first-of-type { border-top: none; padding-top: 8px; }
+  .tn-title { font-family: var(--sans); font-weight: 600; font-size: clamp(20px, 2.4vw, 24px); color: var(--pine-deep); margin: 0 0 20px; letter-spacing: -0.01em; }
+
+  /* ── Packaging system grid ── */
+  .pack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 640px) { .pack-grid { grid-template-columns: 1fr; } }
+  .pack-cell figcaption { margin-top: 12px; }
+  .pack-note { margin-top: 30px; font-size: 17.5px; line-height: 1.62; max-width: 66ch; }
+
+  /* ── Footer ── */
+  footer { margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--hair); display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+  .foot-line { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--pine-mid); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- ══════════ MASTHEAD ══════════ -->
+    <header class="masthead">
+      <div class="brand">
+        <!-- triangle pine/mountain mark from the label system -->
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <polygon points="13,4 24,40 2,40" fill="#1F5240"/>
+          <polygon points="29,14 38,40 20,40" fill="#E0622E"/>
+        </svg>
+        <div>
+          <div class="brand-name">Korbel · Chalet Elixir</div>
+          <div class="brand-sub">Concept Rebrand · Case Study</div>
+        </div>
+      </div>
+      <div class="doc-meta">
+        <div>Portfolio · Garrison Bullock</div>
+        <div>2023 → 2026</div>
+      </div>
+    </header>
+
+    <!-- ══════════ 01 · HERO ══════════ -->
+    <div class="hero">
+      <div class="chips">
+        <span class="chip">Concept rebrand</span>
+        <span class="chip">Art-directing AI since DALL·E 2</span>
+        <span class="chip">2023 → 2026</span>
+      </div>
+      <div class="hero-grid">
+        <p class="hero-sentence">A California champagne house, sent to a 1960s ski resort — designed twice with the same art direction, <em>three years of AI apart.</em></p>
+        <figure>
+          <div class="frame"><img src="assets/bottle-hero.webp" alt="The 2026 Chalet Elixir bottle hero: a champagne bottle standing in fresh snow with pine sprigs, its cream label wrapped in retro green-and-orange mountain artwork."></div>
+          <figcaption class="fig-label">2026 · Bottle hero</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ══════════ 02 · AT A GLANCE ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">02 — At a glance</div>
+        <h2 class="sec-title">At a glance</h2>
+      </div>
+      <dl class="glance">
+        <dt>Project</dt><dd>Self-initiated concept rebrand of Korbel California Champagne</dd>
+        <dt>Concept</dt><dd>"Chalet Elixir" — a 1960s alpine ski-resort world: pine green, persimmon, cream</dd>
+        <dt>Role</dt><dd>Art direction · brand &amp; packaging design · AI direction</dd>
+        <dt>2023 tools</dt><dd>DALL·E 2 · early Midjourney · Illustrator · Photoshop</dd>
+        <dt>2026 tools</dt><dd>Higgsfield (frontier image models) · code-drawn geometry · the same eye</dd>
+        <dt>Status</dt><dd>Concept / portfolio exploration — not affiliated with Korbel</dd>
+      </dl>
+    </section>
+
+    <!-- ══════════ 03 · THE SHORT VERSION ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">03 — The short version</div>
+        <h2 class="sec-title">The short version</h2>
+      </div>
+      <p class="prose lede">In February 2023 — when generative AI meant DALL·E 2 and a young Midjourney — I rebranded Korbel as a 1960s alpine resort pour: new label system, travel-poster campaign, packaging, even a champagne-tower hero shot. The direction held up. The tools didn't. Faces melted, signage came out as gibberish, and the bottle changed shape between frames. In 2026 I went back with modern models and re-executed the same art direction, shot for shot. Both versions live on this page, because the pairing <em>is</em> the story: the constant is the direction; the tools just caught up.</p>
+    </section>
+
+    <!-- ══════════ 04 · THE BRAND ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">04 — The brand</div>
+        <h2 class="sec-title">Chalet Elixir, the system</h2>
+      </div>
+      <p class="prose">Korbel's actual label whispers grocery store. The concept reframes it as a destination: a triangular pine-and-peak motif, a cream ground, persimmon and pine pulled from 1960s travel posters, and a script that belongs on a chairlift ticket. The 2023 label system below was hand-built in Illustrator — the part of the project no model could do then, and the part I'd still do by hand today.</p>
+      <figure style="margin-top:34px;">
+        <div class="frame"><img src="assets/old-label-system.webp" alt="The 2023 label system sheet: triangular pine and mountain motifs in green and orange on cream, with the Korbel Chalet Elixir script lockup."></div>
+        <figcaption class="fig-label">2023 · Label system (Illustrator, by hand)</figcaption>
+      </figure>
+      <figure style="margin-top:26px;">
+        <div class="frame"><img src="assets/old-before-after.webp" alt="Before and after: the original Korbel bottle next to the redesigned Chalet Elixir bottle with the triangle motif label."></div>
+        <figcaption class="fig-label">2023 · Before / after</figcaption>
+      </figure>
+    </section>
+
+    <!-- ══════════ 05 · THEN & NOW ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">05 — Then &amp; now</div>
+        <h2 class="sec-title">Same direction, three years of tools</h2>
+      </div>
+
+      <div class="then-now">
+        <h3 class="tn-title">The champagne tower</h3>
+        <div class="pair">
+          <figure>
+            <div class="frame then"><img src="assets/old-tower.webp" alt="The 2023 attempt: a Midjourney still from the prompt 'a video of a man climbing a tower of champagne glasses' — soft detail, ambiguous anatomy."></div>
+            <figcaption class="fig-label">2023 · Midjourney — prompted as a video, delivered as a still</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/tower.webp" alt="The 2026 version: a woman in a pine-green ski suit pours champagne atop a glass pyramid, halftone poster texture, correct hands, alpine chalet behind."></div>
+            <figcaption class="fig-label">2026 · Correct anatomy, halftone poster grain</figcaption>
+          </figure>
+        </div>
+        <p class="pair-note">The 2023 file is literally named <em>"a video of a man climbing a tower of champagne glasses."</em> I was prompting for video before video existed — the tool handed back a blurry still. The 2026 frame holds the pour, the hands, and the poster texture at the same time.</p>
+      </div>
+
+      <div class="then-now">
+        <h3 class="tn-title">The bottle</h3>
+        <div class="pair">
+          <figure>
+            <div class="frame then"><img src="assets/old-bottle.webp" alt="2023 bottle scene: the redesigned bottle rendered against snowy peaks — geometry drifting between takes."></div>
+            <figcaption class="fig-label">2023 · The bottle changed shape between frames</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/bottle-hero.webp" alt="2026 bottle hero: consistent bottle geometry, the mountain-art label crisp, snow and pine staging."></div>
+            <figcaption class="fig-label">2026 · One bottle, every shot</figcaption>
+          </figure>
+        </div>
+        <p class="pair-note">The 2026 label drops the badge that floated over the 2023 artwork — the mountain painting <em>is</em> the label now, with the script beneath it. Wordmarks stay vector; they're composited, never generated.</p>
+      </div>
+
+      <div class="then-now">
+        <h3 class="tn-title">The campaign world</h3>
+        <div class="pair">
+          <figure>
+            <div class="frame then"><img src="assets/old-cover.webp" alt="The 2023 campaign cover: a stylized alpine valley with the Korbel Chalet Elixir script across the sky."></div>
+            <figcaption class="fig-label">2023 · Campaign cover</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/poster.webp" alt="2026 travel poster: a flat mid-century illustration of skiers toasting on a chalet terrace, sky left clean for type."></div>
+            <figcaption class="fig-label">2026 · Poster, sky reserved for type</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 06 · PACKAGING ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">06 — Packaging</div>
+        <h2 class="sec-title">Follow the arrows</h2>
+      </div>
+      <p class="prose">The 2026 pass earned a packaging idea the 2023 tools couldn't draw: gift boxes shaped like ski-trail directional signs — routed white borders, black-diamond markers, an arrow that points somewhere worth going. Two tiers: a matte <strong>premium box</strong>, and a <strong>special-edition enameled tin</strong> with a vintage skier panel.</p>
+      <div class="pack-grid" style="margin-top:34px;">
+        <figure class="pack-cell">
+          <div class="frame"><img src="assets/arrow-box.webp" alt="The premium arrow box: a matte cream arrow-shaped gift box, open, with the champagne bottle in green tissue."></div>
+          <figcaption class="fig-label">Premium · Arrow gift box</figcaption>
+        </figure>
+        <figure class="pack-cell">
+          <div class="frame"><img src="assets/metal-tin.webp" alt="The special-edition tin: a glossy enameled arrow-shaped tin with a vintage skier illustration panel and silver rolled edges."></div>
+          <figcaption class="fig-label">Special edition · Enameled tin</figcaption>
+        </figure>
+        <figure class="pack-cell">
+          <div class="frame"><img src="assets/signpost.webp" alt="Retail display: arrow boxes mounted on a weathered wooden signpost in a wine shop, bottles standing in snow at the base."></div>
+          <figcaption class="fig-label">Retail · Signpost display</figcaption>
+        </figure>
+        <figure class="pack-cell">
+          <div class="frame"><img src="assets/slope.webp" alt="Campaign: an arrow box planted in slope-side snow at golden hour, pointing toward a glowing chalet, bottle and coupes beside it."></div>
+          <figcaption class="fig-label">Campaign · Slope-side</figcaption>
+        </figure>
+      </div>
+      <p class="pack-note">For contrast, the 2023 packaging pass: <a href="assets/old-packaging.webp" target="_blank" rel="noopener">boxes and bottles, February 2023</a> — right palette, wandering geometry.</p>
+    </section>
+
+    <!-- ══════════ 07 · WHAT THIS PROVES ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">07 — What this proves</div>
+        <h2 class="sec-title">The constant is the direction</h2>
+      </div>
+      <p class="prose">Anyone can prompt a pretty picture in 2026. The point of this page is the 2023 column: the palette, the era, the label system, and the shot list were all locked when the tools could barely hold a face together — and they were strong enough to survive three model generations unchanged. Art direction is the durable skill; the renderer is a line item. Where geometry must be perfect — wordmarks, label vectors, flat patterns — it's still drawn, not generated.</p>
+    </section>
+
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer>
+      <div class="foot-line">Chalet Elixir · Concept by Garrison Bullock · Not affiliated with Korbel</div>
+      <div class="foot-line">© 2026 Garrison Bullock</div>
+    </footer>
+
+  </div>
+</body>
+</html>

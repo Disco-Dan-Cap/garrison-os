@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(node --check /tmp/check.js)",
+      "Bash(ls ~/.cache/ms-playwright)",
+      "Bash(which chromium *)",
+      "Bash(ls \"/Applications/Google Chrome.app\")",
+      "Bash(node -e \"require.resolve\\('playwright'\\)\")",
+      "Bash(rm -f __tmp_preview*.html __shot_*.png)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(node --check /tmp/check2.js)",
+      "Bash(rm -f __tmp_*.html __shot_*.png)",
+      "Bash(open \"index.html\")",
+      "Bash(rm -f __tmp_*.html __tmp_*.py __shot_*.png)",
+      "Bash(sips -c 220 760 --cropOffset 680 140 __shot_verify.png --out __crop_report.png)",
+      "Bash(sips -c 120 360 --cropOffset 780 1080 __shot_verify.png --out __crop_pill.png)",
+      "Bash(sips -c 78 580 --cropOffset 818 0 __shot_verify.png --out __crop_report.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight __crop_report.png)",
+      "Bash(rm -f __tmp_*.html __mk*.py __shot_*.png __crop_*.png)",
+      "Bash(node --check /tmp/c.js)",
+      "Bash(sips -g pixelWidth -g pixelHeight assets/copia/preview-trio.png)",
+      "Bash(sips -g pixelHeight -g pixelWidth __shot_copia.png)",
+      "Bash(sips -c 170 620 --cropOffset 380 460 __shot_copia.png --out __crop_copia3.png)",
+      "Bash(rm -f __tmp_*.html __shot_*.png __crop_*.png)",
+      "Bash(git push *)"
+    ]
+  }
+}

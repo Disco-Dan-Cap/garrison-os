@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alani Nu · No Brainer — Case Study · Garrison Bullock</title>
+<meta name="description" content="Ideas for Alani Nu's art direction: a nootropic line concept ('it's a no brainer') pitched with market research in 2023, art-directed with DALL-E 2 and early Midjourney, then re-executed with 2026 AI tooling. A case study by Garrison Bullock.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* No Brainer palette — orange, teal, bubblegum */
+    --orange:      #F4861F;
+    --orange-deep: #C95E0A;
+    --teal:        #19B79B;
+    --teal-deep:   #0E7A68;
+    --pink:        #F472B6;
+    --pink-deep:   #C2417E;
+    --cream:       #FFF7EC;
+    --cream-warm:  #FBEDD8;
+    --charcoal:    #211C18;
+
+    --hair: color-mix(in oklab, var(--orange-deep) 32%, transparent);
+    --hair-soft: color-mix(in oklab, var(--orange-deep) 15%, transparent);
+
+    --display: "Archivo", "Inter", system-ui, sans-serif;
+    --sans: "Inter", -apple-system, system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    position: relative;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 56px 48px 120px; position: relative; z-index: 1; }
+  @media (max-width: 700px) { .wrap { padding: 40px 22px 80px; } }
+
+  a { color: var(--teal-deep); text-decoration: none; }
+  a:hover { color: var(--charcoal); }
+
+  /* ── Masthead ── */
+  header.masthead {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap; padding-bottom: 28px; border-bottom: 1px solid var(--orange-deep);
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand-mark { width: 38px; height: 38px; flex: none; border-radius: 9px; overflow: hidden; }
+  .brand-name { font-family: var(--display); font-weight: 800; font-size: 25px; line-height: 0.95; color: var(--orange-deep); letter-spacing: -0.01em; }
+  .brand-sub { font-family: var(--mono); font-size: 10.5px; color: var(--teal-deep); text-transform: uppercase; letter-spacing: 0.16em; margin-top: 7px; }
+  .doc-meta { font-family: var(--mono); font-size: 10.5px; color: var(--teal-deep); text-transform: uppercase; letter-spacing: 0.14em; text-align: right; }
+  .doc-meta div + div { margin-top: 5px; }
+
+  /* ── Section frame ── */
+  .eyebrow { font-family: var(--mono); font-size: 11.5px; color: var(--pink-deep); text-transform: uppercase; letter-spacing: 0.18em; }
+  section { padding: 64px 0; border-top: 1px solid var(--hair); }
+  .sec-head { margin-bottom: 38px; }
+  .sec-title {
+    font-family: var(--display); font-weight: 700; letter-spacing: -0.015em;
+    font-size: clamp(30px, 4.4vw, 46px); line-height: 1.04;
+    color: var(--charcoal); margin: 16px 0 0; max-width: 20ch;
+  }
+
+  /* ── Hero ── */
+  .hero { padding: 60px 0 72px; }
+  @media (max-width: 760px) { .hero { padding: 40px 0 56px; } }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 38px; }
+  .chip {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--orange-deep); border: 1px solid var(--hair); border-radius: 999px; padding: 7px 13px;
+    display: inline-flex; align-items: center; gap: 8px; background: var(--cream-warm);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: center; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; gap: 44px; } }
+  .hero-sentence {
+    font-family: var(--display); font-weight: 800; letter-spacing: -0.02em;
+    font-size: clamp(32px, 5.2vw, 56px); line-height: 1.06;
+    color: var(--charcoal); margin: 0;
+  }
+  .hero-sentence .hl-orange { color: var(--orange-deep); }
+  .hero-sentence .hl-pink { color: var(--pink-deep); }
+
+  figure { margin: 0; }
+  .frame {
+    border-radius: 14px; overflow: hidden; background: var(--cream-warm);
+    border: 1px solid var(--hair-soft);
+    box-shadow: 0 18px 40px rgba(201,94,10,0.13), 0 4px 12px rgba(201,94,10,0.08);
+  }
+  .frame img { width: 100%; display: block; }
+  .fig-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--teal-deep); text-align: center; margin-top: 14px; }
+
+  /* ── At a glance ── */
+  .glance { display: grid; grid-template-columns: max-content 1fr; gap: 0 40px; max-width: 760px; }
+  @media (max-width: 560px) { .glance { grid-template-columns: 1fr; } }
+  .glance dt {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--teal-deep); padding: 18px 0; border-top: 1px solid var(--hair-soft); align-self: baseline;
+  }
+  .glance dd { margin: 0; padding: 18px 0; font-size: 17.5px; border-top: 1px solid var(--hair-soft); }
+  .glance dt:first-of-type, .glance dd:first-of-type { border-top: none; }
+  @media (max-width: 560px) {
+    .glance dt { padding: 16px 0 2px; border-top: 1px solid var(--hair-soft); }
+    .glance dd { padding: 2px 0 16px; border-top: none; }
+    .glance dt:first-of-type { border-top: none; }
+  }
+
+  .prose { font-size: 18px; line-height: 1.66; max-width: 64ch; }
+  .prose.lede { font-size: clamp(19px, 2.2vw, 22px); line-height: 1.6; max-width: 60ch; }
+  .prose strong { font-weight: 600; }
+
+  /* ── Research findings ── */
+  .findings { display: grid; gap: 30px; max-width: 70ch; }
+  .finding { display: grid; gap: 4px; }
+  .finding b { font-weight: 700; color: var(--orange-deep); font-size: 19px; }
+  .finding span { font-size: 17.5px; line-height: 1.6; }
+
+  /* ── Then & Now pairs ── */
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+  @media (max-width: 640px) { .pair { grid-template-columns: 1fr; } }
+  .pair-note { margin: 26px 0 0; font-size: 17.5px; line-height: 1.62; max-width: 66ch; }
+  .then-now { padding: 44px 0; border-top: 1px solid var(--hair-soft); }
+  .then-now:first-of-type { border-top: none; padding-top: 8px; }
+  .tn-title { font-family: var(--display); font-weight: 700; font-size: clamp(20px, 2.4vw, 24px); color: var(--charcoal); margin: 0 0 20px; letter-spacing: -0.01em; }
+
+  /* ── Footer ── */
+  footer { margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--hair); display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+  .foot-line { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--teal-deep); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- ══════════ MASTHEAD ══════════ -->
+    <header class="masthead">
+      <div class="brand">
+        <!-- checkerboard mark -->
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <rect width="40" height="40" fill="#F4861F"/>
+          <rect x="0" y="0" width="10" height="10" fill="#FFD9A0"/><rect x="20" y="0" width="10" height="10" fill="#FFD9A0"/>
+          <rect x="10" y="10" width="10" height="10" fill="#FFD9A0"/><rect x="30" y="10" width="10" height="10" fill="#FFD9A0"/>
+          <rect x="0" y="20" width="10" height="10" fill="#FFD9A0"/><rect x="20" y="20" width="10" height="10" fill="#FFD9A0"/>
+          <rect x="10" y="30" width="10" height="10" fill="#FFD9A0"/><rect x="30" y="30" width="10" height="10" fill="#FFD9A0"/>
+        </svg>
+        <div>
+          <div class="brand-name">Alani Nu · No Brainer</div>
+          <div class="brand-sub">Concept Pitch · Case Study</div>
+        </div>
+      </div>
+      <div class="doc-meta">
+        <div>Portfolio · Garrison Bullock</div>
+        <div>2023 → 2026</div>
+      </div>
+    </header>
+
+    <!-- ══════════ 01 · HERO ══════════ -->
+    <div class="hero">
+      <div class="chips">
+        <span class="chip">Unsolicited concept pitch</span>
+        <span class="chip">Research-led</span>
+        <span class="chip">2023 → 2026</span>
+      </div>
+      <div class="hero-grid">
+        <p class="hero-sentence">A nootropic line for Alani Nu — because for a brand built on energy, entering the <span class="hl-orange">calm-energy</span> aisle is, well, <span class="hl-pink">a no brainer.</span></p>
+        <figure>
+          <div class="frame"><img src="assets/can-hero.webp" alt="The 2026 can hero: a slim orange-and-cream checkered can floating over a mathematically perfect checkerboard backdrop."></div>
+          <figcaption class="fig-label">2026 · Can hero</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ══════════ 02 · AT A GLANCE ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">02 — At a glance</div>
+        <h2 class="sec-title">At a glance</h2>
+      </div>
+      <dl class="glance">
+        <dt>Project</dt><dd>Unsolicited art-direction pitch: a nootropic beverage line for Alani Nu</dd>
+        <dt>Concept</dt><dd>"Alani Tronic — it's a no brainer." Pop-art comics meet retro pool-party Americana</dd>
+        <dt>Role</dt><dd>Market research · concept · art direction · AI direction</dd>
+        <dt>2023 tools</dt><dd>DALL·E 2 · early Midjourney · Illustrator · Photoshop</dd>
+        <dt>2026 tools</dt><dd>Higgsfield (frontier image models) · code-drawn checkerboards · the same eye</dd>
+        <dt>Status</dt><dd>Concept / portfolio exploration — not affiliated with Alani Nu</dd>
+      </dl>
+    </section>
+
+    <!-- ══════════ 03 · THE SHORT VERSION ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">03 — The short version</div>
+        <h2 class="sec-title">The short version</h2>
+      </div>
+      <p class="prose lede">This started as strategy, not pictures: the data said younger drinkers were trading alcohol for functional beverages, and Alani Nu had no offer in the space. I built the case, named the line, and art-directed a brand world with the AI tools of early 2023 — pink brains, checkered cans, a cloud-tiled dream room. In 2026 I re-executed the same shots with modern models. Both generations are on this page; the strategy didn't need updating.</p>
+    </section>
+
+    <!-- ══════════ 04 · THE RESEARCH ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">04 — The research</div>
+        <h2 class="sec-title">Why a nootropic line (2023)</h2>
+      </div>
+      <div class="findings">
+        <div class="finding"><b>The generational shift is real.</b><span>Berenberg Research: Gen Z drinks ~20% less per capita than millennials — who already drink less than Gen X and Boomers did at the same age.</span></div>
+        <div class="finding"><b>The category is compounding.</b><span>Consumer demand for non-alcoholic drinks was up +18% quarter-over-quarter and +5% year-over-year.</span></div>
+        <div class="finding"><b>The benefit fits the brand.</b><span>Adaptogens and nootropics promise reduced stress and clean energy without a hangover — adjacent to Alani Nu's core promise, new aisle.</span></div>
+      </div>
+    </section>
+
+    <!-- ══════════ 05 · THEN & NOW ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">05 — Then &amp; now</div>
+        <h2 class="sec-title">Same direction, three years of tools</h2>
+      </div>
+
+      <div class="then-now">
+        <h3 class="tn-title">The can</h3>
+        <div class="pair">
+          <figure>
+            <div class="frame"><img src="assets/old-can.webp" alt="The 2023 can render: a checkered orange can floating over an orange checkerboard — soft edges, drifting pattern."></div>
+            <figcaption class="fig-label">2023 · The checker drifts if you look closely</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/can-hero.webp" alt="The 2026 can hero: crisp checkered can over a mathematically perfect code-drawn checkerboard."></div>
+            <figcaption class="fig-label">2026 · AI can · code-drawn checkerboard</figcaption>
+          </figure>
+        </div>
+        <p class="pair-note">The 2026 backdrop isn't generated at all. Models still fumble large flat patterns, so the can is AI, cut out, and recomposited over a checkerboard <strong>drawn in code</strong> — colors and square size sampled from the render, grain matched. AI for the subject; code for the geometry.</p>
+      </div>
+
+      <div class="then-now">
+        <h3 class="tn-title">The comic spot</h3>
+        <div class="pair">
+          <figure>
+            <div class="frame"><img src="assets/old-comic.webp" alt="2023 comic concept: the thought-bubble logo and a pink DALL-E 2 brain on a comic-book pink background."></div>
+            <figcaption class="fig-label">2023 · DALL·E 2 brain, mushy halftones</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/comic.webp" alt="2026 comic spot: a crisp Ben-Day pop-art brain and checkered can with an empty burst bubble reserved for the wordmark."></div>
+            <figcaption class="fig-label">2026 · Ben-Day dots, bubble reserved for type</figcaption>
+          </figure>
+        </div>
+        <p class="pair-note">The burst bubble is generated <em>empty</em> on purpose — "it's a no brainer" gets set in type and composited, because lettering belongs to the designer, not the model.</p>
+      </div>
+
+      <div class="then-now">
+        <h3 class="tn-title">The dream room</h3>
+        <div class="pair">
+          <figure>
+            <div class="frame"><img src="assets/old-room.webp" alt="2023 NuBrainer room: a blue cloud-tiled room with a red halftone brain — warped tiles, wobbly perspective."></div>
+            <figcaption class="fig-label">2023 · Wobbly tiles, charming anyway</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/room.webp" alt="2026 dream room: the same cloud-tile room rebuilt with square tiles and correct single-point perspective."></div>
+            <figcaption class="fig-label">2026 · Square tiles, single-point perspective</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="then-now">
+        <h3 class="tn-title">The lifestyle world</h3>
+        <div class="pair">
+          <figure>
+            <div class="frame"><img src="assets/inspo.webp" alt="The 2023 inspiration grid: saturated retro pool-party photography — checkered floats, flowers in turquoise water."></div>
+            <figcaption class="fig-label">2023 · The inspiration board</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/pool.webp" alt="2026 lifestyle photo: friends on a checkered float holding checkered cans, orange flowers in turquoise water, Kodachrome saturation."></div>
+            <figcaption class="fig-label">2026 · The board, shot for real (almost)</figcaption>
+          </figure>
+        </div>
+        <p class="pair-note">In 2023 this could only exist as a moodboard of found photos. In 2026 the board became an original campaign image — correct faces, correct hands, the brand's own cans in frame.</p>
+      </div>
+    </section>
+
+    <!-- ══════════ 06 · WHAT THIS PROVES ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">06 — What this proves</div>
+        <h2 class="sec-title">Strategy first, tools second</h2>
+      </div>
+      <p class="prose">The pitch led with Berenberg data, not pictures — the imagery existed to make a market argument feel inevitable. That's the job: research → positioning → a world you can see. The 2023/2026 pairs add the third proof: the direction was strong enough to survive three model generations untouched, and the craft judgment — what to generate, what to draw, where type belongs — is the part no model supplies.</p>
+    </section>
+
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer>
+      <div class="foot-line">No Brainer · Concept by Garrison Bullock · Not affiliated with Alani Nu</div>
+      <div class="foot-line">© 2026 Garrison Bullock</div>
+    </footer>
+
+  </div>
+</body>
+</html>
