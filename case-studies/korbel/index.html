@@ -132,6 +132,10 @@
   .then-now:first-of-type { border-top: none; padding-top: 8px; }
   .tn-title { font-family: var(--sans); font-weight: 600; font-size: clamp(20px, 2.4vw, 24px); color: var(--pine-deep); margin: 0 0 20px; letter-spacing: -0.01em; }
 
+  /* full-width stacked campaign gallery */
+  .campaign-stack { display: grid; gap: 30px; }
+  .campaign-stack figure { margin: 0; }
+
   /* ── Packaging system grid ── */
   .pack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
   @media (max-width: 640px) { .pack-grid { grid-template-columns: 1fr; } }
@@ -260,14 +264,22 @@
 
       <div class="then-now">
         <h3 class="tn-title">The campaign world</h3>
-        <div class="pair">
+        <div class="campaign-stack">
           <figure>
-            <div class="frame"><img src="assets/old-cover.webp" alt="The 2023 campaign cover: a stylized alpine valley with the Korbel Chalet Elixir script across the sky."></div>
-            <figcaption class="fig-label">2023</figcaption>
+            <div class="frame"><img src="assets/camp-car.webp" alt="A weathered vintage sports car — repainted green over its original orange, paint peeling to reveal it — loaded with skis and a champagne crate, parked by a Korbel Chalet Elixir trail signpost on a snowy pass, bottle in the foreground."></div>
+            <figcaption class="fig-label">The arrival</figcaption>
           </figure>
           <figure>
-            <div class="frame"><img src="assets/poster.webp" alt="2026 travel poster: a flat mid-century illustration of skiers toasting on a chalet terrace."></div>
-            <figcaption class="fig-label">2026</figcaption>
+            <div class="frame"><img src="assets/camp-gondola.webp" alt="A retro photo-collage of a mid-mountain terrace party with diagonal green-and-orange stripe bands and an orange Korbel gondola arriving."></div>
+            <figcaption class="fig-label">On the mountain</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/camp-chalet-textured.webp" alt="A heavily screen-printed retro travel-poster of an apres-ski party on a chalet terrace, halftone texture and faded inks."></div>
+            <figcaption class="fig-label">Aprés-ski · poster</figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="assets/camp-chalet.webp" alt="A clean mid-century illustration of an apres-ski terrace party in green and orange ski wear against snowy peaks."></div>
+            <figcaption class="fig-label">Aprés-ski · illustration</figcaption>
           </figure>
         </div>
       </div>
