@@ -137,6 +137,10 @@
   .then-now:first-of-type { border-top: none; padding-top: 8px; }
   .tn-title { font-family: var(--display); font-weight: 700; font-size: clamp(20px, 2.4vw, 24px); color: var(--charcoal); margin: 0 0 20px; letter-spacing: -0.01em; }
 
+  /* full-width stacked gallery */
+  .campaign-stack { display: grid; gap: 30px; }
+  .campaign-stack figure { margin: 0; }
+
   /* ── Footer ── */
   footer { margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--hair); display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
   .foot-line { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--teal-deep); }
@@ -223,23 +227,15 @@
 
     <!-- ══════════ 05 · THE WORK ══════════ -->
     <section>
-      <div class="sec-head">
-        <div class="eyebrow">05 — The work</div>
-        <h2 class="sec-title">No Brainer, then and now</h2>
-      </div>
-
-      <div class="then-now">
-        <h3 class="tn-title">The can</h3>
-        <div class="pair">
-          <figure>
-            <div class="frame"><img src="assets/old-can.webp" alt="The 2023 can render: a checkered orange can over an orange checkerboard."></div>
-            <figcaption class="fig-label">2023</figcaption>
-          </figure>
-          <figure>
-            <div class="frame"><img src="assets/can-hero.webp" alt="The 2026 can hero: crisp checkered can over a code-drawn checkerboard."></div>
-            <figcaption class="fig-label">2026</figcaption>
-          </figure>
-        </div>
+      <div class="campaign-stack" style="margin-bottom:44px;">
+        <figure>
+          <div class="frame"><img src="assets/can-hero.webp" alt="The can hero: a slim orange-and-cream checkered can floating over a mathematically perfect checkerboard backdrop."></div>
+          <figcaption class="fig-label">Can hero</figcaption>
+        </figure>
+        <figure>
+          <div class="frame"><img src="assets/can-family.webp" alt="The can family: four cans in orange, mint green, light blue and hot pink checkerboard colorways on white."></div>
+          <figcaption class="fig-label">The flavor family</figcaption>
+        </figure>
       </div>
 
       <div class="then-now">
