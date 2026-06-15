@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disco Capital — a16z Speedrun SR007 · Pitch Deck v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-app: #0D0E11;
+  --bg-card: #151618;
+  --bg-card-elevated: #1E1F23;
+  --green-500: #00E87B;
+  --green-400: #33FF99;
+  --green-glow: rgba(0, 232, 123, 0.25);
+  --green-glow-strong: rgba(0, 232, 123, 0.40);
+  --cyan-500: #00D4FF;
+  --cyan-glow: rgba(0, 212, 255, 0.25);
+  --purple-500: #8B5CF6;
+  --violet-500: #A855F7;
+  --pink-500: #FF3B7A;
+  --pink-glow: rgba(255, 59, 122, 0.30);
+  --yellow-500: #FBBF24;
+  --lime-500: #84CC16;
+  --text-primary: #FFFFFF;
+  --text-secondary: #9CA3AF;
+  --text-tertiary: #6B7280;
+  --border: rgba(255,255,255,0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+.deck { height: 100vh; width: 100vw; position: relative; }
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  padding: 60px 80px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.slide.active { display: flex; opacity: 1; }
+.slide::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 60vw; height: 60vh;
+  background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.4;
+  z-index: 0;
+}
+.slide-content { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+h1 { font-size: 96px; font-weight: 800; line-height: 1.0; letter-spacing: -0.04em; margin-bottom: 24px; }
+h2 { font-size: 64px; font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 24px; }
+h3 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.16em;
+  color: var(--green-500); text-shadow: 0 0 12px var(--green-glow);
+  text-transform: uppercase; margin-bottom: 24px;
+}
+.lead { font-size: 24px; line-height: 1.5; color: var(--text-secondary); max-width: 800px; margin-bottom: 32px; }
+.body-text { font-size: 18px; line-height: 1.6; color: var(--text-secondary); }
+.accent-green { color: var(--green-500); text-shadow: 0 0 12px var(--green-glow); }
+.accent-pink { color: var(--pink-500); text-shadow: 0 0 12px var(--pink-glow); }
+.accent-cyan { color: var(--cyan-500); }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+.deck-nav {
+  position: fixed;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--text-secondary); z-index: 100;
+  background: rgba(21, 22, 24, 0.85);
+  backdrop-filter: blur(20px);
+  padding: 12px 24px; border-radius: 999px;
+  border: 1px solid var(--border);
+}
+.nav-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-primary); width: 32px; height: 32px;
+  border-radius: 50%; cursor: pointer; font-size: 14px;
+  transition: all 0.2s;
+}
+.nav-btn:hover { border-color: var(--green-500); color: var(--green-500); }
+
+/* SLIDE 1 — Title + Thesis (DAANI's structural decision, neon-pink theme) */
+.slide-title {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.slide-title::before {
+  background: radial-gradient(circle, var(--pink-glow) 0%, transparent 70%);
+  opacity: 0.6;
+}
+.slide-title .slide-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.slide-title .logo-mark {
+  width: 220px;
+  height: 220px;
+  color: var(--pink-500);
+  margin-bottom: 24px;
+  filter:
+    drop-shadow(0 0 16px rgba(255, 59, 122, 0.55))
+    drop-shadow(0 0 40px rgba(255, 59, 122, 0.35))
+    drop-shadow(0 0 80px rgba(255, 59, 122, 0.25));
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+.slide-title .logo-mark svg { width: 100%; height: 100%; display: block; }
+@keyframes pulse-glow {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 16px rgba(255, 59, 122, 0.55))
+      drop-shadow(0 0 40px rgba(255, 59, 122, 0.35))
+      drop-shadow(0 0 80px rgba(255, 59, 122, 0.25));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 24px rgba(255, 59, 122, 0.75))
+      drop-shadow(0 0 60px rgba(255, 59, 122, 0.5))
+      drop-shadow(0 0 120px rgba(255, 59, 122, 0.35));
+  }
+}
+.slide-title .brand {
+  font-size: 96px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--pink-500);
+  text-shadow:
+    0 0 12px rgba(255, 59, 122, 0.5),
+    0 0 40px rgba(255, 59, 122, 0.3),
+    0 0 80px rgba(255, 59, 122, 0.2);
+  margin-bottom: 24px;
+}
+.slide-title .tagline {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 760px;
+  line-height: 1.5;
+  margin-bottom: 40px;
+}
+.slide-title .thesis-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 59, 122, 0.4);
+  border-radius: 16px;
+  padding: 24px 36px;
+  max-width: 700px;
+  margin-bottom: 40px;
+  box-shadow: 0 0 60px rgba(255, 59, 122, 0.25);
+}
+.slide-title .thesis-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--pink-500);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.slide-title .thesis-text {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+.slide-title .thesis-text .arch {
+  color: var(--pink-500);
+  text-shadow: 0 0 12px rgba(255, 59, 122, 0.5);
+}
+.slide-title .meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+  line-height: 1.8;
+}
+.slide-title .meta .highlight {
+  color: var(--pink-500);
+  text-shadow: 0 0 8px rgba(255, 59, 122, 0.4);
+}
+
+/* SLIDE 2 — Problem: Human Consequence */
+.human-consequence-layout {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.human-consequence-layout h2 {
+  font-size: 72px; max-width: 1000px; line-height: 1.05;
+}
+.human-consequence-layout h2 .strike {
+  color: var(--text-tertiary);
+  text-decoration: line-through;
+  text-decoration-color: var(--pink-500);
+  text-decoration-thickness: 4px;
+}
+.human-consequence-layout .lead {
+  text-align: center; margin-top: 32px; font-size: 26px;
+  max-width: 900px; color: var(--text-secondary);
+}
+.human-consequence-layout .closer {
+  margin-top: 48px;
+  padding: 32px 48px;
+  background: rgba(255, 59, 122, 0.08);
+  border: 1px solid rgba(255, 59, 122, 0.3);
+  border-radius: 16px;
+  max-width: 900px;
+  font-size: 26px; font-weight: 600; line-height: 1.4;
+  color: var(--text-primary);
+}
+.human-consequence-layout .closer .accent-pink {
+  font-weight: 700;
+}
+
+/* SLIDE 3 — Problem: Macro Context */
+.compare-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 32px; margin-top: 32px;
+}
+.compare-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px;
+}
+.compare-card .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.16em;
+  color: var(--text-tertiary); margin-bottom: 16px; text-transform: uppercase;
+}
+.compare-card.then { border-color: rgba(0, 232, 123, 0.3); }
+.compare-card.then .label { color: var(--green-500); }
+.compare-card.now { border-color: rgba(255, 59, 122, 0.3); }
+.compare-card.now .label { color: var(--pink-500); }
+.compare-card .data-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.compare-card .data-row:last-of-type { border-bottom: none; }
+.compare-card .data-name { font-size: 18px; font-weight: 500; }
+.compare-card .data-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; font-weight: 700;
+}
+.compare-card.then .data-value { color: var(--green-500); }
+.compare-card.now .data-value { color: var(--pink-500); }
+.compare-card .footer {
+  margin-top: 16px; font-size: 14px; color: var(--text-secondary); font-style: italic;
+}
+.macro-takeaway {
+  margin-top: 40px;
+  font-size: 24px; text-align: center; line-height: 1.5;
+  max-width: 1000px; margin-left: auto; margin-right: auto;
+  color: var(--text-primary);
+}
+
+/* SLIDE 4 — Solution (architecture-first, DAANI's framing) */
+.solution-hero {
+  text-align: center; padding: 40px 0;
+}
+.solution-hero .key-insight {
+  font-size: 56px; font-weight: 800; line-height: 1.1;
+  letter-spacing: -0.03em; max-width: 1000px;
+  margin: 0 auto 40px; background: linear-gradient(135deg, var(--text-primary), var(--green-500));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.solution-architecture {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 232, 123, 0.3);
+  border-radius: 20px; padding: 40px 48px;
+  max-width: 900px; margin: 0 auto;
+  text-align: left;
+}
+.solution-architecture .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+  color: var(--green-500); margin-bottom: 16px; text-transform: uppercase;
+}
+.solution-architecture .statement {
+  font-size: 26px; line-height: 1.5; font-weight: 500;
+  color: var(--text-primary);
+}
+.solution-architecture .statement strong {
+  color: var(--green-500); font-weight: 700;
+}
+
+/* SLIDE 5 — Mechanic (4-step flow) */
+.mechanic-flow {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 20px; margin-top: 40px;
+}
+.mechanic-step {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px; position: relative;
+}
+.mechanic-step .step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px; font-weight: 700;
+  color: var(--green-500);
+  text-shadow: 0 0 12px var(--green-glow);
+  margin-bottom: 12px; line-height: 1;
+}
+.mechanic-step .step-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.mechanic-step .step-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+.mechanic-closer {
+  margin-top: 40px; padding: 20px 32px;
+  background: rgba(0, 232, 123, 0.08);
+  border-left: 3px solid var(--green-500); border-radius: 8px;
+  font-size: 20px; font-weight: 600;
+}
+
+/* SLIDE 6 — Product (lean, DAANI's approach) */
+.product-grid-lean {
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 16px; margin-top: 32px;
+}
+.product-screen {
+  aspect-ratio: 9/16;
+  background: var(--bg-card); border-radius: 16px;
+  padding: 12px; border: 1px solid var(--border);
+}
+.product-screen.featured { box-shadow: 0 0 40px var(--green-glow); aspect-ratio: 9/14; }
+.screenshot-placeholder {
+  width: 100%; height: 100%;
+  background: var(--bg-card-elevated);
+  border: 2px dashed var(--text-tertiary);
+  border-radius: 12px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: var(--text-tertiary); text-align: center; padding: 16px;
+}
+.screenshot-placeholder .icon { font-size: 36px; margin-bottom: 8px; }
+.screenshot-placeholder .caption { font-size: 12px; line-height: 1.4; }
+.product-screenshot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  display: block;
+}
+.product-caption {
+  margin-top: 24px; text-align: center;
+  font-size: 17px; color: var(--text-secondary);
+}
+.product-caption .live {
+  display: inline-block; padding: 4px 12px;
+  background: rgba(0, 232, 123, 0.15);
+  color: var(--green-500); border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  font-weight: 600; letter-spacing: 0.1em; margin-right: 8px;
+}
+
+/* SLIDE 7 — The Blend Feature */
+.blend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}
+.blend-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+}
+.blend-card.incoming { border-color: rgba(0, 232, 123, 0.3); }
+.blend-card.outgoing { border-color: rgba(255, 59, 122, 0.3); }
+.blend-card.composition { border-color: rgba(168, 85, 247, 0.3); }
+.blend-icon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 18px;
+}
+.blend-card.incoming .blend-icon { color: var(--green-500); text-shadow: 0 0 16px var(--green-glow); }
+.blend-card.outgoing .blend-icon { color: var(--pink-500); text-shadow: 0 0 16px var(--pink-glow); }
+.blend-card.composition .blend-icon { color: var(--violet-500); text-shadow: 0 0 16px rgba(168, 85, 247, 0.35); }
+.blend-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.blend-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.blend-closer {
+  margin-top: 36px;
+  padding: 20px 32px;
+  background: rgba(0, 232, 123, 0.08);
+  border-left: 3px solid var(--green-500);
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* SLIDE 8 — Market */
+.market-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 24px; margin-top: 40px;
+}
+.market-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px; text-align: center;
+}
+.market-card.tam { border-color: rgba(0, 232, 123, 0.3); }
+.market-card.sam { border-color: rgba(0, 212, 255, 0.3); }
+.market-card.som { border-color: rgba(168, 85, 247, 0.3); }
+.market-card .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.2em; margin-bottom: 16px;
+}
+.market-card.tam .label { color: var(--green-500); }
+.market-card.sam .label { color: var(--cyan-500); }
+.market-card.som .label { color: var(--violet-500); }
+.market-card .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px; font-weight: 800;
+  margin-bottom: 12px; line-height: 1;
+}
+.market-card.tam .value { color: var(--green-500); text-shadow: 0 0 16px var(--green-glow); }
+.market-card.sam .value { color: var(--cyan-500); text-shadow: 0 0 16px var(--cyan-glow); }
+.market-card.som .value { color: var(--violet-500); }
+.market-card .desc { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+.market-footer {
+  margin-top: 32px; padding: 20px;
+  background: var(--bg-card); border-radius: 12px;
+  border: 1px solid var(--border);
+  font-size: 16px; color: var(--text-secondary); text-align: center;
+}
+.market-footer strong { color: var(--green-500); }
+
+/* SLIDE 8 — Moat Part 1 (Relationships + Equity, DAANI's split) */
+.moat-detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 32px; margin-top: 32px;
+}
+.moat-detail-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px;
+}
+.moat-detail-card.one { border-color: rgba(0, 232, 123, 0.3); }
+.moat-detail-card.two { border-color: rgba(0, 212, 255, 0.3); }
+.moat-detail-card .moat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 60px; font-weight: 800; line-height: 1;
+  margin-bottom: 16px;
+}
+.moat-detail-card.one .moat-num { color: var(--green-500); text-shadow: 0 0 16px var(--green-glow); }
+.moat-detail-card.two .moat-num { color: var(--cyan-500); text-shadow: 0 0 16px var(--cyan-glow); }
+.moat-detail-card .moat-title {
+  font-size: 26px; font-weight: 700;
+  margin-bottom: 16px; letter-spacing: -0.01em;
+}
+.moat-detail-card .moat-desc {
+  font-size: 16px; color: var(--text-secondary); line-height: 1.6;
+}
+.moat-detail-card .moat-key {
+  margin-top: 20px; padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--green-500);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  font-weight: 700;
+}
+.moat-detail-card.two .moat-key { color: var(--cyan-500); }
+
+/* SLIDE 9 — Moat Part 2 (Regulatory + visual timeline) */
+.regulatory-layout {
+  display: flex; flex-direction: column;
+}
+.regulatory-card {
+  background: var(--bg-card); border: 1px solid rgba(255, 59, 122, 0.3);
+  border-radius: 20px; padding: 32px 40px; margin-bottom: 40px;
+}
+.regulatory-card .moat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 60px; font-weight: 800; line-height: 1;
+  color: var(--pink-500);
+  text-shadow: 0 0 16px var(--pink-glow);
+  margin-bottom: 12px;
+}
+.regulatory-card .moat-title {
+  font-size: 28px; font-weight: 700; margin-bottom: 16px;
+}
+.regulatory-card .moat-desc {
+  font-size: 16px; color: var(--text-secondary); line-height: 1.6;
+}
+.timeline-wrapper {
+  background: var(--bg-card-elevated);
+  border-radius: 16px; padding: 32px 40px;
+  border: 1px solid var(--border);
+}
+.timeline-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+  color: var(--pink-500); margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 24px; left: 12px; right: 12px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--pink-500), var(--green-500));
+}
+.timeline-milestone {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  position: relative; z-index: 1;
+}
+.timeline-marker {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--pink-500);
+  border: 4px solid var(--bg-card-elevated);
+  box-shadow: 0 0 8px var(--pink-glow);
+  margin-bottom: 16px; margin-top: 16px;
+}
+.timeline-milestone:last-child .timeline-marker {
+  background: var(--green-500);
+  box-shadow: 0 0 12px var(--green-glow-strong);
+}
+.timeline-month {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  color: var(--pink-500);
+  letter-spacing: 0.1em; margin-bottom: 6px;
+}
+.timeline-milestone:last-child .timeline-month { color: var(--green-500); }
+.timeline-event {
+  font-size: 13px; line-height: 1.4;
+  color: var(--text-primary); max-width: 140px;
+}
+
+/* SLIDE 10 — Team (execution-focused, DAANI's framing) */
+.team-execution-layout {
+  display: grid; grid-template-columns: 2fr 1fr;
+  gap: 32px; margin-top: 32px;
+}
+.team-founder-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(0, 232, 123, 0.3);
+  border-radius: 20px; padding: 36px;
+}
+.team-founder-card .role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+  color: var(--green-500); margin-bottom: 8px; text-transform: uppercase;
+}
+.team-founder-card .name {
+  font-size: 36px; font-weight: 700;
+  margin-bottom: 24px; letter-spacing: -0.02em;
+}
+.fitness-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-bottom: 20px;
+}
+.fitness-item {
+  padding: 14px 16px;
+  background: var(--bg-card-elevated);
+  border-radius: 10px;
+  font-size: 14px; line-height: 1.5;
+  border-left: 3px solid var(--green-500);
+}
+.fitness-item strong { color: var(--green-500); display: block; margin-bottom: 4px; font-size: 13px; }
+.team-side-column { display: flex; flex-direction: column; gap: 20px; }
+.team-side-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.team-side-card.ai { border-color: rgba(168, 85, 247, 0.3); background: rgba(168, 85, 247, 0.04); }
+.team-side-card.recruit { border-color: rgba(255, 59, 122, 0.3); background: rgba(255, 59, 122, 0.04); }
+.team-side-card .side-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+  margin-bottom: 8px; text-transform: uppercase;
+}
+.team-side-card.ai .side-label { color: var(--violet-500); }
+.team-side-card.recruit .side-label { color: var(--pink-500); }
+.team-side-card .side-name {
+  font-size: 20px; font-weight: 700; margin-bottom: 8px;
+}
+.team-side-card .side-desc {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+}
+
+/* SLIDE 11 — Ask */
+.ask-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 24px; margin-top: 40px;
+}
+.ask-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px;
+}
+.ask-card .ask-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+  color: var(--green-500); margin-bottom: 12px; text-transform: uppercase;
+}
+.ask-card .ask-desc {
+  font-size: 15px; color: var(--text-secondary); line-height: 1.6;
+}
+.ask-closer {
+  margin-top: 60px; text-align: center;
+  font-size: 36px; font-weight: 700;
+  background: linear-gradient(135deg, var(--green-500), var(--cyan-500));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; letter-spacing: -0.02em;
+}
+.contact-line {
+  margin-top: 24px; text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; color: var(--text-tertiary);
+}
+.contact-line a { color: var(--green-500); text-decoration: none; }
+
+/* Print / PDF — Letter landscape (most reliable for Chrome headless) */
+@page {
+  size: 11in 8.5in;
+  margin: 0;
+}
+@media print {
+  @page {
+    size: 11in 8.5in;
+    margin: 0;
+  }
+  html, body {
+    width: 11in !important;
+    height: 8.5in !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #0D0E11 !important;
+    overflow: hidden !important;
+  }
+  .deck {
+    width: 11in !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+  }
+  .slide {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    opacity: 1 !important;
+    page-break-after: always !important;
+    page-break-inside: avoid !important;
+    break-after: page !important;
+    position: relative !important;
+    width: 11in !important;
+    height: 8.5in !important;
+    padding: 0.4in 0.6in !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  .slide:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  /* Hide ambient background glow (renders heavy in print) */
+  .slide::before { display: none !important; }
+  .deck-nav { display: none !important; }
+  /* Force backgrounds, colors, and gradients to render in PDF */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  /* Scale fonts down to fit 11in x 8.5in landscape */
+  h1 { font-size: 56px !important; line-height: 1.05 !important; }
+  h2 { font-size: 38px !important; line-height: 1.05 !important; }
+  h3 { font-size: 22px !important; }
+  .lead { font-size: 16px !important; line-height: 1.45 !important; }
+  .eyebrow { font-size: 11px !important; margin-bottom: 14px !important; }
+  /* Cover slide specific scale-downs */
+  .slide-title .brand { font-size: 64px !important; margin-bottom: 16px !important; }
+  .slide-title .logo-mark {
+    width: 130px !important;
+    height: 130px !important;
+    margin-bottom: 18px !important;
+  }
+  .slide-title .tagline { font-size: 18px !important; max-width: 600px !important; margin-bottom: 28px !important; }
+  .slide-title .meta { font-size: 11px !important; }
+  /* Solution slide key insight */
+  .solution-hero .key-insight { font-size: 36px !important; margin-bottom: 28px !important; }
+  .solution-architecture { padding: 24px 32px !important; }
+  .solution-architecture .statement { font-size: 18px !important; line-height: 1.5 !important; }
+  /* Mechanic flow steps */
+  .mechanic-step { padding: 16px !important; }
+  .mechanic-step .step-num { font-size: 24px !important; margin-bottom: 8px !important; }
+  .mechanic-step .step-title { font-size: 15px !important; }
+  .mechanic-step .step-desc { font-size: 12px !important; }
+  .mechanic-closer { font-size: 14px !important; padding: 14px 22px !important; margin-top: 24px !important; }
+  /* Compare cards (problem · macro) */
+  .compare-card { padding: 22px !important; }
+  .compare-card .data-value { font-size: 18px !important; }
+  .compare-card .data-name { font-size: 14px !important; }
+  .macro-takeaway { font-size: 16px !important; margin-top: 24px !important; }
+  /* Market cards */
+  .market-card { padding: 22px !important; }
+  .market-card .value { font-size: 36px !important; }
+  .market-card .desc { font-size: 12px !important; }
+  .market-footer { font-size: 13px !important; padding: 14px !important; margin-top: 22px !important; }
+  /* Moat cards */
+  .moat-detail-card { padding: 24px !important; }
+  .moat-detail-card .moat-num { font-size: 44px !important; margin-bottom: 10px !important; }
+  .moat-detail-card .moat-title { font-size: 20px !important; }
+  .moat-detail-card .moat-desc { font-size: 13px !important; }
+  .moat-detail-card .moat-key { font-size: 11px !important; }
+  /* Regulatory timeline */
+  .regulatory-card { padding: 22px 30px !important; margin-bottom: 24px !important; }
+  .regulatory-card .moat-num { font-size: 40px !important; }
+  .regulatory-card .moat-title { font-size: 22px !important; }
+  .regulatory-card .moat-desc { font-size: 14px !important; }
+  .timeline-wrapper { padding: 20px 26px !important; }
+  .timeline-event { font-size: 11px !important; max-width: 110px !important; }
+  /* Blend slide */
+  .blend-card { padding: 22px 18px !important; }
+  .blend-icon { font-size: 32px !important; margin-bottom: 12px !important; }
+  .blend-title { font-size: 16px !important; }
+  .blend-desc { font-size: 12px !important; }
+  .blend-closer { font-size: 14px !important; padding: 14px 22px !important; margin-top: 24px !important; }
+  /* Team slide */
+  .team-founder-card { padding: 26px !important; }
+  .team-founder-card .name { font-size: 26px !important; margin-bottom: 18px !important; }
+  .fitness-item { padding: 12px 14px !important; font-size: 12px !important; }
+  .team-side-card { padding: 18px !important; }
+  .team-side-card .side-name { font-size: 17px !important; }
+  .team-side-card .side-desc { font-size: 12px !important; }
+  .recruiting-banner { padding: 14px 22px !important; margin-top: 22px !important; }
+  /* Ask slide */
+  .ask-card { padding: 22px !important; }
+  .ask-card .ask-desc { font-size: 13px !important; }
+  .ask-closer { font-size: 28px !important; margin-top: 40px !important; }
+  .contact-line { font-size: 12px !important; margin-top: 16px !important; }
+  /* Product screens (slide 6) */
+  .product-grid-lean { margin-top: 22px !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- SLIDE 1: TITLE + THESIS (centered, neon-pink, with disco ball logo) -->
+  <section class="slide slide-title active" id="slide-1">
+    <div class="slide-content">
+      <div class="logo-mark">
+        <svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" aria-label="Disco Capital">
+          <path fill="currentColor" d="M865.338,347.99h-112.39c4.161,25.693,5.815,51.963,10.674,77.512,7.6,36.437,27.237,76.449,64.742,89.093,11.869,4.439,25.689,4.494,39.719,4.476,15.092.021,34.971-.007,49.064.004-3.396-62.238-21.866-120.454-51.809-171.086Z"/>
+          <path fill="currentColor" d="M348.063,519.075h174.5v-171.086h-160.238c-8.476,53.358-13.345,111.114-14.263,171.086Z"/>
+          <path fill="currentColor" d="M557.435,347.99v171.086c22.102-.002,48.954.001,72.21,0,13.492-.233,24.956.864,36.119-1.96,34.815-8.126,54.974-41.207,59.331-75.025,2.764-18.459.169-37.203-2.053-55.904-1.568-12.768-3.421-25.5-5.371-38.196h-160.238Z"/>
+          <path fill="currentColor" d="M327.05,347.99h-112.388c-29.945,50.632-48.413,108.848-51.809,171.086h150.337c.895-59.713,5.616-117.423,13.86-171.086Z"/>
+          <path fill="currentColor" d="M313.092,553.801h-150.546c2.232,62.005,19.4,120.194,48.029,171.086h115.416c-7.901-53.781-12.309-111.477-12.899-171.086Z"/>
+          <path fill="currentColor" d="M781.905,597.295c-4.541,7.939-8.234,16.323-11.383,24.918-4.922,13.434-7.899,27.503-9.232,41.748-1.944,20.773-4.373,41.118-7.283,60.926h115.418c28.627-50.892,45.797-109.081,48.029-171.086h-64.667c-14.228,0-28.29,3.749-40.318,11.35-12.271,7.754-22.622,18.128-30.564,32.145Z"/>
+          <path fill="currentColor" d="M361.22,724.887h161.343v-171.086h-174.596c.605,59.853,5.134,117.601,13.253,171.086Z"/>
+          <path fill="currentColor" d="M648.549,553.801s-91.114,0-91.114,0v171.086h161.343c4.431-34.83,12.56-71.789,3.995-106.661-7.738-36.162-36.469-64.679-74.225-64.425Z"/>
+          <path fill="currentColor" d="M232.664,759.612c33.217,46.398,76.678,84.962,127.077,112.386-11.331-34.189-20.733-71.964-28.059-112.386h-99.017Z"/>
+          <path fill="currentColor" d="M557.435,917.313c41.521-1.887,81.292-10.481,118.261-24.719,1.218-3.053,2.398-6.09,3.534-9.1,13.814-36.594,25.112-78.388,33.667-123.883h-155.462v157.701Z"/>
+          <path fill="currentColor" d="M400.77,883.495c1.136,3.01,2.316,6.047,3.534,9.1,36.969,14.238,76.74,22.832,118.26,24.719v-157.701h-155.462c8.557,45.495,19.855,87.289,33.669,123.883Z"/>
+          <path fill="currentColor" d="M720.261,871.998c50.397-27.424,93.858-65.988,127.074-112.386h-99.016c-7.326,40.422-16.727,78.197-28.058,112.386Z"/>
+          <path fill="currentColor" d="M400.77,196.465c-13.092,34.684-23.917,74.05-32.297,116.8h154.091v-150.578c-41.528,1.888-81.301,10.474-118.275,24.717-1.214,3.04-2.387,6.063-3.518,9.06Z"/>
+          <path fill="currentColor" d="M842.143,313.264c-32.499-43.242-74.07-79.273-121.877-105.288,10.665,32.184,19.632,67.531,26.757,105.288h95.12Z"/>
+          <path fill="currentColor" d="M679.23,196.465c-1.132-2.997-2.305-6.02-3.518-9.06-36.974-14.244-76.748-22.83-118.277-24.718v150.578h154.093c-8.38-42.75-19.205-82.116-32.297-116.8Z"/>
+          <path fill="currentColor" d="M359.736,207.976c-47.809,26.016-89.38,62.046-121.879,105.289h95.12c7.125-37.758,16.092-73.104,26.759-105.289Z"/>
+        </svg>
+      </div>
+      <div class="brand">DISCO CAPITAL</div>
+      <div class="tagline">Co-invest with the venture funds shaping the future you'll inherit.</div>
+      <div class="meta">
+        <div>FOUNDED BY <span class="highlight">GARRISON BULLOCK</span></div>
+        <div>disco-capital.com</div>
+        <div>a16z SPEEDRUN SR007 · MAY 2026</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: PROBLEM — HUMAN CONSEQUENCE -->
+  <section class="slide" id="slide-2">
+    <div class="slide-content human-consequence-layout">
+      <div class="eyebrow">// The Problem · 1 of 2</div>
+      <h2>The most fluent generation watches from outside as wealth gets created.</h2>
+      <p class="lead">The same people who understand AI, crypto, biotech, and emerging technology best — the ones most affected by the future being built — are locked out of building it with their capital.</p>
+      <div class="closer">
+        When you can't participate in the future's growth, <span class="accent-pink">you don't root for its success.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: PROBLEM — MACRO CONTEXT -->
+  <section class="slide" id="slide-3">
+    <div class="slide-content">
+      <div class="eyebrow">// The Problem · 2 of 2</div>
+      <h2>The wealth-creation window has moved.</h2>
+      <p class="lead">From public markets, where retail could participate, to venture rounds, where they can't.</p>
+      <div class="compare-grid">
+        <div class="compare-card then">
+          <div class="label">Then · 1986-1997</div>
+          <div class="data-row"><span class="data-name">Microsoft IPO</span><span class="data-value">$0.6B</span></div>
+          <div class="data-row"><span class="data-name">Amazon IPO</span><span class="data-value">$0.4B</span></div>
+          <div class="data-row"><span class="data-name">Time to IPO</span><span class="data-value">~5 years</span></div>
+          <div class="footer">Retail rode the curve.</div>
+        </div>
+        <div class="compare-card now">
+          <div class="label">Now · 2026</div>
+          <div class="data-row"><span class="data-name">Stripe (private)</span><span class="data-value">$91B</span></div>
+          <div class="data-row"><span class="data-name">OpenAI (private)</span><span class="data-value">$157B</span></div>
+          <div class="data-row"><span class="data-name">Time to IPO</span><span class="data-value">~12 years</span></div>
+          <div class="footer">Retail locked out.</div>
+        </div>
+      </div>
+      <p class="macro-takeaway">Companies used to IPO in 5 years and exit small enough for retail to compound. Today they take 12 — and exit at tens of billions.</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: SOLUTION — ARCHITECTURE, NOT OPERATIONS -->
+  <section class="slide" id="slide-4">
+    <div class="slide-content">
+      <div class="eyebrow">// The Solution</div>
+      <div class="solution-hero">
+        <div class="key-insight">The retail co-investment layer for top-tier venture rounds.</div>
+      </div>
+      <div class="solution-architecture">
+        <div class="label">// How the architecture works</div>
+        <div class="statement">
+          Institutional leads <strong>anchor the round</strong> at agreed terms. Disco's vetted retail community <strong>co-invests on identical terms</strong> — same allocation, same cap table position. The lead's commitment <strong>is the quality gate by design.</strong> Retail only enters rounds where institutional conviction is already priced in. Deal selection is not an operations problem — it's an architectural property.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: MECHANIC -->
+  <section class="slide" id="slide-5">
+    <div class="slide-content">
+      <div class="eyebrow">// How It Works</div>
+      <h2>Anchor → Co-invest → Tokenize → Auto-payout</h2>
+      <div class="mechanic-flow">
+        <div class="mechanic-step">
+          <div class="step-num">01</div>
+          <div class="step-title">Anchor</div>
+          <div class="step-desc">Top-tier VC commits to lead the round at agreed terms.</div>
+        </div>
+        <div class="mechanic-step">
+          <div class="step-num">02</div>
+          <div class="step-title">Co-invest</div>
+          <div class="step-desc">Disco's vetted retail community joins on identical terms — same allocation, same cap table position.</div>
+        </div>
+        <div class="mechanic-step">
+          <div class="step-num">03</div>
+          <div class="step-title">Tokenize</div>
+          <div class="step-desc">Retail receives fractional equity as NFTs in their own crypto wallets.</div>
+        </div>
+        <div class="mechanic-step">
+          <div class="step-num">04</div>
+          <div class="step-title">Auto-payout</div>
+          <div class="step-desc">Chainlink oracles trigger automatic distributions at liquidation events.</div>
+        </div>
+      </div>
+      <div class="mechanic-closer">
+        Programmable cap tables. Smart-contract-enforced payouts. <span class="accent-green">Web3 makes the entire stack composable.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: PRODUCT DEMO (lean, DAANI's approach) -->
+  <section class="slide" id="slide-6">
+    <div class="slide-content">
+      <div class="eyebrow">// The Product</div>
+      <h2>Live prototype at <span class="accent-green">disco-capital.com</span></h2>
+      <div class="product-grid-lean">
+        <div class="product-screen featured">
+          <img src="floors.png" alt="Dance Floors — Active funding rounds" class="product-screenshot">
+        </div>
+        <div class="product-screen">
+          <img src="wallet.png" alt="Wallet — NFT positions" class="product-screenshot">
+        </div>
+        <div class="product-screen">
+          <img src="punch.png" alt="Punch Bowl — P2P NFT trading and blending" class="product-screenshot">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: THE BLEND FEATURE (Punch Bowl differentiator) -->
+  <section class="slide" id="slide-7">
+    <div class="slide-content">
+      <div class="eyebrow">// The Blend Feature</div>
+      <h2>Diversify without selling.</h2>
+      <p class="lead">Punch Bowl's blending lets investors gain exposure to deals they missed — and share exposure from deals they got into — without anyone needing to liquidate. <span class="accent-green">Composition replaces transaction.</span></p>
+      <div class="blend-grid">
+        <div class="blend-card incoming">
+          <div class="blend-icon">←</div>
+          <div class="blend-title">Missed the round?</div>
+          <div class="blend-desc">A current holder blends a slice of their position into yours. You gain proportional exposure to a deal you couldn't get into. They retain their core stake.</div>
+        </div>
+        <div class="blend-card outgoing">
+          <div class="blend-icon">→</div>
+          <div class="blend-title">Got in early?</div>
+          <div class="blend-desc">Held the round others wanted? Blend a portion of your sought-after position into another investor's portfolio. Diversify without divesting.</div>
+        </div>
+        <div class="blend-card composition">
+          <div class="blend-icon">⇄</div>
+          <div class="blend-title">No one sells.</div>
+          <div class="blend-desc">Smart contracts handle the math. Hybrid NFT instruments emerge. Liquidity flows through composition, not forced exits.</div>
+        </div>
+      </div>
+      <div class="blend-closer">
+        Programmable cap tables make this possible. <span class="accent-green">The Punch Bowl makes it accessible.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: MARKET -->
+  <section class="slide" id="slide-8">
+    <div class="slide-content">
+      <div class="eyebrow">// Market</div>
+      <h2>Big addressable market, structurally unfilled gap.</h2>
+      <div class="market-grid">
+        <div class="market-card tam">
+          <div class="label">TAM</div>
+          <div class="value mono">$5T+</div>
+          <div class="desc">Global alternatives market — private equity, venture capital, and secondaries</div>
+        </div>
+        <div class="market-card sam">
+          <div class="label">SAM</div>
+          <div class="value mono">$200B</div>
+          <div class="desc">Annual US VC deployment, Series A through late-stage — the rounds Disco enables retail to access</div>
+        </div>
+        <div class="market-card som">
+          <div class="label">SOM</div>
+          <div class="value mono">$5B</div>
+          <div class="desc">Annual retail crowdfunding deployment — currently structurally adverse-selected</div>
+        </div>
+      </div>
+      <div class="market-footer">
+        Retail demand is proven: <strong>27M Robinhood users</strong> · <strong>Republic deployed $2.6B</strong> · <strong>AngelList syndicates active</strong> — none have the institutional-anchor mechanic.
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: MOAT PART 1 — Relationships + Equity (DAANI's split) -->
+  <section class="slide" id="slide-9">
+    <div class="slide-content">
+      <div class="eyebrow">// The Moat · 1 of 2</div>
+      <h2>Two structural moats competitors can't tweak around.</h2>
+      <div class="moat-detail-grid">
+        <div class="moat-detail-card one">
+          <div class="moat-num">01</div>
+          <div class="moat-title">VC Supply-Side Relationships</div>
+          <div class="moat-desc">Once a top-tier fund reserves an allocation for Disco's retail community, the next platform rebuilds that trust from scratch. The institutional relationship IS the platform — and it can't be replicated through better UX, more features, or better fees.</div>
+          <div class="moat-key">// Network effect on the supply side</div>
+        </div>
+        <div class="moat-detail-card two">
+          <div class="moat-num">02</div>
+          <div class="moat-title">Equity-In-Every-Round Capital Structure</div>
+          <div class="moat-desc">Disco takes equity in every funded round, not cash fees. Power-law thesis: a few IPOs make the wide-net portfolio work. Republic and SeedInvest collect cash fees; we collect equity — a capital-structure difference competitors can't replicate by tweaking fee schedules.</div>
+          <div class="moat-key">// Capital structure, not pricing</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10: MOAT PART 2 — Regulatory + Visual Timeline (DAANI's diagnostic) -->
+  <section class="slide" id="slide-10">
+    <div class="slide-content">
+      <div class="eyebrow">// The Moat · 2 of 2</div>
+      <h2>The regulatory moat is an execution roadmap, not a claim.</h2>
+      <div class="regulatory-layout">
+        <div class="regulatory-card">
+          <div class="moat-num">03</div>
+          <div class="moat-title">Regulatory Pathway (Under Execution)</div>
+          <div class="moat-desc">Engaging securities counsel post-funding. Targeting a no-action letter on NFT-blending within 12 months. Once secured, an 18-month lead before any competitor can replicate the legal work.</div>
+        </div>
+        <div class="timeline-wrapper">
+          <div class="timeline-label">// 12-Month Regulatory Path → 18-Month Lead</div>
+          <div class="timeline">
+            <div class="timeline-milestone">
+              <div class="timeline-marker"></div>
+              <div class="timeline-month">M1</div>
+              <div class="timeline-event">Engage securities counsel</div>
+            </div>
+            <div class="timeline-milestone">
+              <div class="timeline-marker"></div>
+              <div class="timeline-month">M3</div>
+              <div class="timeline-event">File no-action letter request</div>
+            </div>
+            <div class="timeline-milestone">
+              <div class="timeline-marker"></div>
+              <div class="timeline-month">M6</div>
+              <div class="timeline-event">SEC review + dialogue</div>
+            </div>
+            <div class="timeline-milestone">
+              <div class="timeline-marker"></div>
+              <div class="timeline-month">M9</div>
+              <div class="timeline-event">Comment period · iterate</div>
+            </div>
+            <div class="timeline-milestone">
+              <div class="timeline-marker"></div>
+              <div class="timeline-month">M12-18+</div>
+              <div class="timeline-event">No-action letter received · 18-mo lead begins</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11: TEAM — EXECUTION-FOCUSED (DAANI's framing) -->
+  <section class="slide" id="slide-11">
+    <div class="slide-content">
+      <div class="eyebrow">// The Team</div>
+      <h2>Why this founder ships.</h2>
+      <div class="team-execution-layout">
+        <div class="team-founder-card">
+          <div class="role">Founder & CEO</div>
+          <div class="name">Garrison Bullock</div>
+          <div class="fitness-grid">
+            <div class="fitness-item">
+              <strong>// Product Designer</strong>
+              Industrial design background — trained to figure it out anyway when the problem doesn't have a known solution.
+            </div>
+            <div class="fitness-item">
+              <strong>// Eden Precedent</strong>
+              Built consumer marketplace during MBA; declined $1.5M VC offer because team and timing were wrong. Knows the cost of premature scaling.
+            </div>
+            <div class="fitness-item">
+              <strong>// Consumer-Product Thinker</strong>
+              Not a banker. Marketing/Branding lead at multi-state real estate developer. The right founder profile for retail fintech.
+            </div>
+            <div class="fitness-item">
+              <strong>// Solo Execution</strong>
+              Self-built DAANI to coordinate product, design, code, legal, research. Moves faster than most two-person founder teams.
+            </div>
+          </div>
+        </div>
+        <div class="team-side-column">
+          <div class="team-side-card ai">
+            <div class="side-label">// AI Cofounder</div>
+            <div class="side-name">DAANI</div>
+            <div class="side-desc">Custom AI agent on OpenClaw. Coordinates the workstreams that would otherwise require specialist hires.</div>
+          </div>
+          <div class="team-side-card recruit">
+            <div class="side-label">// Actively Recruiting</div>
+            <div class="side-name">Technical Cofounder</div>
+            <div class="side-desc">Named technical cofounder by Demo Day. Search is active, criteria defined, pipeline being built.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12: ASK -->
+  <section class="slide" id="slide-12">
+    <div class="slide-content">
+      <div class="eyebrow">// The Ask</div>
+      <h2>What Speedrun unlocks.</h2>
+      <div class="ask-grid">
+        <div class="ask-card">
+          <div class="ask-label">Capital →</div>
+          <div class="ask-desc">Engage securities counsel immediately. Hire technical cofounder. Deploy production-grade smart contracts and audit. Build the institutional partnership pipeline.</div>
+        </div>
+        <div class="ask-card">
+          <div class="ask-label">Network →</div>
+          <div class="ask-desc">First institutional VC reserve-allocation partnerships. Founder community access. Warm intros to top securities counsel and Chainlink integration.</div>
+        </div>
+        <div class="ask-card">
+          <div class="ask-label">Timeline →</div>
+          <div class="ask-desc">3 months: 2-3 institutional reserve-allocation partnerships committed by Demo Day. First pilot round live. Named technical cofounder onboard. No-action letter filed. Founder community at 1,000+.</div>
+        </div>
+      </div>
+      <div class="ask-closer">Let's get everyone on the dance floor.</div>
+      <div class="contact-line">
+        <a href="https://disco-capital.com">disco-capital.com</a> · DISCODAANI@proton.me
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="deck-nav">
+  <button class="nav-btn" onclick="prevSlide()">‹</button>
+  <span><span id="currentSlide">1</span> / 12</span>
+  <button class="nav-btn" onclick="nextSlide()">›</button>
+</div>
+
+<script>
+  let current = 1;
+  const totalSlides = 12;
+
+  function showSlide(n) {
+    if (n < 1) n = totalSlides;
+    if (n > totalSlides) n = 1;
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('slide-' + n).classList.add('active');
+    document.getElementById('currentSlide').textContent = n;
+    current = n;
+  }
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      prevSlide();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      showSlide(1);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      showSlide(totalSlides);
+    } else if (e.key >= '1' && e.key <= '9') {
+      showSlide(parseInt(e.key));
+    } else if (e.key === '0') {
+      showSlide(10);
+    }
+  });
+</script>
+
+</body>
+</html>

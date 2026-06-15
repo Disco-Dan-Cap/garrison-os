@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Disco Capital — Case Study · Garrison Bullock</title>
+<meta name="description" content="Disco Capital: a venture co-investment app that lets everyday investors join the rounds top VCs lead and hold their stake as NFTs. Brand, a dark-mode design system, and the full iPhone-first UI/UX — designed and founded by Garrison Bullock.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg-app:#0D0E11; --bg-card:#151618; --bg-card-2:#1A1B1F;
+    --green:#00E87B; --cyan:#00D4FF; --purple:#8B5CF6; --violet:#A855F7;
+    --pink:#FF3B7A; --orange:#FF6B35; --yellow:#FBBF24;
+    --text:#FFFFFF; --text-2:#9CA3AF; --text-3:#6B7280;
+    --border:#222328; --divider:#2A2B30;
+    --glow-green:0 0 10px rgba(0,232,123,.45),0 0 34px rgba(0,232,123,.18);
+    --glow-cyan:0 0 10px rgba(0,212,255,.45),0 0 34px rgba(0,212,255,.18);
+    --glow-pink:0 0 10px rgba(255,59,122,.45),0 0 34px rgba(255,59,122,.18);
+    --glow-purple:0 0 10px rgba(139,92,246,.45),0 0 34px rgba(139,92,246,.18);
+    --font:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --r-md:12px; --r-lg:16px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg-app); color:#E8EAED; font-family:var(--font);
+    font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility; position:relative; overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(60vw 50vh at 8% -5%, rgba(0,232,123,.10), transparent 60%),
+      radial-gradient(55vw 45vh at 100% 6%, rgba(0,212,255,.09), transparent 60%),
+      radial-gradient(60vw 60vh at 82% 112%, rgba(255,59,122,.08), transparent 60%);
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:52px 44px 110px; position:relative; z-index:1;}
+  @media(max-width:700px){ .wrap{padding:36px 20px 80px;} }
+  a{color:var(--cyan); text-decoration:none;} a:hover{color:#7fe6ff;}
+  h1,h2,h3{color:var(--text);}
+
+  /* masthead */
+  header.masthead{ display:flex; align-items:flex-end; justify-content:space-between; gap:28px; flex-wrap:wrap; padding-bottom:26px; border-bottom:1px solid var(--border); }
+  .brand{ display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+  .brand-logo{ height:36px; width:auto; display:block; filter:drop-shadow(0 0 16px rgba(0,212,255,.20)); }
+  .brand-sub{ font-family:var(--mono); font-size:10.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:.16em; margin-top:0; }
+  .doc-meta{ font-family:var(--mono); font-size:10.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:.13em; text-align:right; }
+  .doc-meta div+div{ margin-top:5px; } .doc-meta b{ color:var(--text-2); font-weight:500; }
+
+  /* sections */
+  section{ padding:58px 0; border-top:1px solid var(--border); }
+  .eyebrow{ font-family:var(--mono); font-size:11px; color:var(--cyan); text-transform:uppercase; letter-spacing:.2em; }
+  .sec-head{ margin-bottom:30px; }
+  .sec-title{ font-weight:800; font-size:clamp(27px,4.2vw,42px); line-height:1.05; letter-spacing:-.02em; margin:14px 0 0; max-width:22ch; }
+  .prose{ color:#C7CBD1; max-width:64ch; }
+  .prose.lede{ font-size:clamp(18px,2.2vw,22px); line-height:1.5; color:#D7DBE1; max-width:60ch; }
+  .prose em{ color:#fff; font-style:normal; }
+  .hl-green{color:var(--green);} .hl-cyan{color:var(--cyan);} .hl-pink{color:var(--pink);}
+
+  /* hero */
+  .hero{ padding:54px 0 58px; border-top:0; }
+  .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-bottom:32px; }
+  .chip{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:var(--text-2); border:1px solid var(--border); border-radius:999px; padding:7px 12px; display:inline-flex; align-items:center; gap:8px; background:var(--bg-card); }
+  .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:var(--glow-green); animation:pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .hero-grid{ display:grid; grid-template-columns:1.5fr 1fr; gap:48px; align-items:center; }
+  @media(max-width:880px){ .hero-grid{ grid-template-columns:1fr; gap:38px; } }
+  .hero-sentence{ font-weight:900; font-size:clamp(31px,5.1vw,55px); line-height:1.06; letter-spacing:-.03em; margin:0 0 22px; color:#fff; }
+  .hero-sub{ color:#A9AEB6; font-size:18px; max-width:48ch; margin:0; }
+
+  /* phone */
+  .phone{ width:300px; max-width:100%; background:#000; border-radius:42px; padding:9px; box-shadow:0 30px 70px rgba(0,0,0,.6), 0 0 0 1px #26272c, 0 0 60px rgba(0,232,123,.05); }
+  .phone .screen{ aspect-ratio:1195/2600; border-radius:34px; overflow:hidden; background:var(--bg-app); }
+  .phone .screen img{ width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
+  figure{ margin:0; }
+  .fig-label{ font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.15em; color:var(--text-3); text-align:center; margin-top:14px; }
+  .hero-fig .phone{ margin:0 auto; }
+
+  /* at a glance */
+  .glance{ display:grid; grid-template-columns:max-content 1fr; gap:0 36px; max-width:800px; }
+  .glance dt{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.13em; color:var(--text-3); padding:14px 0; border-top:1px solid var(--border); }
+  .glance dd{ margin:0; padding:14px 0; border-top:1px solid var(--border); color:#D7DBE1; }
+  .glance dd a{ font-family:var(--mono); font-size:14px; }
+
+  /* flow */
+  .flow{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  @media(max-width:820px){ .flow{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:460px){ .flow{ grid-template-columns:1fr; } }
+  .step{ background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; position:relative; overflow:hidden; }
+  .step .n{ font-family:var(--mono); font-size:12px; color:var(--text-3); }
+  .step h3{ font-size:16.5px; margin:10px 0 7px; letter-spacing:-.01em; }
+  .step p{ margin:0; font-size:14px; color:#A9AEB6; line-height:1.5; }
+  .step::after{ content:""; position:absolute; left:0; top:0; width:100%; height:3px; }
+  .step.s1::after{ background:var(--green); box-shadow:var(--glow-green); }
+  .step.s2::after{ background:var(--cyan); box-shadow:var(--glow-cyan); }
+  .step.s3::after{ background:var(--purple); box-shadow:var(--glow-purple); }
+  .step.s4::after{ background:var(--pink); box-shadow:var(--glow-pink); }
+
+  /* walkthrough */
+  .walk{ display:grid; grid-template-columns:296px 1fr; gap:50px; align-items:center; padding:42px 0; border-top:1px solid var(--border); }
+  .walk.flip{ grid-template-columns:1fr 296px; }
+  .walk.flip .walk-fig{ order:2; }
+  @media(max-width:820px){ .walk,.walk.flip{ grid-template-columns:1fr; gap:26px; } .walk.flip .walk-fig{ order:0; } .walk-fig .phone{ margin:0 auto; } }
+  .walk-tag{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--cyan); margin-bottom:11px; }
+  .walk-body h3{ font-size:clamp(20px,2.7vw,28px); margin:0 0 13px; letter-spacing:-.02em; line-height:1.1; }
+  .walk-body p{ color:#A9AEB6; margin:0 0 12px; max-width:48ch; }
+  .walk-body p:last-child{ margin-bottom:0; }
+
+  /* principles + palette */
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media(max-width:820px){ .grid3{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:520px){ .grid3{ grid-template-columns:1fr; } }
+  .pcard{ background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; }
+  .pcard .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; margin-bottom:12px; }
+  .pcard h3{ font-size:16px; margin:0 0 6px; letter-spacing:-.01em; }
+  .pcard p{ margin:0; font-size:14px; color:#A9AEB6; line-height:1.5; }
+  .palette{ display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; }
+  .sw{ width:120px; border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; background:var(--bg-card); }
+  .sw .chip-c{ height:60px; } .sw .meta{ padding:9px 11px; }
+  .sw .nm{ font-size:12px; font-weight:600; color:#fff; } .sw .hex{ font-family:var(--mono); font-size:11px; color:var(--text-3); }
+
+  /* explore */
+  .explore{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media(max-width:720px){ .explore{ grid-template-columns:1fr; } }
+  .xbtn{ display:block; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r-lg); padding:22px; transition:border-color .15s, transform .15s; }
+  .xbtn:hover{ border-color:var(--cyan); transform:translateY(-2px); }
+  .xbtn .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3); }
+  .xbtn .t{ font-size:19px; font-weight:700; color:#fff; margin:8px 0 4px; letter-spacing:-.01em; }
+  .xbtn .a{ font-family:var(--mono); font-size:12px; color:var(--cyan); }
+  .frame{ border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; background:var(--bg-card); box-shadow:0 18px 50px rgba(0,0,0,.5); margin-top:30px; }
+  .frame .bar{ display:flex; align-items:center; gap:7px; padding:11px 14px; border-bottom:1px solid var(--border); }
+  .frame .bar i{ width:11px; height:11px; border-radius:50%; background:#2a2c32; }
+  .frame .bar .ttl{ font-family:var(--mono); font-size:11px; color:var(--text-3); margin-left:8px; }
+  .frame iframe{ width:100%; height:540px; border:0; display:block; background:#0b0c0f; }
+
+  /* footer */
+  footer{ padding:52px 0 0; border-top:1px solid var(--border); text-align:center; }
+  .foot-mark{ width:42px; height:38px; margin:0 auto 15px; background:url("assets/logo.svg") no-repeat left center; background-size:auto 38px; opacity:.85; }
+  .foot-line{ font-family:var(--mono); font-size:11.5px; color:var(--text-3); letter-spacing:.05em; }
+  .foot-line+.foot-line{ margin-top:5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ══════════ MASTHEAD ══════════ -->
+  <header class="masthead">
+    <div class="brand">
+      <img class="brand-logo" src="assets/logo.svg" alt="Disco Capital">
+      <div class="brand-sub">Venture co-investment app · Case study</div>
+    </div>
+    <div class="doc-meta">
+      <div><b>Role</b> &nbsp;Founder · Sole designer</div>
+      <div><b>Scope</b> &nbsp;Brand · Design system · App UI/UX</div>
+      <div><b>Year</b> &nbsp;2026</div>
+    </div>
+  </header>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="chips">
+      <span class="chip"><span class="live-dot"></span>Live prototype</span>
+      <span class="chip">iPhone-first</span>
+      <span class="chip">a16z Speedrun SR007</span>
+      <span class="chip">2026</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-sentence">Put <span class="hl-green">$100</span> into the startups top VCs are funding — and hold your stake in your pocket.</h1>
+        <p class="hero-sub">Disco Capital is a venture co-investment app. I founded it, and designed all of it — the brand, a dark-mode design system, and every screen in the app you're about to scroll through.</p>
+      </div>
+      <figure class="hero-fig">
+        <div class="phone"><div class="screen"><img src="assets/splash.webp" alt="Disco Capital launch screen: a glowing green-to-blue orb, the wordmark, the line 'Invest in tomorrow's startups. Own fractional equity as NFTs. Join the dance floor,' and a Connect Wallet button."></div></div>
+        <figcaption class="fig-label">Launch · Connect wallet</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ══════════ 01 · AT A GLANCE ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">01 — At a glance</div><h2 class="sec-title">At a glance</h2></div>
+    <dl class="glance">
+      <dt>What it is</dt><dd>A mobile app that lets everyday investors join the same venture rounds top funds lead, from as little as $100, and hold the stake as NFTs.</dd>
+      <dt>My role</dt><dd>Solo founder and product designer — brand identity, the design system, and the full product UI/UX.</dd>
+      <dt>Design work</dt><dd>Logo &amp; brand · a dark-mode design system · 5-tab iPhone-first app · the pitch deck.</dd>
+      <dt>Build status</dt><dd>HTML prototype live; React Native app in progress.</dd>
+      <dt>Milestone</dt><dd>Pitched <b style="color:#fff;font-weight:600;">a16z Speedrun SR007</b> (May 2026).</dd>
+      <dt>Links</dt><dd><a href="https://disco-capital.com/" target="_blank" rel="noopener">disco-capital.com&nbsp;↗</a> &nbsp;·&nbsp; <a href="assets/design-system.html" target="_blank" rel="noopener">Design system&nbsp;↗</a> &nbsp;·&nbsp; <a href="assets/pitch-deck.html" target="_blank" rel="noopener">Pitch deck&nbsp;↗</a></dd>
+    </dl>
+  </section>
+
+  <!-- ══════════ 02 · THE SHORT VERSION ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">02 — The short version</div><h2 class="sec-title">The short version</h2></div>
+    <p class="prose lede">Microsoft and Amazon went public early enough that regular people could ride the curve. Today the Stripes and OpenAIs stay private for a decade-plus — so the upside is gone by the time you're allowed to buy in. <em>Disco opens those private rounds.</em> When a top fund leads a round, Disco's community co-invests on the exact same terms, from $100, and holds the stake as an NFT. I built it because I wanted it to exist — and designed every part of it, from the logo to the last micro-interaction.</p>
+  </section>
+
+  <!-- ══════════ 03 · HOW IT WORKS ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">03 — How it works</div><h2 class="sec-title">Four steps, no fund admin.</h2></div>
+    <div class="flow">
+      <div class="step s1"><div class="n">01</div><h3>Find a round</h3><p>Browse live rounds on the Dance Floors — filter by sector, stage, or which fund is leading.</p></div>
+      <div class="step s2"><div class="n">02</div><h3>Invest from $100</h3><p>Set an amount and see exactly what you'll get. A top VC already set the terms.</p></div>
+      <div class="step s3"><div class="n">03</div><h3>Hold it as an NFT</h3><p>Your fractional equity lands in your wallet as a token you actually own.</p></div>
+      <div class="step s4"><div class="n">04</div><h3>Get paid automatically</h3><p>Chainlink oracles trigger payouts at exits — no paperwork, no waiting on a fund admin.</p></div>
+    </div>
+  </section>
+
+  <!-- ══════════ 04 · INSIDE THE APP ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">04 — Inside the app</div><h2 class="sec-title">Five tabs, one idea: make private investing feel like something you'd actually open.</h2></div>
+
+    <!-- Dance Floors -->
+    <div class="walk">
+      <figure class="walk-fig"><div class="phone"><div class="screen"><img src="assets/floors.webp" alt="Dance Floors tab: a feed of active funding rounds. A featured NeuralPath AI card shows $2.4M raised, $12M valuation, 847 investors, and a glowing green 78% funding-progress bar."></div></div><figcaption class="fig-label">Floors · Active rounds</figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">The home screen</div>
+        <h3>A feed of live rounds, not a brokerage screen.</h3>
+        <p>The home tab — "Dance Floors" — is a scrollable feed of rounds you can join right now. Each card carries the numbers that matter (raised, valuation, investors) and a funding-progress bar that glows in the round's category color.</p>
+        <p>It reads like a social feed, not a trading terminal. That was the point: the people locked out of venture aren't intimidated by startups — they're intimidated by the interfaces around them.</p>
+      </div>
+    </div>
+
+    <!-- Filtering -->
+    <div class="walk flip">
+      <figure class="walk-fig"><div class="phone"><div class="screen"><img src="assets/floors-filter.webp" alt="The Dance Floors filter expanded: pill toggles for Industry Verticals, Funding Stage, and VC Host (Sequoia, Y Combinator, a16z, Founders Fund...). Selected pills glow solid green."></div></div><figcaption class="fig-label">Floors · Multi-select filter</figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">Filtering</div>
+        <h3>Filter by sector, stage, or which fund is hosting.</h3>
+        <p>Disco's real value is the fund behind a round, so the filter treats <em>VC Host</em> as a first-class dimension — alongside sector and stage. Sequoia, a16z, Founders Fund, YC.</p>
+        <p>Selection is the only thing that lights up: an unselected pill is a quiet outline, a selected one goes solid neon-green. Color earns its place by meaning "on," never decoration.</p>
+      </div>
+    </div>
+
+    <!-- The round -->
+    <div class="walk">
+      <figure class="walk-fig"><div class="phone"><div class="screen"><img src="assets/deal-invest.webp" alt="A round detail sheet for NeuralPath AI: valuation $12M, raised $2.4M, $100 minimum, $14.82 token price, an investment amount field, a live receipt reading 'You receive ~33.7 NFT tokens', a 2.5% fee, Polygon network, and a green 'Invest in NeuralPath AI' button."></div></div><figcaption class="fig-label">Round · Invest</figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">The round</div>
+        <h3>Every round reads like a story and ends in one tap.</h3>
+        <p>Open a round and it's tabbed into Overview, Milestones, and Investors. Type an amount and a live receipt does the math: how many NFT tokens you'll receive, the fee, the network — before you ever commit.</p>
+        <p>Every number is set in mono and green means money coming in. The whole sheet resolves to a single glowing <em>Invest</em> button.</p>
+      </div>
+    </div>
+
+    <!-- Wallet -->
+    <div class="walk flip">
+      <figure class="walk-fig"><div class="phone"><div class="screen"><img src="assets/wallet.webp" alt="Wallet tab: total portfolio value $47,832 up 12.4%, with invested, returns and holdings stats, a glowing green portfolio-performance line chart with 1W/1M/3M/1Y ranges, and holding cards below."></div></div><figcaption class="fig-label">Wallet · Portfolio</figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">Wallet</div>
+        <h3>Your portfolio, the way it should look.</h3>
+        <p>One number up top, a glowing performance line, then invested / returns / holdings. The chart emits light because, in this system, an active value is a value that glows.</p>
+        <p>It's the screen that turns "I own a slice of a startup" from an abstraction into something you check in the morning.</p>
+      </div>
+    </div>
+
+    <!-- Punch Bowl -->
+    <div class="walk">
+      <figure class="walk-fig"><div class="phone"><div class="screen"><img src="assets/punch.webp" alt="Punch Bowl tab: peer-to-peer NFT trading and blending. A 'Create Trade Offer' gradient button, Incoming/Outgoing/Browse/Blend tabs, and a trade card swapping a Solaris Solar position for Copenhagen Atomics with Decline / Counter / Accept actions."></div></div><figcaption class="fig-label">Punch Bowl · P2P trades</figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">The signature feature</div>
+        <h3>Trade or blend positions — without anyone selling.</h3>
+        <p>The Punch Bowl is a peer-to-peer floor for the NFT positions. Missed a round? Blend a slice of someone else's. Holding one others want? Trade or share it. Smart contracts handle the math; hybrid instruments emerge.</p>
+        <p>This is the one screen that leans pink and purple — the system's "action / negotiation" register — to set bargaining apart from the calm green of holding.</p>
+      </div>
+    </div>
+
+    <!-- Social -->
+    <div class="walk flip">
+      <figure class="walk-fig"><div class="phone"><div class="screen"><img src="assets/social.webp" alt="Disco Social tab: a feed where portfolio companies post updates — Copenhagen Atomics announcing 85% funded, Genie Genetics launching GenomeVault 2.0 — each with likes and comments."></div></div><figcaption class="fig-label">Social · Founder feed</figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">Social</div>
+        <h3>Founders post to the people who funded them.</h3>
+        <p>Because your cap-table position lives in the app, the companies you backed can talk to you in it. Disco Social is a feed of portfolio-company updates, milestones and press — the part of venture that's usually a quarterly PDF.</p>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="walk">
+      <figure class="walk-fig"><div class="phone"><div class="screen"><img src="assets/profile-analytics.webp" alt="Profile analytics: monthly, yearly and ROI figures, a stacked multicolor neon bar chart by month, and a sector breakdown — AI/ML $18,240, DeFi $14,100, Climate $9,800, Deep Tech $5,692 — each labeled in its own color."></div></div><figcaption class="fig-label">Profile · Analytics</figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">Profile</div>
+        <h3>Your track record, charted.</h3>
+        <p>The profile turns a year of investing into a stacked neon bar chart, with each sector keyed to its own color so the mix reads at a glance. ROI, monthly and yearly deltas, and a clean sector breakdown sit underneath.</p>
+        <p>Charts here are drawn from the system's vocabulary — no off-the-shelf library — so even the analytics feel like the brand.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 05 · THE SYSTEM ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">05 — The system behind the screens</div><h2 class="sec-title">Six rules every screen obeys.</h2></div>
+    <p class="prose">None of those screens are one-offs. They come from a single dark-mode design system I built first — tokens, type, components, charts and a11y — governed by six principles:</p>
+    <div class="grid3" style="margin-top:24px;">
+      <div class="pcard"><span class="dot" style="background:var(--bg-app);border:1px solid var(--divider)"></span><h3>Dark-first</h3><p>Background is always near-black. Cards lift by elevation, not borders.</p></div>
+      <div class="pcard"><span class="dot" style="background:var(--cyan);box-shadow:var(--glow-cyan)"></span><h3>Glow is the accent</h3><p>Bars, charts and active icons emit a soft glow. Glow signals "alive."</p></div>
+      <div class="pcard"><span class="dot" style="background:#fff"></span><h3>Mono numbers, always</h3><p>Every figure renders in JetBrains Mono. A number in a sans face is a bug.</p></div>
+      <div class="pcard"><span class="dot" style="background:var(--green);box-shadow:var(--glow-green)"></span><h3>Color is meaning</h3><p>Green = positive, pink = negative, cyan = link, yellow = warning. Never decoration.</p></div>
+      <div class="pcard"><span class="dot" style="background:var(--purple);box-shadow:var(--glow-purple)"></span><h3>Breathing room</h3><p>24px card padding, 32px section gaps. Whitespace is the most underused tool.</p></div>
+      <div class="pcard"><span class="dot" style="background:var(--pink);box-shadow:var(--glow-pink)"></span><h3>Agent-native</h3><p>Every surface has a structured-data twin, authored to be parsed by the app's AI agent.</p></div>
+    </div>
+    <div class="palette">
+      <div class="sw"><div class="chip-c" style="background:#00E87B;box-shadow:inset 0 0 24px rgba(0,232,123,.5)"></div><div class="meta"><div class="nm">Positive</div><div class="hex">#00E87B</div></div></div>
+      <div class="sw"><div class="chip-c" style="background:#00D4FF;box-shadow:inset 0 0 24px rgba(0,212,255,.5)"></div><div class="meta"><div class="nm">Link</div><div class="hex">#00D4FF</div></div></div>
+      <div class="sw"><div class="chip-c" style="background:#FF3B7A;box-shadow:inset 0 0 24px rgba(255,59,122,.5)"></div><div class="meta"><div class="nm">Negative</div><div class="hex">#FF3B7A</div></div></div>
+      <div class="sw"><div class="chip-c" style="background:#8B5CF6;box-shadow:inset 0 0 24px rgba(139,92,246,.5)"></div><div class="meta"><div class="nm">Violet</div><div class="hex">#8B5CF6</div></div></div>
+      <div class="sw"><div class="chip-c" style="background:#FBBF24;box-shadow:inset 0 0 24px rgba(251,191,36,.5)"></div><div class="meta"><div class="nm">Warning</div><div class="hex">#FBBF24</div></div></div>
+      <div class="sw"><div class="chip-c" style="background:#0D0E11;border-right:1px solid #222"></div><div class="meta"><div class="nm">App BG</div><div class="hex">#0D0E11</div></div></div>
+    </div>
+    <div class="frame">
+      <div class="bar"><i></i><i></i><i></i><span class="ttl">design-system.html — the living spec</span></div>
+      <iframe src="assets/design-system.html" title="Disco Capital design system" loading="lazy"></iframe>
+    </div>
+    <p class="prose" style="margin-top:16px;font-size:14px;"><a href="assets/design-system.html" target="_blank" rel="noopener">Open the full design system ↗</a> — principles, marks, palette, type scale, component gallery, chart vocabulary, and accessibility.</p>
+  </section>
+
+  <!-- ══════════ 06 · EXPLORE ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">06 — Explore</div><h2 class="sec-title">See it for yourself.</h2></div>
+    <div class="explore">
+      <a class="xbtn" href="https://disco-capital.com/" target="_blank" rel="noopener"><div class="k">Live prototype</div><div class="t">The app ↗</div><div class="a">disco-capital.com</div></a>
+      <a class="xbtn" href="assets/design-system.html" target="_blank" rel="noopener"><div class="k">Design</div><div class="t">Design system ↗</div><div class="a">principles · palette · components</div></a>
+      <a class="xbtn" href="assets/pitch-deck.html" target="_blank" rel="noopener"><div class="k">Story</div><div class="t">Pitch deck ↗</div><div class="a">a16z Speedrun · v3</div></a>
+    </div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer>
+    <div class="foot-mark" role="img" aria-label="Disco Capital"></div>
+    <div class="foot-line">Disco Capital · Founded, branded, designed &amp; built by Garrison Bullock</div>
+    <div class="foot-line">© 2026 Garrison Bullock · disco-capital.com</div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -24,7 +24,10 @@
       "Bash(sips -g pixelHeight -g pixelWidth __shot_copia.png)",
       "Bash(sips -c 170 620 --cropOffset 380 460 __shot_copia.png --out __crop_copia3.png)",
       "Bash(rm -f __tmp_*.html __shot_*.png __crop_*.png)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(rm -f .git/index.lock)",
+      "Bash(git reset *)",
+      "Bash(git commit *)"
     ]
   }
 }

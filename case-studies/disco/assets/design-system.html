@@ -1,0 +1,2187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Disco Capital — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,900&display=swap" rel="stylesheet">
+<style>
+/* ─── Tokens (mirrors tokens.css) ──────────────────────────────────────── */
+:root {
+  --bg-app: #0D0E11;
+  --bg-card: #151618;
+  --bg-card-hover: #1A1B1F;
+  --bg-card-elevated: #1E1F23;
+  --bg-input: #1A1B1F;
+  --bg-row-hover: #1C1D21;
+  --bg-overlay: rgba(5,6,8,0.72);
+
+  --green-400: #33FF99;
+  --green-500: #00E87B;
+  --green-600: #00C466;
+  --green-glow: rgba(0,232,123,0.25);
+  --green-glow-strong: rgba(0,232,123,0.40);
+  --green-glow-subtle: rgba(0,232,123,0.12);
+
+  --cyan-500: #00D4FF;
+  --cyan-glow: rgba(0,212,255,0.25);
+  --blue-500: #3B82F6;
+  --indigo-500: #6366F1;
+  --indigo-glow: rgba(99,102,241,0.25);
+  --purple-500: #8B5CF6;
+  --purple-glow: rgba(139,92,246,0.25);
+  --violet-500: #A855F7;
+  --violet-glow: rgba(168,85,247,0.25);
+  --pink-500: #EC4899;
+  --hot-pink-500: #FF3B7A;
+  --hot-pink-glow: rgba(255,59,122,0.25);
+  --red-500: #FF3B30;
+  --red-glow: rgba(255,59,48,0.25);
+  --yellow-500: #FBBF24;
+  --orange-500: #FF6B35;
+  --lime-500: #84CC16;
+  --lime-glow: rgba(132,204,22,0.25);
+  --gray-500: #6B7280;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #9CA3AF;
+  --text-tertiary: #6B7280;
+  --text-positive: #00E87B;
+  --text-negative: #FF3B7A;
+  --text-link: #00D4FF;
+  --text-disabled: #4B4F57;
+
+  --border-card: #222328;
+  --border-divider: #2A2B30;
+  --border-input: #333438;
+
+  --font-heading: 'Inter','SF Pro Display',-apple-system,sans-serif;
+  --font-body: 'Inter','SF Pro Text',-apple-system,sans-serif;
+  --font-mono: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  --glow-green:  0 0 8px rgba(0,232,123,0.40), 0 0 20px rgba(0,232,123,0.20), 0 0 40px rgba(0,232,123,0.10);
+  --glow-cyan:   0 0 8px rgba(0,212,255,0.40), 0 0 20px rgba(0,212,255,0.20), 0 0 40px rgba(0,212,255,0.10);
+  --glow-purple: 0 0 8px rgba(139,92,246,0.40), 0 0 20px rgba(139,92,246,0.20), 0 0 40px rgba(139,92,246,0.10);
+  --glow-pink:   0 0 8px rgba(255,59,122,0.40), 0 0 20px rgba(255,59,122,0.20), 0 0 40px rgba(255,59,122,0.10);
+  --glow-red:    0 0 8px rgba(255,59,48,0.40),  0 0 20px rgba(255,59,48,0.20),  0 0 40px rgba(255,59,48,0.10);
+  --glow-yellow: 0 0 8px rgba(251,191,36,0.40), 0 0 20px rgba(251,191,36,0.20), 0 0 40px rgba(251,191,36,0.10);
+  --glow-orange: 0 0 8px rgba(255,107,53,0.40), 0 0 20px rgba(255,107,53,0.20), 0 0 40px rgba(255,107,53,0.10);
+  --glow-lime:   0 0 8px rgba(132,204,22,0.40), 0 0 20px rgba(132,204,22,0.20), 0 0 40px rgba(132,204,22,0.10);
+  --glow-indigo: 0 0 8px rgba(99,102,241,0.40), 0 0 20px rgba(99,102,241,0.20), 0 0 40px rgba(99,102,241,0.10);
+  --glow-violet: 0 0 8px rgba(168,85,247,0.40), 0 0 20px rgba(168,85,247,0.20), 0 0 40px rgba(168,85,247,0.10);
+
+  --ambient-green: 0 4px 24px rgba(0,0,0,0.5), 0 0 60px rgba(0,232,123,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+a { color: var(--text-link); text-decoration: none; }
+
+.mono { font-family: var(--font-mono); letter-spacing: 0.02em; }
+.upper { text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ─── Top nav ─────────────────────────────────────────────────────────── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,14,17,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-card);
+}
+.topnav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; gap: 24px;
+  padding: 14px 24px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-heading); font-weight: 700; font-size: 16px;
+  letter-spacing: 0.08em;
+  color: var(--hot-pink-500);
+}
+.brand .star { color: var(--hot-pink-500); filter: drop-shadow(0 0 6px rgba(255,59,122,0.35)); font-size: 14px; }
+.brand .brand-mark { width: 40px; height: 40px; filter: drop-shadow(0 0 10px rgba(255,59,122,0.45)); flex-shrink: 0; }
+.topnav nav { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
+.topnav nav a {
+  color: var(--text-secondary); font-size: 12px; font-weight: 500;
+  padding: 6px 10px; border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+.topnav nav a:hover { color: var(--text-primary); background: var(--bg-card-hover); }
+.version-pill {
+  font-family: var(--font-mono); font-size: 11px;
+  padding: 4px 10px; border-radius: var(--radius-full);
+  border: 1px solid var(--border-input); color: var(--text-secondary);
+}
+
+/* ─── Hero ────────────────────────────────────────────────────────────── */
+.hero {
+  max-width: 1200px; margin: 0 auto;
+  padding: 80px 24px 64px;
+  border-bottom: 1px solid var(--border-card);
+}
+.hero h1 {
+  font-family: var(--font-heading); font-weight: 700;
+  font-size: 64px; line-height: 1; letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.hero h1 .accent { color: var(--green-500); text-shadow: 0 0 24px var(--green-glow-strong); }
+.hero p.lede { font-size: 18px; color: var(--text-secondary); max-width: 720px; margin-bottom: 32px; }
+.hero-meta {
+  display: flex; gap: 32px; flex-wrap: wrap;
+  font-size: 12px; color: var(--text-tertiary);
+}
+.hero-meta b { color: var(--text-primary); font-weight: 600; }
+
+/* ─── Section ─────────────────────────────────────────────────────────── */
+section {
+  max-width: 1200px; margin: 0 auto;
+  padding: 80px 24px;
+  border-bottom: 1px solid var(--border-card);
+  scroll-margin-top: 64px;
+}
+section header { margin-bottom: 32px; }
+section header .eyebrow {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--green-500); margin-bottom: 12px;
+}
+section header h2 {
+  font-family: var(--font-heading); font-weight: 700;
+  font-size: 36px; line-height: 1.1; letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+section header p { color: var(--text-secondary); max-width: 720px; font-size: 15px; }
+
+h3 {
+  font-family: var(--font-heading); font-weight: 600;
+  font-size: 20px; margin: 40px 0 16px;
+}
+h4 {
+  font-family: var(--font-heading); font-weight: 600;
+  font-size: 14px; margin: 24px 0 12px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+/* ─── Cards / shells ──────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.card-elev { background: var(--bg-card-elevated); }
+.card-featured { box-shadow: var(--ambient-green); }
+
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.grid-6 { grid-template-columns: repeat(6, minmax(0,1fr)); }
+@media (max-width: 800px) {
+  .grid-3, .grid-4, .grid-6 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
+/* ─── Color swatches ──────────────────────────────────────────────────── */
+.swatch {
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.swatch:hover { border-color: var(--border-input); transform: translateY(-1px); }
+.swatch .chip { height: 88px; }
+.swatch .meta { padding: 12px 14px; font-size: 12px; }
+.swatch .name { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.swatch .hex { font-family: var(--font-mono); color: var(--text-secondary); font-size: 11px; }
+.swatch .desc { color: var(--text-tertiary); font-size: 11px; margin-top: 6px; line-height: 1.4; }
+.swatch.copied { border-color: var(--green-500); }
+.swatch.copied .hex::after { content: '  COPIED'; color: var(--green-500); font-weight: 600; }
+
+/* ─── Typography specimens ────────────────────────────────────────────── */
+.type-row {
+  display: grid; grid-template-columns: 120px 100px 1fr;
+  align-items: baseline; gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-divider);
+}
+.type-row:last-child { border-bottom: 0; }
+.type-row .label { font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary); }
+.type-row .specs { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
+.type-row .sample { color: var(--text-primary); }
+
+/* ─── Spacing visualizer ──────────────────────────────────────────────── */
+.spacing-row {
+  display: grid; grid-template-columns: 80px 60px 1fr 2fr;
+  align-items: center; gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-divider);
+}
+.spacing-row:last-child { border-bottom: 0; }
+.spacing-row .name { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+.spacing-row .px { font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary); }
+.spacing-row .bar { background: var(--green-500); height: 8px; border-radius: 4px; box-shadow: var(--glow-green); }
+.spacing-row .desc { color: var(--text-secondary); font-size: 13px; }
+
+/* ─── Buttons ─────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  height: 48px; padding: 0 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.btn-primary { background: var(--green-500); color: #000; box-shadow: var(--glow-green); }
+.btn-primary:hover { filter: brightness(1.08); box-shadow: 0 0 12px rgba(0,232,123,0.5), 0 0 30px rgba(0,232,123,0.25); }
+.btn-primary:active { transform: scale(0.98); box-shadow: 0 0 6px rgba(0,232,123,0.6); }
+.btn-secondary { background: transparent; border-color: var(--border-input); color: var(--text-primary); }
+.btn-secondary:hover { background: var(--bg-card-hover); border-color: #444; }
+.btn-tertiary { background: transparent; color: var(--text-link); padding: 0 16px; }
+.btn-tertiary:hover { color: #66E2FF; }
+.btn-destructive { background: var(--red-500); color: #fff; box-shadow: var(--glow-red); }
+.btn-sell { background: var(--hot-pink-500); color: #fff; box-shadow: var(--glow-pink); }
+.btn-disabled { background: var(--bg-card-hover); color: var(--text-disabled); cursor: not-allowed; box-shadow: none; }
+.btn-compact { height: 36px; padding: 0 16px; font-size: 13px; }
+.btn-pill { border-radius: var(--radius-full); }
+
+/* ─── Inputs ──────────────────────────────────────────────────────────── */
+.input {
+  display: block; width: 100%;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 14px; font-family: var(--font-body);
+  outline: none;
+  transition: all 0.15s;
+}
+.input::placeholder { color: var(--text-tertiary); }
+.input:focus { border-color: var(--green-500); box-shadow: 0 0 0 3px var(--green-glow-subtle); }
+.input.mono { font-family: var(--font-mono); letter-spacing: 0.02em; }
+.input.error { border-color: var(--red-500); box-shadow: 0 0 0 3px var(--red-glow); }
+.helper { font-size: 12px; color: var(--text-tertiary); margin-top: 8px; }
+.helper.error { color: var(--text-negative); }
+
+/* ─── Chips & badges ──────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-input);
+  font-size: 12px; font-weight: 500; color: var(--text-secondary);
+  background: transparent; cursor: pointer;
+  transition: all 0.15s;
+}
+.chip:hover { color: var(--text-primary); }
+.chip.active { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border-input); }
+.chip.active::before { content: ''; width: 6px; height: 6px; background: var(--green-500); border-radius: 50%; box-shadow: 0 0 6px var(--green-glow); }
+
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px; }
+.badge.positive { color: var(--green-500); }
+.badge.negative { color: var(--red-500); }
+.badge.pending { color: var(--yellow-500); }
+.sector-chip {
+  display: inline-flex; align-items: center; height: 24px; padding: 0 10px;
+  border-radius: var(--radius-full);
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  color: #000;
+}
+.sector-chip.aiml     { background: #00E87B; box-shadow: var(--glow-green);  color: #003319; }
+.sector-chip.climate  { background: #84CC16; box-shadow: var(--glow-lime);   color: #1A2E03; }
+.sector-chip.consumer { background: #FBBF24; box-shadow: var(--glow-yellow); color: #3F2D02; }
+.sector-chip.space    { background: #FF6B35; box-shadow: var(--glow-orange); color: #fff; }
+.sector-chip.deeptech { background: #FF3B7A; box-shadow: var(--glow-pink);   color: #fff; }
+.sector-chip.biotech  { background: #A855F7; box-shadow: var(--glow-violet); color: #fff; }
+.sector-chip.fintech  { background: #6366F1; box-shadow: var(--glow-indigo); color: #fff; }
+.sector-chip.defi     { background: #00D4FF; box-shadow: var(--glow-cyan);   color: #003B4D; }
+
+/* ─── Tabs / segmented ────────────────────────────────────────────────── */
+.seg {
+  display: inline-flex;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  height: 36px;
+}
+.seg button {
+  background: transparent; border: 0; color: var(--text-secondary);
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  padding: 0 18px; height: 100%;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.seg button.on {
+  background: var(--bg-card-elevated); color: var(--green-500);
+  box-shadow: 0 0 0 1px var(--border-divider), 0 0 12px rgba(0,232,123,0.18);
+}
+
+/* ─── Progress ────────────────────────────────────────────────────────── */
+.progress {
+  background: var(--bg-input);
+  border-radius: var(--radius-full);
+  height: 8px; overflow: hidden;
+}
+.progress > .fill {
+  height: 100%; background: var(--green-500);
+  box-shadow: 0 0 12px var(--green-glow), 0 0 24px var(--green-glow);
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.22,0.61,0.36,1);
+}
+
+/* ─── Tab bar (mock) ──────────────────────────────────────────────────── */
+.tabbar {
+  display: flex; align-items: stretch;
+  height: 64px;
+  background: rgba(21,22,24,0.85);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-card);
+  border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+  padding: 6px 4px;
+  box-sizing: border-box;
+}
+.tabbar .tab {
+  flex: 1 1 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  font-size: 10px; font-weight: 500; color: var(--text-tertiary);
+  cursor: pointer;
+  min-width: 0;
+}
+.tabbar .tab .icbox {
+  display: flex; align-items: center; justify-content: center;
+  height: 24px; width: 28px;
+}
+.tabbar .tab .ic { height: 22px; width: auto; max-width: 28px; opacity: 0.85; display: block; }
+.tabbar .tab.on { color: var(--hot-pink-500); }
+.tabbar .tab.on .ic { opacity: 1; filter: drop-shadow(0 0 4px rgba(255,59,122,0.40)) drop-shadow(0 0 10px rgba(255,59,122,0.20)) drop-shadow(0 0 20px rgba(255,59,122,0.10)); }
+
+/* ─── Hyper Charts widget ─────────────────────────────────────────────── */
+.widget {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;       /* clip chart glow at the card border */
+  min-width: 0;
+}
+.widget header { margin: 0 0 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.widget header h5 { font-size: 14px; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.widget .star {
+  width: 22px; height: 22px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--green-500); filter: drop-shadow(0 0 8px var(--green-glow));
+  font-size: 14px;
+}
+.widget .metric { font-family: var(--font-mono); font-weight: 700; font-size: 26px; letter-spacing: 0.02em; line-height: 1.15; }
+.widget .delta { font-family: var(--font-mono); font-size: 12px; font-weight: 600; margin-left: 8px; }
+.widget .delta.up { color: var(--green-500); }
+.widget .delta.down { color: var(--red-500); }
+.widget .compared { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+.widget .footnote { font-size: 11px; color: var(--text-tertiary); margin-top: 12px; }
+
+.metric-strip { display: flex; gap: 12px; margin-bottom: 14px; }
+.metric-strip .col { flex: 1; min-width: 0; }
+.metric-strip .col h6 {
+  font-size: 11px; font-weight: 500; color: var(--text-secondary);
+  display: flex; align-items: center; gap: 4px; margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.metric-strip .col .v {
+  font-family: var(--font-mono); font-weight: 700; font-size: 17px;
+  letter-spacing: 0.01em; line-height: 1.2;
+  display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap;
+}
+.metric-strip .col .v .delta { font-size: 10px; margin-left: 0; }
+
+.footer-table { margin-top: 14px; border-top: 1px solid var(--border-divider); }
+.footer-table .row {
+  display: flex; justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-divider);
+  font-size: 12px;
+}
+.footer-table .row:last-child { border-bottom: 0; }
+.footer-table .row .v { font-family: var(--font-mono); color: var(--text-primary); }
+
+/* ─── Chart bars (SVG-style via divs) ─────────────────────────────────── */
+.chart-area { height: 140px; padding: 8px 4px 4px; position: relative; min-width: 0; }
+.bars { display: flex; align-items: flex-end; gap: 4px; height: 100%; min-width: 0; }
+.bar {
+  flex: 1; min-width: 0;
+  background: linear-gradient(to bottom, var(--green-400), var(--green-600));
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 0 6px var(--green-glow), 0 0 14px var(--green-glow-subtle);
+  position: relative;
+}
+.bar.cyan  { background: linear-gradient(to bottom, #5EE7FF, #0099BF); box-shadow: 0 0 6px var(--cyan-glow), 0 0 14px rgba(0,212,255,0.10); }
+.bar.purple { background: linear-gradient(to bottom, #B89AF8, #6541C7); box-shadow: var(--glow-purple); }
+.bar.pink  { background: linear-gradient(to bottom, #FF7AAA, #CC1454); box-shadow: var(--glow-pink); }
+.bar.yellow{ background: linear-gradient(to bottom, #FCD15B, #B8860D); box-shadow: var(--glow-yellow); }
+
+/* Stacked horizontal bar — the iconic look */
+.shb { display: flex; flex-direction: column; gap: 8px; padding: 8px 4px; min-width: 0; }
+.shb .row { display: flex; gap: 4px; min-width: 0; }
+.shb .pill {
+  flex: 1; min-width: 0;
+  height: 8px; background: var(--bg-input); border-radius: var(--radius-full);
+}
+/* Slightly tighter glow than the canonical --glow-green so the halo doesn't
+   extend past the card on dense rows. Element glow is kept on chart bars. */
+.shb .pill.fill {
+  background: var(--green-500);
+  box-shadow: 0 0 6px rgba(0,232,123,0.40), 0 0 14px rgba(0,232,123,0.18);
+}
+
+/* Bubble bar */
+.bubble-row { display: flex; align-items: center; gap: 6px; height: 100%; }
+.bubble {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--yellow-500); box-shadow: var(--glow-yellow);
+}
+
+/* Stacked columns with dot reels */
+.reels { display: flex; gap: 8px; height: 100%; align-items: flex-end; }
+.reel { flex: 1; display: flex; flex-direction: column; gap: 3px; align-items: center; justify-content: flex-end; height: 100%; }
+.reel .seg { width: 8px; height: 14px; border-radius: var(--radius-full); }
+
+/* Donut */
+.donut { width: 160px; height: 160px; position: relative; margin: 0 auto; }
+.donut svg { transform: rotate(-90deg); }
+.donut .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.donut .v { font-family: var(--font-mono); font-weight: 700; font-size: 22px; letter-spacing: 0.02em; }
+.donut .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-top: 4px; }
+
+/* ─── Wallet hero card ────────────────────────────────────────────────── */
+.wallet {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #1a1e2e 0%, #0D0E11 100%);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  border: 1px solid var(--border-card);
+  box-shadow: var(--ambient-green);
+}
+.wallet::after {
+  content: ''; position: absolute;
+  top: -60%; right: -20%;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(0,232,123,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.wallet h6 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 8px; }
+.wallet .total { font-family: var(--font-mono); font-weight: 700; font-size: 40px; letter-spacing: 0.02em; }
+.wallet .delta { font-family: var(--font-mono); font-weight: 600; font-size: 14px; color: var(--green-500); margin-top: 4px; }
+.wallet .holdings-mini { display: flex; gap: 8px; margin-top: 24px; }
+.wallet .mini {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 18px; color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ─── Dance Floor card ────────────────────────────────────────────────── */
+.df-card { padding: 20px; }
+.df-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.df-mark {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 18px; color: #fff;
+}
+.df-card .tagline { color: var(--text-secondary); font-size: 13px; margin-bottom: 16px; }
+.df-card .progress-line { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); display: flex; justify-content: space-between; margin-top: 8px; }
+
+/* ─── NFT stake card ──────────────────────────────────────────────────── */
+.stake {
+  width: 240px; height: 240px;
+  border-radius: var(--radius-xl);
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.stake::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 6px 6px; opacity: 0.5;
+}
+.stake .glyph {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-heading); font-weight: 700;
+  font-size: 88px; color: #fff;
+}
+.stake .corner {
+  position: absolute; top: 12px; right: 12px;
+  width: 24px; height: 24px; border: 1.5px solid #fff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.stake .corner::after { content: ''; width: 8px; height: 8px; transform: rotate(45deg); border: 1.5px solid #fff; }
+.stake .band {
+  background: rgba(0,0,0,0.45); backdrop-filter: blur(8px);
+  padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;
+}
+.stake .band .name { font-size: 14px; font-weight: 600; }
+.stake-meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); margin-top: 8px; padding: 0 4px; display: flex; justify-content: space-between; }
+
+/* sector gradients — same hue, ~30% darker second stop */
+.stake.aiml     { background: linear-gradient(135deg, #00E87B, #00C466); box-shadow: 0 0 24px rgba(0,232,123,0.20); }
+.stake.aiml .glyph     { text-shadow: var(--glow-green); }
+.stake.climate  { background: linear-gradient(135deg, #84CC16, #4D7C0F); box-shadow: 0 0 24px rgba(132,204,22,0.20); }
+.stake.climate .glyph  { text-shadow: var(--glow-lime); }
+.stake.consumer { background: linear-gradient(135deg, #FBBF24, #D97706); box-shadow: 0 0 24px rgba(251,191,36,0.20); }
+.stake.consumer .glyph { text-shadow: var(--glow-yellow); }
+.stake.space    { background: linear-gradient(135deg, #FF6B35, #C2410C); box-shadow: 0 0 24px rgba(255,107,53,0.25); }
+.stake.space .glyph    { text-shadow: var(--glow-orange); }
+.stake.deeptech { background: linear-gradient(135deg, #FF3B7A, #BE185D); box-shadow: 0 0 24px rgba(255,59,122,0.20); }
+.stake.deeptech .glyph { text-shadow: var(--glow-pink); }
+.stake.biotech  { background: linear-gradient(135deg, #A855F7, #7E22CE); box-shadow: 0 0 24px rgba(168,85,247,0.20); }
+.stake.biotech .glyph  { text-shadow: var(--glow-violet); }
+.stake.fintech  { background: linear-gradient(135deg, #6366F1, #3730A3); box-shadow: 0 0 24px rgba(99,102,241,0.20); }
+.stake.fintech .glyph  { text-shadow: var(--glow-indigo); }
+.stake.defi     { background: linear-gradient(135deg, #00D4FF, #0369A1); box-shadow: 0 0 24px rgba(0,212,255,0.20); }
+.stake.defi .glyph     { text-shadow: var(--glow-cyan); }
+
+/* ─── iPhone frame ────────────────────────────────────────────────────── */
+.phone {
+  width: 360px; height: 740px;
+  background: var(--bg-app);
+  border-radius: 44px;
+  border: 12px solid #0a0a0c;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px #2a2a2c;
+  position: relative; overflow: hidden;
+  margin: 0 auto;
+}
+.phone .notch {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 30px; background: #0a0a0c; border-radius: 18px; z-index: 5;
+}
+.phone .screen {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+}
+.phone .statusbar {
+  height: 50px; padding: 16px 24px 0; display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+}
+.phone .body { flex: 1; padding: 12px 16px; overflow: hidden; }
+
+/* ─── Do/don't ─────────────────────────────────────────────────────────── */
+.dodont { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.dodont .col {
+  border-radius: var(--radius-lg); padding: 20px;
+  border: 1px solid;
+}
+.dodont .col.do  { border-color: rgba(0,232,123,0.3); background: rgba(0,232,123,0.04); }
+.dodont .col.dont{ border-color: rgba(255,59,122,0.3); background: rgba(255,59,122,0.04); }
+.dodont .col h5 {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.dodont .col.do h5 { color: var(--green-500); }
+.dodont .col.dont h5 { color: var(--red-500); }
+
+/* ─── Code block ──────────────────────────────────────────────────────── */
+pre.code {
+  background: #0a0b0d;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-secondary); overflow-x: auto;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+pre.code .k { color: var(--cyan-500); }
+pre.code .v { color: var(--green-400); }
+
+/* ─── Glow rings around tagged elements ───────────────────────────────── */
+.glow-tile {
+  background: var(--bg-card); border-radius: var(--radius-md);
+  padding: 24px; text-align: center;
+  border: 1px solid var(--border-card);
+}
+.glow-orb { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 12px; }
+.glow-orb.green  { background: var(--green-500);    box-shadow: var(--glow-green); }
+.glow-orb.cyan   { background: var(--cyan-500);     box-shadow: var(--glow-cyan); }
+.glow-orb.indigo { background: var(--indigo-500);   box-shadow: var(--glow-indigo); }
+.glow-orb.purple { background: var(--purple-500);   box-shadow: var(--glow-purple); }
+.glow-orb.violet { background: var(--violet-500);   box-shadow: var(--glow-violet); }
+.glow-orb.pink   { background: var(--hot-pink-500); box-shadow: var(--glow-pink); }
+.glow-orb.yellow { background: var(--yellow-500);   box-shadow: var(--glow-yellow); }
+.glow-orb.orange { background: var(--orange-500);   box-shadow: var(--glow-orange); }
+.glow-orb.lime   { background: var(--lime-500);     box-shadow: var(--glow-lime); }
+
+@keyframes glow-pulse {
+  0%,100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.pulse { animation: glow-pulse 2s cubic-bezier(0.65,0,0.35,1) infinite; }
+
+/* ─── Footer ──────────────────────────────────────────────────────────── */
+footer {
+  max-width: 1200px; margin: 0 auto;
+  padding: 48px 24px 80px;
+  font-size: 12px; color: var(--text-tertiary);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px;
+}
+footer .links a { color: var(--text-secondary); margin-right: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ─── Top nav ────────────────────────────────────────────────────────── -->
+<div class="topnav"><div class="topnav-inner">
+  <div class="brand"><svg class="brand-mark" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" aria-label="Disco Capital"><path fill="currentColor" d="M865.338,347.99h-112.39c4.161,25.693,5.815,51.963,10.674,77.512,7.6,36.437,27.237,76.449,64.742,89.093,11.869,4.439,25.689,4.494,39.719,4.476,15.092.021,34.971-.007,49.064.004-3.396-62.238-21.866-120.454-51.809-171.086Z"/><path fill="currentColor" d="M348.063,519.075h174.5v-171.086h-160.238c-8.476,53.358-13.345,111.114-14.263,171.086Z"/><path fill="currentColor" d="M557.435,347.99v171.086c22.102-.002,48.954.001,72.21,0,13.492-.233,24.956.864,36.119-1.96,34.815-8.126,54.974-41.207,59.331-75.025,2.764-18.459.169-37.203-2.053-55.904-1.568-12.768-3.421-25.5-5.371-38.196h-160.238Z"/><path fill="currentColor" d="M327.05,347.99h-112.388c-29.945,50.632-48.413,108.848-51.809,171.086h150.337c.895-59.713,5.616-117.423,13.86-171.086Z"/><path fill="currentColor" d="M313.092,553.801h-150.546c2.232,62.005,19.4,120.194,48.029,171.086h115.416c-7.901-53.781-12.309-111.477-12.899-171.086Z"/><path fill="currentColor" d="M781.905,597.295c-4.541,7.939-8.234,16.323-11.383,24.918-4.922,13.434-7.899,27.503-9.232,41.748-1.944,20.773-4.373,41.118-7.283,60.926h115.418c28.627-50.892,45.797-109.081,48.029-171.086h-64.667c-14.228,0-28.29,3.749-40.318,11.35-12.271,7.754-22.622,18.128-30.564,32.145Z"/><path fill="currentColor" d="M361.22,724.887h161.343v-171.086h-174.596c.605,59.853,5.134,117.601,13.253,171.086Z"/><path fill="currentColor" d="M648.549,553.801s-91.114,0-91.114,0v171.086h161.343c4.431-34.83,12.56-71.789,3.995-106.661-7.738-36.162-36.469-64.679-74.225-64.425Z"/><path fill="currentColor" d="M232.664,759.612c33.217,46.398,76.678,84.962,127.077,112.386-11.331-34.189-20.733-71.964-28.059-112.386h-99.017Z"/><path fill="currentColor" d="M557.435,917.313c41.521-1.887,81.292-10.481,118.261-24.719,1.218-3.053,2.398-6.09,3.534-9.1,13.814-36.594,25.112-78.388,33.667-123.883h-155.462v157.701Z"/><path fill="currentColor" d="M400.77,883.495c1.136,3.01,2.316,6.047,3.534,9.1,36.969,14.238,76.74,22.832,118.26,24.719v-157.701h-155.462c8.557,45.495,19.855,87.289,33.669,123.883Z"/><path fill="currentColor" d="M720.261,871.998c50.397-27.424,93.858-65.988,127.074-112.386h-99.016c-7.326,40.422-16.727,78.197-28.058,112.386Z"/><path fill="currentColor" d="M400.77,196.465c-13.092,34.684-23.917,74.05-32.297,116.8h154.091v-150.578c-41.528,1.888-81.301,10.474-118.275,24.717-1.214,3.04-2.387,6.063-3.518,9.06Z"/><path fill="currentColor" d="M842.143,313.264c-32.499-43.242-74.07-79.273-121.877-105.288,10.665,32.184,19.632,67.531,26.757,105.288h95.12Z"/><path fill="currentColor" d="M679.23,196.465c-1.132-2.997-2.305-6.02-3.518-9.06-36.974-14.244-76.748-22.83-118.277-24.718v150.578h154.093c-8.38-42.75-19.205-82.116-32.297-116.8Z"/><path fill="currentColor" d="M359.736,207.976c-47.809,26.016-89.38,62.046-121.879,105.289h95.12c7.125-37.758,16.092-73.104,26.759-105.289Z"/></svg> DISCO CAPITAL</div>
+  <nav>
+    <a href="#foundations">Foundations</a>
+    <a href="#logo">Logo</a>
+    <a href="#color">Color</a>
+    <a href="#type">Type</a>
+    <a href="#spacing">Spacing</a>
+    <a href="#glow">Glow</a>
+    <a href="#icons">Icons</a>
+    <a href="#components">Components</a>
+    <a href="#charts">Charts</a>
+    <a href="#patterns">Patterns</a>
+    <a href="#filters">Filters</a>
+    <a href="#nft">NFTs</a>
+    <a href="#motion">Motion</a>
+    <a href="#ios">iOS</a>
+    <a href="#a11y">A11y</a>
+  </nav>
+  <span class="version-pill">v1.0 · iOS</span>
+</div></div>
+
+<!-- ─── Hero ───────────────────────────────────────────────────────────── -->
+<header class="hero">
+  <h1>Disco Capital<br/><span class="accent">Design System</span></h1>
+  <p class="lede">Alien Pixels, adapted for an iOS-first tokenized-VC product. Dark luxury cockpit with neon-green data, mono numbers, glow-as-signal — and just enough disco to remember why we exist.</p>
+  <div class="hero-meta">
+    <div><b>Version</b> 1.0 · April 2026</div>
+    <div><b>Production target</b> iOS · React Native + Expo</div>
+    <div><b>Owner</b> Garrison Bullock</div>
+  </div>
+</header>
+
+<!-- ─── Foundations ────────────────────────────────────────────────────── -->
+<section id="foundations">
+  <header>
+    <div class="eyebrow">Foundations</div>
+    <h2>Six principles</h2>
+    <p>Every design and code decision should be checkable against these. If something on screen breaks one of them, that's the bug.</p>
+  </header>
+  <div class="grid grid-3">
+    <div class="card"><h3 style="margin-top:0">1. Dark-first</h3><p style="color:var(--text-secondary)">Background is always near-black. Cards lift by elevation, not borders. White is for light.</p></div>
+    <div class="card"><h3 style="margin-top:0">2. Glow is the accent</h3><p style="color:var(--text-secondary)">Color radiates. Bars, charts, active icons emit a soft ambient glow. Glow signals "alive."</p></div>
+    <div class="card"><h3 style="margin-top:0">3. Mono numbers, always</h3><p style="color:var(--text-secondary)">Every numerical value renders in JetBrains Mono / SF Mono. A number in a sans-serif face is a bug.</p></div>
+    <div class="card"><h3 style="margin-top:0">4. Color is meaning</h3><p style="color:var(--text-secondary)">Green = positive. Hot pink = negative. Cyan = link. Yellow = warning. Color is never decoration.</p></div>
+    <div class="card"><h3 style="margin-top:0">5. Breathing room</h3><p style="color:var(--text-secondary)">24px card padding, 32px section gaps. Whitespace is the system's most underused tool.</p></div>
+    <div class="card"><h3 style="margin-top:0">6. Agent-native</h3><p style="color:var(--text-secondary)">Every UI surface has a structured-data twin. Microcopy is authored to be parsed by Disco Dan.</p></div>
+  </div>
+</section>
+
+<!-- ─── Logo ───────────────────────────────────────────────────────────── -->
+<section id="logo">
+  <header>
+    <div class="eyebrow">Logo</div>
+    <h2>Disco Capital marks</h2>
+    <p>Four official logo variants. The disco-ball icon is the foundation, paired with the wordmark in three lockups. Pick the variant that fits the format — never modify proportions or relationships.</p>
+  </header>
+
+  <style>
+    .logo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 12px; }
+    @media (max-width: 720px) { .logo-grid { grid-template-columns: 1fr; } }
+    .logo-card { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+    .logo-card .logo-frame { background: var(--bg-app); border: 1px solid rgba(255,255,255,0.04); border-radius: var(--radius-md); padding: 28px; display: flex; align-items: center; justify-content: center; min-height: 200px; }
+    .logo-card .logo-frame svg { color: var(--text-primary); width: 100%; max-width: 360px; max-height: 160px; height: auto; }
+    .logo-card .logo-frame.square svg { max-width: 160px; max-height: 160px; }
+    .logo-card h4 { margin: 0; font-size: 14px; }
+    .logo-card .meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.6px; text-transform: uppercase; }
+    .logo-card p { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+  </style>
+
+  <div class="logo-grid">
+
+    <!-- 1. Ball mark -->
+    <div class="logo-card">
+      <div class="logo-frame square">
+        <svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" aria-label="Disco Capital ball mark">
+          <path fill="currentColor" d="M865.338,347.99h-112.39c4.161,25.693,5.815,51.963,10.674,77.512,7.6,36.437,27.237,76.449,64.742,89.093,11.869,4.439,25.689,4.494,39.719,4.476,15.092.021,34.971-.007,49.064.004-3.396-62.238-21.866-120.454-51.809-171.086Z"/>
+          <path fill="currentColor" d="M348.063,519.075h174.5v-171.086h-160.238c-8.476,53.358-13.345,111.114-14.263,171.086Z"/>
+          <path fill="currentColor" d="M557.435,347.99v171.086c22.102-.002,48.954.001,72.21,0,13.492-.233,24.956.864,36.119-1.96,34.815-8.126,54.974-41.207,59.331-75.025,2.764-18.459.169-37.203-2.053-55.904-1.568-12.768-3.421-25.5-5.371-38.196h-160.238Z"/>
+          <path fill="currentColor" d="M327.05,347.99h-112.388c-29.945,50.632-48.413,108.848-51.809,171.086h150.337c.895-59.713,5.616-117.423,13.86-171.086Z"/>
+          <path fill="currentColor" d="M313.092,553.801h-150.546c2.232,62.005,19.4,120.194,48.029,171.086h115.416c-7.901-53.781-12.309-111.477-12.899-171.086Z"/>
+          <path fill="currentColor" d="M781.905,597.295c-4.541,7.939-8.234,16.323-11.383,24.918-4.922,13.434-7.899,27.503-9.232,41.748-1.944,20.773-4.373,41.118-7.283,60.926h115.418c28.627-50.892,45.797-109.081,48.029-171.086h-64.667c-14.228,0-28.29,3.749-40.318,11.35-12.271,7.754-22.622,18.128-30.564,32.145Z"/>
+          <path fill="currentColor" d="M361.22,724.887h161.343v-171.086h-174.596c.605,59.853,5.134,117.601,13.253,171.086Z"/>
+          <path fill="currentColor" d="M648.549,553.801s-91.114,0-91.114,0v171.086h161.343c4.431-34.83,12.56-71.789,3.995-106.661-7.738-36.162-36.469-64.679-74.225-64.425Z"/>
+          <path fill="currentColor" d="M232.664,759.612c33.217,46.398,76.678,84.962,127.077,112.386-11.331-34.189-20.733-71.964-28.059-112.386h-99.017Z"/>
+          <path fill="currentColor" d="M557.435,917.313c41.521-1.887,81.292-10.481,118.261-24.719,1.218-3.053,2.398-6.09,3.534-9.1,13.814-36.594,25.112-78.388,33.667-123.883h-155.462v157.701Z"/>
+          <path fill="currentColor" d="M400.77,883.495c1.136,3.01,2.316,6.047,3.534,9.1,36.969,14.238,76.74,22.832,118.26,24.719v-157.701h-155.462c8.557,45.495,19.855,87.289,33.669,123.883Z"/>
+          <path fill="currentColor" d="M720.261,871.998c50.397-27.424,93.858-65.988,127.074-112.386h-99.016c-7.326,40.422-16.727,78.197-28.058,112.386Z"/>
+          <path fill="currentColor" d="M400.77,196.465c-13.092,34.684-23.917,74.05-32.297,116.8h154.091v-150.578c-41.528,1.888-81.301,10.474-118.275,24.717-1.214,3.04-2.387,6.063-3.518,9.06Z"/>
+          <path fill="currentColor" d="M842.143,313.264c-32.499-43.242-74.07-79.273-121.877-105.288,10.665,32.184,19.632,67.531,26.757,105.288h95.12Z"/>
+          <path fill="currentColor" d="M679.23,196.465c-1.132-2.997-2.305-6.02-3.518-9.06-36.974-14.244-76.748-22.83-118.277-24.718v150.578h154.093c-8.38-42.75-19.205-82.116-32.297-116.8Z"/>
+          <path fill="currentColor" d="M359.736,207.976c-47.809,26.016-89.38,62.046-121.879,105.289h95.12c7.125-37.758,16.092-73.104,26.759-105.289Z"/>
+        </svg>
+      </div>
+      <h4>Ball mark</h4>
+      <div class="meta">1080 × 1080 · square</div>
+      <p>The icon by itself. Use for favicons, app icons, profile bubbles, watermarks — anywhere too small for type to be legible.</p>
+    </div>
+
+    <!-- 2. Horizontal lockup: ball + DISCO CAPITAL -->
+    <div class="logo-card">
+      <div class="logo-frame">
+        <svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" aria-label="Disco Capital horizontal lockup">
+          <path fill="currentColor" d="M369.026,455.575h-49.417c1.83,11.297,2.557,22.848,4.693,34.081,3.342,16.021,11.976,33.614,28.466,39.174,5.219,1.952,11.295,1.976,17.464,1.968,6.636.009,15.376-.003,21.573.002-1.493-27.365-9.614-52.962-22.78-75.225Z"/>
+          <path fill="currentColor" d="M141.584,530.8h76.726v-75.225h-70.455c-3.727,23.461-5.868,48.856-6.271,75.225Z"/>
+          <path fill="currentColor" d="M233.643,455.575v75.225c9.718,0,21.524,0,31.75,0,5.932-.103,10.973.38,15.881-.862,15.308-3.573,24.172-18.118,26.087-32.988,1.215-8.116.074-16.358-.902-24.581-.689-5.614-1.504-11.212-2.361-16.794h-70.455Z"/>
+          <path fill="currentColor" d="M132.345,455.575h-49.416c-13.166,22.262-21.287,47.859-22.78,75.225h66.102c.393-26.255,2.469-51.63,6.094-75.225Z"/>
+          <path fill="currentColor" d="M126.208,546.068H60.014c.981,27.263,8.53,52.848,21.118,75.225h50.747c-3.474-23.647-5.412-49.015-5.672-75.225Z"/>
+          <path fill="currentColor" d="M332.341,565.192c-1.997,3.491-3.621,7.177-5.005,10.956-2.164,5.907-3.473,12.093-4.059,18.356-.855,9.134-1.923,18.079-3.202,26.789h50.748c12.587-22.377,20.136-47.962,21.118-75.225h-28.434c-6.256,0-12.439,1.648-17.727,4.99-5.395,3.409-9.947,7.971-13.439,14.134Z"/>
+          <path fill="currentColor" d="M147.369,621.293h70.941v-75.225h-76.768c.266,26.317,2.258,51.708,5.827,75.225Z"/>
+          <path fill="currentColor" d="M273.705,546.068s-40.062,0-40.062,0v75.225h70.941c1.948-15.315,5.522-31.565,1.757-46.898-3.403-15.9-16.035-28.439-32.636-28.327Z"/>
+          <path fill="currentColor" d="M90.844,636.561c14.605,20.401,33.715,37.357,55.874,49.415-4.982-15.032-9.116-31.642-12.337-49.415h-43.537Z"/>
+          <path fill="currentColor" d="M233.643,705.901c18.257-.83,35.743-4.608,51.998-10.869.536-1.342,1.054-2.678,1.554-4.001,6.074-16.09,11.041-34.466,14.803-54.47h-68.355v69.34Z"/>
+          <path fill="currentColor" d="M164.759,691.032c.5,1.323,1.018,2.659,1.554,4.001,16.255,6.26,33.742,10.039,51.998,10.869v-69.34h-68.355c3.762,20.004,8.73,38.38,14.804,54.47Z"/>
+          <path fill="currentColor" d="M305.236,685.976c22.159-12.058,41.269-29.014,55.873-49.415h-43.536c-3.221,17.773-7.355,34.383-12.337,49.415Z"/>
+          <path fill="currentColor" d="M164.759,388.95c-5.757,15.25-10.516,32.559-14.201,51.356h67.752v-66.208c-18.259.83-35.748,4.605-52.005,10.868-.534,1.337-1.049,2.666-1.547,3.984Z"/>
+          <path fill="currentColor" d="M358.827,440.306c-14.289-19.013-32.568-34.856-53.588-46.294,4.689,14.151,8.632,29.693,11.765,46.294h41.823Z"/>
+          <path fill="currentColor" d="M287.195,388.95c-.498-1.318-1.013-2.647-1.547-3.984-16.257-6.263-33.745-10.038-52.005-10.868v66.208h67.753c-3.685-18.797-8.444-36.106-14.201-51.356Z"/>
+          <path fill="currentColor" d="M146.717,394.012c-21.021,11.439-39.3,27.281-53.589,46.295h41.823c3.133-16.602,7.076-32.143,11.766-46.295Z"/>
+          <text x="0" y="0" transform="translate(448.582 622.023)" style="font-family:'Satoshi','Satoshi Variable',Inter,sans-serif;font-size:225.561px;font-weight:900;fill:currentColor;letter-spacing:-0.015em">Disco Capital</text>
+        </svg>
+      </div>
+      <h4>Horizontal lockup</h4>
+      <div class="meta">1920 × 1080 · 16:9</div>
+      <p>Primary horizontal version. Use for site headers, landing pages, signature blocks, business cards, anywhere wide.</p>
+    </div>
+
+    <!-- 3. Stacked lockup: ball + DISCO / CAPITAL stacked -->
+    <div class="logo-card">
+      <div class="logo-frame square">
+        <svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" aria-label="Disco Capital stacked lockup">
+          <path fill="currentColor" d="M437.644,427.721h-65.721c2.433,15.024,3.4,30.386,6.242,45.326,4.444,21.307,15.927,44.704,37.858,52.098,6.94,2.596,15.022,2.628,23.226,2.617,8.825.012,20.449-.004,28.69.002-1.986-36.394-12.786-70.436-30.296-100.043Z"/>
+          <path fill="currentColor" d="M135.165,527.764h102.04v-100.043h-93.7c-4.957,31.202-7.803,64.974-8.34,100.043Z"/>
+          <path fill="currentColor" d="M257.597,427.721v100.043c12.925-.001,28.626,0,42.225,0,7.889-.136,14.593.505,21.121-1.146,20.358-4.751,32.146-24.096,34.694-43.871,1.616-10.794.099-21.754-1.2-32.69-.917-7.466-2.001-14.911-3.14-22.335h-93.7Z"/>
+          <path fill="currentColor" d="M122.878,427.721H57.158c-17.51,29.607-28.31,63.649-30.296,100.043h87.91c.523-34.917,3.284-68.664,8.105-100.043Z"/>
+          <path fill="currentColor" d="M114.716,548.07H26.684c1.305,36.258,11.344,70.284,28.085,100.044h67.49c-4.62-31.448-7.198-65.186-7.543-100.044Z"/>
+          <path fill="currentColor" d="M388.857,573.504c-2.656,4.643-4.815,9.545-6.656,14.571-2.878,7.855-4.619,16.083-5.398,24.412-1.137,12.147-2.557,24.044-4.259,35.627h67.491c16.74-29.759,26.78-63.786,28.085-100.044h-37.814c-8.32,0-16.543,2.192-23.576,6.637-7.176,4.534-13.228,10.601-17.872,18.797Z"/>
+          <path fill="currentColor" d="M142.859,648.114h94.346v-100.044h-102.096c.354,35,3.002,68.768,7.75,100.044Z"/>
+          <path fill="currentColor" d="M310.876,548.07s-53.279,0-53.279,0v100.044h94.346c2.591-20.367,7.344-41.979,2.336-62.37-4.525-21.146-21.325-37.821-43.403-37.673Z"/>
+          <path fill="currentColor" d="M67.685,668.419c19.424,27.131,44.838,49.682,74.309,65.718-6.626-19.992-12.124-42.081-16.408-65.718h-57.901Z"/>
+          <path fill="currentColor" d="M257.597,760.636c24.28-1.103,47.536-6.129,69.154-14.454.712-1.785,1.402-3.561,2.066-5.321,8.078-21.398,14.684-45.838,19.687-72.441h-90.907v92.217Z"/>
+          <path fill="currentColor" d="M165.986,740.86c.664,1.76,1.354,3.536,2.066,5.321,21.618,8.326,44.874,13.351,69.153,14.454v-92.217h-90.907c5.004,26.603,11.61,51.043,19.688,72.441Z"/>
+          <path fill="currentColor" d="M352.81,734.137c29.47-16.036,54.884-38.587,74.307-65.718h-57.9c-4.284,23.637-9.781,45.726-16.407,65.718Z"/>
+          <path fill="currentColor" d="M165.986,339.116c-7.656,20.281-13.986,43.301-18.886,68.299h90.105v-88.051c-24.283,1.104-47.541,6.125-69.162,14.454-.71,1.778-1.396,3.545-2.057,5.298Z"/>
+          <path fill="currentColor" d="M424.081,407.415c-19.004-25.286-43.313-46.355-71.268-61.568,6.237,18.82,11.48,39.489,15.646,61.568h55.622Z"/>
+          <path fill="currentColor" d="M328.817,339.116c-.662-1.752-1.348-3.52-2.057-5.298-21.621-8.329-44.878-13.35-69.163-14.454v88.051h90.106c-4.901-24.998-11.23-48.018-18.886-68.299Z"/>
+          <path fill="currentColor" d="M141.991,345.847c-27.957,15.213-52.265,36.282-71.269,61.568h55.622c4.166-22.079,9.41-42.748,15.647-61.568Z"/>
+          <text x="0" y="0" transform="translate(535.65 521.761)" style="font-family:'Satoshi','Satoshi Variable',Inter,sans-serif;font-size:154.497px;font-weight:900;fill:currentColor;letter-spacing:-0.015em">Disco</text>
+          <text x="0" y="0" transform="translate(535.65 666.844)" style="font-family:'Satoshi','Satoshi Variable',Inter,sans-serif;font-size:154.497px;font-weight:900;fill:currentColor;letter-spacing:-0.015em">Capital</text>
+        </svg>
+      </div>
+      <h4>Stacked lockup</h4>
+      <div class="meta">1080 × 1080 · square</div>
+      <p>Square format with the wordmark stacked next to the ball. Social profile pictures, square ad units, app store icons.</p>
+    </div>
+
+    <!-- 4. Slogan lockup: DISCO [ball] CAPITAL with slogan beneath -->
+    <div class="logo-card">
+      <div class="logo-frame">
+        <svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" aria-label="Disco Capital with slogan">
+          <path fill="currentColor" d="M1000.31,409.181h-42.752c1.583,9.773,2.212,19.766,4.06,29.485,2.891,13.86,10.361,29.08,24.627,33.89,4.515,1.689,9.772,1.71,15.109,1.703,5.741.008,13.302-.003,18.663.002-1.292-23.674-8.318-45.819-19.707-65.079Z"/>
+          <path fill="currentColor" d="M803.545,474.26h66.378v-65.079h-60.952c-3.224,20.297-5.076,42.266-5.425,65.079Z"/>
+          <path fill="currentColor" d="M883.187,409.181v65.079c8.407,0,18.621,0,27.468,0,5.132-.089,9.493.329,13.739-.745,13.243-3.091,20.911-15.675,22.569-28.539,1.051-7.021.064-14.151-.781-21.265-.596-4.857-1.301-9.7-2.043-14.529h-60.952Z"/>
+          <path fill="currentColor" d="M795.552,409.181h-42.751c-11.391,19.26-18.416,41.404-19.707,65.079h57.186c.34-22.714,2.136-44.666,5.272-65.079Z"/>
+          <path fill="currentColor" d="M790.243,487.469h-57.266c.849,23.586,7.38,45.72,18.27,65.079h43.903c-3.005-20.457-4.682-42.404-4.907-65.079Z"/>
+          <path fill="currentColor" d="M968.573,504.014c-1.727,3.02-3.132,6.209-4.33,9.478-1.872,5.11-3.005,10.462-3.512,15.88-.739,7.902-1.664,15.641-2.771,23.175h43.903c10.889-19.359,17.42-41.493,18.27-65.079h-24.598c-5.412,0-10.761,1.426-15.336,4.317-4.668,2.95-8.605,6.896-11.626,12.228Z"/>
+          <path fill="currentColor" d="M808.55,552.548h61.373v-65.079h-66.414c.23,22.767,1.953,44.734,5.041,65.079Z"/>
+          <path fill="currentColor" d="M917.846,487.469s-34.658,0-34.658,0v65.079h61.373c1.686-13.249,4.778-27.307,1.52-40.572-2.944-13.755-13.872-24.603-28.234-24.507Z"/>
+          <path fill="currentColor" d="M759.649,565.757c12.635,17.649,29.167,32.319,48.338,42.75-4.31-13.005-7.887-27.374-10.673-42.75h-37.665Z"/>
+          <path fill="currentColor" d="M883.187,625.744c15.794-.718,30.922-3.987,44.985-9.403.463-1.161.912-2.317,1.344-3.461,5.255-13.92,9.552-29.818,12.807-47.123h-59.136v59.988Z"/>
+          <path fill="currentColor" d="M823.594,612.88c.432,1.145.881,2.3,1.344,3.461,14.063,5.416,29.191,8.685,44.984,9.403v-59.988h-59.136c3.255,17.306,7.553,33.204,12.807,47.123Z"/>
+          <path fill="currentColor" d="M945.124,608.507c19.17-10.432,35.702-25.101,48.337-42.75h-37.664c-2.787,15.376-6.363,29.745-10.673,42.75Z"/>
+          <path fill="currentColor" d="M823.594,351.543c-4.98,13.193-9.098,28.168-12.285,44.429h58.614v-57.278c-15.797.718-30.926,3.984-44.99,9.402-.462,1.156-.908,2.306-1.338,3.446Z"/>
+          <path fill="currentColor" d="M991.486,395.972c-12.362-16.449-28.175-30.154-46.36-40.05,4.057,12.243,7.468,25.688,10.178,40.05h36.182Z"/>
+          <path fill="currentColor" d="M929.517,351.543c-.43-1.14-.877-2.29-1.338-3.446-14.064-5.418-29.194-8.684-44.991-9.402v57.278h58.615c-3.188-16.262-7.305-31.236-12.285-44.429Z"/>
+          <path fill="currentColor" d="M807.985,355.922c-18.186,9.896-33.999,23.602-46.361,40.05h36.182c2.71-14.363,6.121-27.808,10.179-40.05Z"/>
+          <text x="54.264" y="614.259" style="font-family:'Satoshi','Satoshi Variable',Inter,sans-serif;font-size:192.952px;font-weight:900;fill:currentColor;letter-spacing:-0.025em">DISCO</text>
+          <text x="1080.381" y="614.259" style="font-family:'Satoshi','Satoshi Variable',Inter,sans-serif;font-size:192.952px;font-weight:900;fill:currentColor;letter-spacing:-0.025em">CAPITAL</text>
+          <text x="150.352" y="726.392" style="font-family:'Satoshi','Satoshi Variable',Inter,sans-serif;font-size:68.101px;font-weight:300;fill:currentColor;letter-spacing:0.13em">WE GET EVERYONE ON THE DANCE FLOOR</text>
+        </svg>
+      </div>
+      <h4>Slogan lockup</h4>
+      <div class="meta">1920 × 1080 · 16:9</div>
+      <p>Full brand statement with slogan beneath. Splash screens, pitch deck covers, hero areas, founding-investor moments.</p>
+    </div>
+
+  </div>
+
+  <h3>Color usage</h3>
+  <ul>
+    <li>Marks are monochrome by default. Default is white on the dark app background.</li>
+    <li>Use <code>--green-500</code> only for celebratory contexts (post-investment confetti, splash on first launch).</li>
+    <li>Never recolor outside the brand palette. No reds, oranges, or rainbow gradients on the marks.</li>
+    <li>On the rare light background, use <code>--bg-app</code> (#0D0E11) as the foreground.</li>
+  </ul>
+
+  <h3>Clear space &amp; minimum sizes</h3>
+  <ul>
+    <li><b>Clear space.</b> Maintain a margin equal to half the ball's diameter on all sides. No text, line, or edge inside that buffer.</li>
+    <li><b>Minimum sizes.</b> Ball mark: <code>16px</code> square. Horizontal lockup: <code>88px</code> wide. Stacked lockup: <code>64px</code> square. Slogan lockup: <code>240px</code> wide.</li>
+    <li>Below these thresholds the type and slogan become illegible — fall back to the ball mark.</li>
+  </ul>
+
+  <h3>Production note</h3>
+  <p style="color:var(--text-secondary);font-size:13px">For final exports (App Store icon, OG image, print), <b>outline the type in Illustrator before exporting</b> so the lockups don't depend on the Satoshi font being available. Source <code>.svg</code> files live at <code>~/Desktop/DISCO - CoWork/Design System/logos/</code>.</p>
+
+  <h3>Do's &amp; don'ts</h3>
+  <div class="dodont">
+    <div class="col do"><h5>Do</h5>Pick the variant that fits the format's aspect ratio. Horizontal slot → horizontal lockup. Square slot → stacked or ball-only.</div>
+    <div class="col dont"><h5>Don't</h5>Crop, rotate, distort, or warp any mark. Proportions are locked.</div>
+    <div class="col do"><h5>Do</h5>Use the ball-only mark for any spot under 88px wide. Type becomes unreadable below that.</div>
+    <div class="col dont"><h5>Don't</h5>Add drop shadows, glows, gradients, or strokes to the marks. They are pure path. Glow rules govern interactive elements only.</div>
+    <div class="col do"><h5>Do</h5>Maintain clear space (½ ball diameter) on all sides. Tight crops kill the mark.</div>
+    <div class="col dont"><h5>Don't</h5>Pair the ball with arbitrary type or substitute fonts. If you need a wordmark, use one of the three official lockups.</div>
+  </div>
+</section>
+
+<!-- ─── Color ──────────────────────────────────────────────────────────── -->
+<section id="color">
+  <header>
+    <div class="eyebrow">Color</div>
+    <h2>Palette</h2>
+    <p>Click any swatch to copy its hex. The whole app is built from the values below — no hex anywhere else.</p>
+  </header>
+
+  <h3>Backgrounds</h3>
+  <div class="grid grid-4 swatches" data-group="bg">
+    <div class="swatch" data-hex="#0D0E11"><div class="chip" style="background:#0D0E11;border-bottom:1px solid var(--border-card)"></div><div class="meta"><div class="name">bg.app</div><div class="hex">#0D0E11</div><div class="desc">App background. The deepest layer.</div></div></div>
+    <div class="swatch" data-hex="#151618"><div class="chip" style="background:#151618"></div><div class="meta"><div class="name">bg.card</div><div class="hex">#151618</div><div class="desc">Default card surface.</div></div></div>
+    <div class="swatch" data-hex="#1A1B1F"><div class="chip" style="background:#1A1B1F"></div><div class="meta"><div class="name">bg.cardHover</div><div class="hex">#1A1B1F</div><div class="desc">Pressed / hover card state.</div></div></div>
+    <div class="swatch" data-hex="#1E1F23"><div class="chip" style="background:#1E1F23"></div><div class="meta"><div class="name">bg.cardElevated</div><div class="hex">#1E1F23</div><div class="desc">Modals, popovers, sheets.</div></div></div>
+  </div>
+
+  <h3>Hero — neon green</h3>
+  <div class="grid grid-3 swatches">
+    <div class="swatch" data-hex="#33FF99"><div class="chip" style="background:#33FF99"></div><div class="meta"><div class="name">green.400</div><div class="hex">#33FF99</div><div class="desc">Highlights, chart peaks.</div></div></div>
+    <div class="swatch" data-hex="#00E87B"><div class="chip" style="background:#00E87B"></div><div class="meta"><div class="name">green.500</div><div class="hex">#00E87B</div><div class="desc">Hero. Primary CTA, positive deltas, active tab.</div></div></div>
+    <div class="swatch" data-hex="#00C466"><div class="chip" style="background:#00C466"></div><div class="meta"><div class="name">green.600</div><div class="hex">#00C466</div><div class="desc">Pressed state, secondary green.</div></div></div>
+  </div>
+
+  <h3>Accents</h3>
+  <div class="grid grid-4 swatches">
+    <div class="swatch" data-hex="#84CC16"><div class="chip" style="background:#84CC16"></div><div class="meta"><div class="name">lime.500</div><div class="hex">#84CC16</div><div class="desc">Climate / energy.</div></div></div>
+    <div class="swatch" data-hex="#00D4FF"><div class="chip" style="background:#00D4FF"></div><div class="meta"><div class="name">cyan.500</div><div class="hex">#00D4FF</div><div class="desc">Links, secondary data, trending. DeFi.</div></div></div>
+    <div class="swatch" data-hex="#3B82F6"><div class="chip" style="background:#3B82F6"></div><div class="meta"><div class="name">blue.500</div><div class="hex">#3B82F6</div><div class="desc">Stacked-chart middle stop.</div></div></div>
+    <div class="swatch" data-hex="#6366F1"><div class="chip" style="background:#6366F1"></div><div class="meta"><div class="name">indigo.500</div><div class="hex">#6366F1</div><div class="desc">Fintech.</div></div></div>
+    <div class="swatch" data-hex="#8B5CF6"><div class="chip" style="background:#8B5CF6"></div><div class="meta"><div class="name">purple.500</div><div class="hex">#8B5CF6</div><div class="desc">Stacked-chart segment.</div></div></div>
+    <div class="swatch" data-hex="#A855F7"><div class="chip" style="background:#A855F7"></div><div class="meta"><div class="name">violet.500</div><div class="hex">#A855F7</div><div class="desc">Biotech / health.</div></div></div>
+    <div class="swatch" data-hex="#EC4899"><div class="chip" style="background:#EC4899"></div><div class="meta"><div class="name">pink.500</div><div class="hex">#EC4899</div><div class="desc">Stacked-chart segment.</div></div></div>
+    <div class="swatch" data-hex="#FF3B7A"><div class="chip" style="background:#FF3B7A"></div><div class="meta"><div class="name">hotPink.500</div><div class="hex">#FF3B7A</div><div class="desc">Sell, take profit, exit position. Deep Tech / Defense.</div></div></div>
+    <div class="swatch" data-hex="#FF3B30"><div class="chip" style="background:#FF3B30"></div><div class="meta"><div class="name">red.500</div><div class="hex">#FF3B30</div><div class="desc">Negative, destructive, error. Validation failures, decline, irreversible actions.</div></div></div>
+    <div class="swatch" data-hex="#FBBF24"><div class="chip" style="background:#FBBF24"></div><div class="meta"><div class="name">yellow.500</div><div class="hex">#FBBF24</div><div class="desc">Warnings, pending. Consumer.</div></div></div>
+    <div class="swatch" data-hex="#FF6B35"><div class="chip" style="background:#FF6B35"></div><div class="meta"><div class="name">orange.500</div><div class="hex">#FF6B35</div><div class="desc">Space / aero, sparingly.</div></div></div>
+  </div>
+
+  <h3>Sector / category coding</h3>
+  <p style="color:var(--text-secondary);margin-bottom:16px">Eight hues, evenly spread around the wheel. Every pair is at least 25° apart so each sector is unmistakable on a dark surface. Lock these mappings — don't improvise per screen.</p>
+  <div class="grid grid-4">
+    <div class="glow-tile"><div class="glow-orb green"></div><div class="upper" style="font-size:11px;color:var(--green-500);font-weight:600">AI / ML</div><div class="mono" style="font-size:10px;color:var(--text-tertiary);margin-top:4px">#00E87B</div></div>
+    <div class="glow-tile"><div class="glow-orb lime"></div><div class="upper" style="font-size:11px;color:var(--lime-500);font-weight:600">Climate / Energy</div><div class="mono" style="font-size:10px;color:var(--text-tertiary);margin-top:4px">#84CC16</div></div>
+    <div class="glow-tile"><div class="glow-orb yellow"></div><div class="upper" style="font-size:11px;color:var(--yellow-500);font-weight:600">Consumer / Creator</div><div class="mono" style="font-size:10px;color:var(--text-tertiary);margin-top:4px">#FBBF24</div></div>
+    <div class="glow-tile"><div class="glow-orb orange"></div><div class="upper" style="font-size:11px;color:var(--orange-500);font-weight:600">Space / Aero</div><div class="mono" style="font-size:10px;color:var(--text-tertiary);margin-top:4px">#FF6B35</div></div>
+    <div class="glow-tile"><div class="glow-orb pink"></div><div class="upper" style="font-size:11px;color:var(--hot-pink-500);font-weight:600">Deep Tech / Defense</div><div class="mono" style="font-size:10px;color:var(--text-tertiary);margin-top:4px">#FF3B7A</div></div>
+    <div class="glow-tile"><div class="glow-orb violet"></div><div class="upper" style="font-size:11px;color:var(--violet-500);font-weight:600">Biotech / Health</div><div class="mono" style="font-size:10px;color:var(--text-tertiary);margin-top:4px">#A855F7</div></div>
+    <div class="glow-tile"><div class="glow-orb indigo"></div><div class="upper" style="font-size:11px;color:var(--indigo-500);font-weight:600">Fintech</div><div class="mono" style="font-size:10px;color:var(--text-tertiary);margin-top:4px">#6366F1</div></div>
+    <div class="glow-tile"><div class="glow-orb cyan"></div><div class="upper" style="font-size:11px;color:var(--cyan-500);font-weight:600">DeFi / Crypto</div><div class="mono" style="font-size:10px;color:var(--text-tertiary);margin-top:4px">#00D4FF</div></div>
+  </div>
+
+  <h3>Stacked chart sequence</h3>
+  <p style="color:var(--text-secondary);margin-bottom:16px">When a chart needs more than two colors, walk this sequence top-to-bottom.</p>
+  <div style="display:flex;height:48px;border-radius:var(--radius-md);overflow:hidden">
+    <div style="flex:1;background:#00E87B"></div>
+    <div style="flex:1;background:#00D4FF"></div>
+    <div style="flex:1;background:#3B82F6"></div>
+    <div style="flex:1;background:#8B5CF6"></div>
+    <div style="flex:1;background:#A855F7"></div>
+    <div style="flex:1;background:#EC4899"></div>
+    <div style="flex:1;background:#FF3B7A"></div>
+    <div style="flex:1;background:#6B7280"></div>
+  </div>
+
+  <h3>Color do's & don'ts</h3>
+  <div class="dodont">
+    <div class="col do"><h5>Do</h5>Use green for the primary action, the active tab, and the user's portfolio total.</div>
+    <div class="col dont"><h5>Don't</h5>Use green for body copy or large background fills.</div>
+    <div class="col do"><h5>Do</h5>Use hot pink (#FF3B7A) for negative numbers, destructive actions, the Sell flow.</div>
+    <div class="col dont"><h5>Don't</h5>Use brand magenta (#E91E8C) anywhere in product UI. Magenta lives only in the wordmark and marketing.</div>
+    <div class="col do"><h5>Do</h5>Walk the stacked-chart sequence in order.</div>
+    <div class="col dont"><h5>Don't</h5>Pick chart colors by feel. The order is part of the brand.</div>
+  </div>
+</section>
+
+<!-- ─── Type ───────────────────────────────────────────────────────────── -->
+<section id="type">
+  <header>
+    <div class="eyebrow">Typography</div>
+    <h2>Type system</h2>
+    <p>Inter for everything except numbers. JetBrains Mono for every numerical value, no exceptions. The mono number is the system's signature.</p>
+  </header>
+
+  <div class="card">
+    <div class="type-row"><div class="label">display</div><div class="specs">44 / 48 · 700</div><div class="sample" style="font-size:44px;font-weight:700;line-height:48px;letter-spacing:-0.012em">Turn doomers into dreamers.</div></div>
+    <div class="type-row"><div class="label">text.4xl</div><div class="specs">36 / 40 · 700</div><div class="sample mono" style="font-size:36px;font-weight:700;line-height:40px">$32,134</div></div>
+    <div class="type-row"><div class="label">text.3xl</div><div class="specs">30 / 36 · 700</div><div class="sample mono" style="font-size:30px;font-weight:700">$8,903 <span style="color:var(--green-500);font-size:14px">↑1.9%</span></div></div>
+    <div class="type-row"><div class="label">text.2xl</div><div class="specs">24 / 32 · 700</div><div class="sample" style="font-size:24px;font-weight:700">Holdings</div></div>
+    <div class="type-row"><div class="label">text.xl</div><div class="specs">20 / 28 · 600</div><div class="sample" style="font-size:20px;font-weight:600">Helion Energy</div></div>
+    <div class="type-row"><div class="label">text.lg</div><div class="specs">18 / 26 · 600</div><div class="sample" style="font-size:18px;font-weight:600">Sub-header</div></div>
+    <div class="type-row"><div class="label">text.base</div><div class="specs">14 / 20 · 400</div><div class="sample">Body copy. Default UI text. Small enough to be dense, large enough to read.</div></div>
+    <div class="type-row"><div class="label">text.sm</div><div class="specs">12 / 16 · 400</div><div class="sample" style="font-size:12px;color:var(--text-secondary)">Compared to last 7 days</div></div>
+    <div class="type-row"><div class="label">text.xs</div><div class="specs">10 / 14 · 500 · UPPER</div><div class="sample upper" style="font-size:10px;font-weight:500;letter-spacing:0.05em">Pre-Seed · DeFi · 2026-01-12</div></div>
+    <div class="type-row"><div class="label">text.label</div><div class="specs">11 / 14 · 600 · CAPS</div><div class="sample upper" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-secondary)">Allocation</div></div>
+  </div>
+
+  <h3>Metric display pattern</h3>
+  <p style="color:var(--text-secondary);margin-bottom:16px">The most-repeated layout in the app. Use it everywhere a value needs context.</p>
+  <div class="card" style="max-width:420px">
+    <div class="upper" style="font-size:11px;color:var(--text-secondary);font-weight:600;letter-spacing:0.06em">Portfolio value</div>
+    <div class="mono" style="font-size:30px;font-weight:700;margin-top:6px">$8,903 <span style="color:var(--green-500);font-size:14px;font-weight:600">↑1.9%</span></div>
+    <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px">Compared to $8,734 last 7 days</div>
+  </div>
+
+  <h3>Three-metric strip (Hyper Charts)</h3>
+  <p style="color:var(--text-secondary);margin-bottom:16px">Inherited verbatim from Hyper Charts XL widgets. A row of three metrics above a chart.</p>
+  <div class="widget" style="max-width:560px">
+    <div class="metric-strip">
+      <div class="col"><h6><span style="color:var(--hot-pink-500);font-size:9px">●</span> Weekly</h6><div class="v mono">$2,197 <span class="delta" style="color:var(--green-500)">↑19.6%</span></div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Compared to $1,340 last week</div></div>
+      <div class="col"><h6><span style="color:var(--green-500);font-size:9px">●</span> Monthly</h6><div class="v mono">$8,903 <span class="delta" style="color:var(--green-500)">↑1.9%</span></div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Compared to $5,441 last month</div></div>
+      <div class="col"><h6><span style="color:var(--yellow-500);font-size:9px">●</span> Yearly</h6><div class="v mono">$98,134 <span class="delta" style="color:var(--green-500)">↑22%</span></div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Compared to $76,330 last year</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Spacing ────────────────────────────────────────────────────────── -->
+<section id="spacing">
+  <header>
+    <div class="eyebrow">Spacing</div>
+    <h2>4px scale</h2>
+    <p>Every margin, gap, and padding value comes from the scale below. Don't invent a 14px to make a layout fit — re-do the layout.</p>
+  </header>
+  <div class="card" id="spacing-list"></div>
+</section>
+
+<!-- ─── Glow ───────────────────────────────────────────────────────────── -->
+<section id="glow">
+  <header>
+    <div class="eyebrow">Elevation & Glow</div>
+    <h2>Glow is the accent</h2>
+    <p>Three tiers — element glow, ambient card glow, area glow. Use them liberally on data, sparingly on text.</p>
+  </header>
+  <h3>Element glow palette</h3>
+  <div class="grid grid-6">
+    <div class="glow-tile"><div class="glow-orb green"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">--glow-green</div></div>
+    <div class="glow-tile"><div class="glow-orb cyan"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">--glow-cyan</div></div>
+    <div class="glow-tile"><div class="glow-orb purple"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">--glow-purple</div></div>
+    <div class="glow-tile"><div class="glow-orb pink"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">--glow-pink</div></div>
+    <div class="glow-tile"><div class="glow-orb yellow"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">--glow-yellow</div></div>
+    <div class="glow-tile"><div class="glow-orb orange"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">--glow-orange</div></div>
+  </div>
+
+  <h3>Canonical recipe</h3>
+  <pre class="code"><span class="k">box-shadow:</span>
+  0 0 8px  rgba(R,G,B,<span class="v">0.40</span>),
+  0 0 20px rgba(R,G,B,<span class="v">0.20</span>),
+  0 0 40px rgba(R,G,B,<span class="v">0.10</span>);</pre>
+
+  <h3>Ambient card glow (featured)</h3>
+  <div class="grid grid-2">
+    <div class="card"><h4>Default card</h4>Standard surface. Elevation 1.</div>
+    <div class="card card-featured"><h4>Featured card</h4>Add ambient glow for hot deals, top-of-feed posts. At most one per screen.</div>
+  </div>
+
+  <h3>Glow do's & don'ts</h3>
+  <div class="dodont">
+    <div class="col do"><h5>Do</h5>Glow data and active interactive elements (CTA, active tab, focused input).</div>
+    <div class="col dont"><h5>Don't</h5>Glow text. Text uses semantic colors and weight, not glow.</div>
+    <div class="col do"><h5>Do</h5>Use ambient card glow on at most one card per screen.</div>
+    <div class="col dont"><h5>Don't</h5>Glow every card. Then nothing is featured.</div>
+  </div>
+</section>
+
+<!-- ─── Iconography ────────────────────────────────────────────────────── -->
+<section id="icons">
+  <header>
+    <div class="eyebrow">Iconography</div>
+    <h2>Custom navigation set</h2>
+    <p>Six bespoke icons drive the bottom-nav. Inactive state is white. Active state is uniform hot-pink with 3-layer glow — same color for every tab so the active affordance is unmistakable and brand-consistent.</p>
+  </header>
+
+  <style>
+    .icon-row { display:flex; gap:32px; align-items:center; padding:20px; background:var(--bg-card); border-radius:12px; flex-wrap:wrap; }
+    .icon-cell { display:flex; flex-direction:column; align-items:center; gap:8px; min-width:80px; }
+    .icon-cell .label { font-size:11px; color:var(--text-secondary); font-family:'JetBrains Mono', monospace; }
+    .icon-cell svg { width:28px; height:28px; transition:filter 200ms ease, color 200ms ease; }
+    /* Inactive state: plain white, no glow */
+    .icon-inactive svg { color:#FFFFFF; filter:none; }
+    /* Active state: uniform hot-pink fill + 3-layer glow (canonical recipe) — same for every tab */
+    .icon-active svg { color:var(--hot-pink-500); filter: drop-shadow(0 0 4px rgba(255,59,122,0.40)) drop-shadow(0 0 10px rgba(255,59,122,0.20)) drop-shadow(0 0 20px rgba(255,59,122,0.10)); }
+    /* Bottom-nav demo strip */
+    .nav-demo { display:flex; gap:0; justify-content:space-around; align-items:center; padding:14px 20px; background:var(--bg-card-elevated); border-radius:14px; border:1px solid rgba(255,255,255,0.04); }
+    .nav-demo .icon-cell { min-width:auto; }
+    .nav-demo svg { width:24px; height:24px; }
+  </style>
+
+  <h3>Inactive state</h3>
+  <div class="icon-row">
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M15.333 16.4401C15.333 14.8753 14.0648 13.6071 12.5 13.6071C10.9352 13.6071 9.66699 14.8753 9.66699 16.4401V22.9703H15.333V16.4401ZM17.333 22.9703H19C21.2091 22.9703 23 21.1795 23 18.9703V12.4225C23 11.3535 22.5718 10.3292 21.8115 9.57776L15.3115 3.15393C13.7534 1.61453 11.2466 1.61453 9.68848 3.15393L3.18848 9.57776C2.42815 10.3292 2.00001 11.3535 2 12.4225V18.9703C2 21.1795 3.79086 22.9703 6 22.9703H7.66699V16.4401C7.66699 13.7707 9.83062 11.6071 12.5 11.6071C15.1694 11.6071 17.333 13.7707 17.333 16.4401V22.9703ZM25 18.9703C25 22.284 22.3137 24.9703 19 24.9703H6C2.68629 24.9703 0 22.284 0 18.9703V12.4225C1.2726e-05 10.8188 0.642482 9.2821 1.7832 8.15491L8.2832 1.73206C10.6204 -0.577354 14.3796 -0.577351 16.7168 1.73206L23.2168 8.15491C24.3575 9.2821 25 10.8188 25 12.4225V18.9703Z" fill="currentColor"/></svg><div class="label">home</div></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 29 25" xmlns="http://www.w3.org/2000/svg"><path d="M0 4.37793C0.000250914 1.92287 2.05977 0 4.51562 0V2C3.08855 2 2.00026 3.10174 2 4.37793C2 5.65431 3.08838 6.75684 4.51562 6.75684V8.75684C2.05962 8.75684 0 6.8332 0 4.37793Z" fill="currentColor"/><path d="M21.0938 3C21.0938 2.44772 20.646 2 20.0938 2H4.51562V0H20.0938C21.7506 0 23.0938 1.34315 23.0938 3V7.75684H21.0938V3Z" fill="currentColor"/><path d="M0 21.9731V4.37842C0 3.82613 0.447715 3.37842 1 3.37842C1.55228 3.37842 2 3.82613 2 4.37842V21.9731C2.00007 22.5254 2.44776 22.9731 3 22.9731H22.2031C22.7554 22.9731 23.2031 22.5254 23.2031 21.9731V19.5679H17.4688C16.3643 19.5679 15.4689 18.6723 15.4688 17.5679V14.8374C15.469 13.7331 16.3643 12.8374 17.4688 12.8374H23.2031V9.75635C23.2029 9.20427 22.7553 8.75635 22.2031 8.75635H4.51562C3.96334 8.75635 3.51562 8.30863 3.51562 7.75635C3.51587 7.20427 3.96349 6.75635 4.51562 6.75635H22.2031C23.8598 6.75635 25.2029 8.0997 25.2031 9.75635V12.8833C26.7986 13.1468 28.0156 14.5325 28.0156 16.2026C28.0156 17.8728 26.7986 19.2574 25.2031 19.521V21.9731C25.2031 23.6299 23.8599 24.9731 22.2031 24.9731H3C1.34319 24.9731 7.21542e-05 23.6299 0 21.9731ZM17.4688 17.5679H24.6504C25.4042 17.5679 26.0156 16.9564 26.0156 16.2026C26.0156 15.4489 25.4042 14.8374 24.6504 14.8374H17.4688V17.5679Z" fill="currentColor"/></svg><div class="label">wallet</div></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 33 28" xmlns="http://www.w3.org/2000/svg"><path d="M0 9.8042C9.39274e-05 7.53362 1.84075 5.69296 4.11133 5.69287H21.1191V7.69287H4.11133C2.94532 7.69296 2.00009 8.63819 2 9.8042C2 16.8332 7.69849 22.5317 14.7275 22.5317H17.4512C24.4801 22.5316 30.1777 16.8332 30.1777 9.8042C30.1776 8.63813 29.2325 7.69287 28.0664 7.69287H25.0303V5.69287H28.0664C30.3371 5.69287 32.1776 7.53356 32.1777 9.8042C32.1777 17.9377 25.5847 24.5316 17.4512 24.5317H14.7275C6.59393 24.5317 0 17.9378 0 9.8042Z" fill="currentColor"/><path d="M22.4414 10.4945C24.1996 9.44123 26.3951 9.44133 28.1533 10.4945L29.4697 11.2836C29.9858 11.5927 30.5761 11.7562 31.1777 11.7562V13.7562C30.214 13.7562 29.2681 13.4947 28.4414 12.9994L27.126 12.2103C26.0006 11.5361 24.5952 11.5363 23.4697 12.2103C21.7114 13.2638 19.5152 13.2638 17.7568 12.2103C16.6314 11.5363 15.2259 11.5361 14.1006 12.2103C12.3423 13.2637 10.1469 13.2638 8.38867 12.2103C7.26323 11.5362 5.85782 11.5361 4.73242 12.2103L3.14258 13.1635C2.49526 13.5513 1.7546 13.7562 1 13.7562V11.7562C1.3925 11.7562 1.77755 11.6493 2.11426 11.4476L3.70508 10.4945C5.46329 9.44137 7.65885 9.44119 9.41699 10.4945C10.5425 11.1688 11.9477 11.1688 13.0732 10.4945C14.8314 9.4413 17.027 9.44126 18.7852 10.4945C19.9107 11.1688 21.3159 11.1688 22.4414 10.4945Z" fill="currentColor"/><path d="M25.4931 3.60796C25.6389 3.39008 25.5758 3.10138 25.3528 2.96345C25.1298 2.82573 24.831 2.89047 24.685 3.1081L18.9898 11.6103L17.2889 10.5581L22.9841 2.05597C23.7448 0.92063 25.3035 0.583009 26.4658 1.3018C27.6282 2.0208 27.9545 3.5245 27.194 4.66009L22.1684 12.1627L20.4675 11.1105L25.4931 3.60796Z" fill="currentColor"/><path d="M22.4236 21.8906C22.6507 21.3873 23.2424 21.1637 23.7458 21.3906C24.3527 21.6643 24.8645 22.1122 25.2156 22.6777L25.5291 23.1826C26.6542 24.995 25.3508 27.3379 23.2175 27.3379H8.79175C6.73257 27.3377 5.47415 25.0757 6.5603 23.3262L6.84253 22.8721C7.28849 22.1538 7.97373 21.6151 8.7771 21.3516C9.30188 21.1795 9.86669 21.4655 10.0388 21.9902C10.2109 22.5149 9.92561 23.0797 9.40112 23.252C9.04454 23.3689 8.73968 23.6079 8.54175 23.9268L8.25952 24.3809C8.0005 24.7981 8.30075 25.3377 8.79175 25.3379H23.2175C23.7826 25.3379 24.1279 24.7174 23.8298 24.2373L23.5164 23.7324C23.3748 23.5044 23.1683 23.3232 22.9236 23.2129C22.4204 22.9858 22.1966 22.394 22.4236 21.8906Z" fill="currentColor"/><path d="M5.52734 14.5181C6.02139 14.2746 6.62341 14.4787 6.87118 14.9738C7.18065 15.5924 7.78382 16.3687 8.5514 17.0729C9.31935 17.7775 10.1727 18.338 10.9356 18.6018C11.4591 18.7828 11.7397 19.3519 11.5625 19.8732C11.3852 20.3944 10.8173 20.6703 10.2938 20.4894C9.18469 20.106 8.09726 19.3592 7.20355 18.5393C6.30948 17.719 5.52984 16.7531 5.08125 15.8564C4.83353 15.3613 5.03334 14.7617 5.52734 14.5181Z" fill="currentColor"/></svg><div class="label">punchbowl</div></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M7.61068 0.209158C8.04729 -0.12881 8.67587 -0.048665 9.014 0.387869C9.35197 0.824479 9.27183 1.45305 8.83529 1.79119L3.92416 5.5949H23.391C23.943 5.59513 24.391 6.04276 24.391 6.5949C24.3909 7.14698 23.943 7.59467 23.391 7.5949H3.69565L8.87533 12.0529C9.29391 12.4132 9.341 13.0445 8.9808 13.4631C8.62053 13.8817 7.98924 13.9288 7.57065 13.5685L0.347989 7.35271C0.120428 7.15686 -0.00741176 6.86867 0.0003326 6.56853C0.00820089 6.26855 0.150779 5.98766 0.388028 5.80388L7.61068 0.209158Z" fill="currentColor"/><path d="M16.7804 24.7913C16.3438 25.1293 15.7152 25.0492 15.3771 24.6126C15.0391 24.176 15.1193 23.5474 15.5558 23.2093L20.467 19.4056L1.00016 19.4056C0.448064 19.4054 0.000155789 18.9577 0.000155733 18.4056C0.00022958 17.8535 0.44811 17.4058 1.00016 17.4056L20.6955 17.4056L15.5158 12.9476C15.0972 12.5873 15.0501 11.956 15.4103 11.5374C15.7706 11.1188 16.4019 11.0717 16.8205 11.432L24.0431 17.6478C24.2707 17.8436 24.3985 18.1318 24.3908 18.432C24.3829 18.7319 24.2403 19.0128 24.0031 19.1966L16.7804 24.7913Z" fill="currentColor"/></svg><div class="label">trade</div></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 27 29" xmlns="http://www.w3.org/2000/svg"><path d="M8.125 26.5002V27.5002C8.125 27.8619 7.97039 28.1534 7.79492 28.3528C7.62545 28.5453 7.42089 28.6736 7.23926 28.759C7.05267 28.8468 6.85403 28.9058 6.66016 28.9436C6.46451 28.9817 6.2622 29.0002 6.0625 29.0002C5.8628 29.0002 5.66049 28.9817 5.46484 28.9436C5.27097 28.9058 5.07233 28.8468 4.88574 28.759C4.70411 28.6736 4.49955 28.5453 4.33008 28.3528C4.15461 28.1534 4 27.8619 4 27.5002V26.5002H8.125Z" fill="currentColor"/><path d="M23 26.5002V27.5002C23 27.8619 22.8454 28.1534 22.6699 28.3528C22.5004 28.5453 22.2959 28.6736 22.1143 28.759C21.9277 28.8468 21.729 28.9058 21.5352 28.9436C21.3395 28.9817 21.1372 29.0002 20.9375 29.0002C20.7378 29.0002 20.5355 28.9817 20.3398 28.9436C20.146 28.9058 19.9473 28.8468 19.7607 28.759C19.5791 28.6736 19.3746 28.5453 19.2051 28.3528C19.0296 28.1534 18.875 27.8619 18.875 27.5002V26.5002H23Z" fill="currentColor"/><path d="M25 10.0002C25 8.89567 24.1046 8.00024 23 8.00024H4C2.89543 8.00024 2 8.89567 2 10.0002V24.0002C2 25.1048 2.89543 26.0002 4 26.0002H23C24.1046 26.0002 25 25.1048 25 24.0002V10.0002ZM27 24.0002C27 26.2094 25.2091 28.0002 23 28.0002H4C1.79086 28.0002 0 26.2094 0 24.0002V10.0002C0 7.79111 1.79086 6.00024 4 6.00024H23C25.2091 6.00024 27 7.79111 27 10.0002V24.0002Z" fill="currentColor"/><path d="M18 17.0002C18 15.5752 17.9988 14.5816 17.9209 13.8157C17.8447 13.0664 17.7031 12.646 17.4941 12.3333C17.2754 12.0059 16.9943 11.7249 16.667 11.5061C16.3542 11.2971 15.9338 11.1556 15.1846 11.0793C14.4186 11.0015 13.425 11.0002 12 11.0002H11C9.57496 11.0002 8.58137 11.0015 7.81543 11.0793C7.06616 11.1556 6.64576 11.2971 6.33301 11.5061C6.00568 11.7249 5.72463 12.0059 5.50586 12.3333C5.29689 12.646 5.15532 13.0664 5.0791 13.8157C5.00122 14.5816 5 15.5752 5 17.0002C5 18.4253 5.00122 19.4189 5.0791 20.1848C5.15532 20.9341 5.29689 21.3545 5.50586 21.6672C5.72463 21.9946 6.00568 22.2756 6.33301 22.4944C6.64576 22.7034 7.06616 22.8449 7.81543 22.9211C8.58137 22.999 9.57496 23.0002 11 23.0002H12C13.425 23.0002 14.4186 22.999 15.1846 22.9211C15.9338 22.8449 16.3542 22.7034 16.667 22.4944C16.9943 22.2756 17.2754 21.9946 17.4941 21.6672C17.7031 21.3545 17.8447 20.9341 17.9209 20.1848C17.9988 19.4189 18 18.4253 18 17.0002ZM20 17.0002C20 18.3839 20.0008 19.4972 19.9102 20.3879C19.8178 21.2952 19.6223 22.0825 19.1572 22.7786C18.7926 23.3242 18.324 23.7928 17.7783 24.1575C17.0823 24.6226 16.2949 24.8181 15.3877 24.9104C14.497 25.001 13.3836 25.0002 12 25.0002H11C9.61635 25.0002 8.503 25.001 7.6123 24.9104C6.70505 24.8181 5.91773 24.6226 5.22168 24.1575C4.67602 23.7928 4.20745 23.3242 3.84277 22.7786C3.37769 22.0825 3.18217 21.2952 3.08984 20.3879C2.99924 19.4972 3 18.3839 3 17.0002C3 15.6166 2.99924 14.5032 3.08984 13.6125C3.18217 12.7053 3.37769 11.918 3.84277 11.2219C4.20745 10.6763 4.67602 10.2077 5.22168 9.84302C5.91773 9.37793 6.70505 9.18241 7.6123 9.09009C8.503 8.99948 9.61635 9.00024 11 9.00024H12C13.3836 9.00024 14.497 8.99948 15.3877 9.09009C16.2949 9.18241 17.0823 9.37793 17.7783 9.84302C18.324 10.2077 18.7926 10.6763 19.1572 11.2219C19.6223 11.918 19.8178 12.7053 19.9102 13.6125C20.0008 14.5032 20 15.6166 20 17.0002Z" fill="currentColor"/><path d="M22.7383 18.0002C23.2906 18.0002 23.7383 18.448 23.7383 19.0002C23.7383 19.5525 23.2906 20.0002 22.7383 20.0002H22C21.4477 20.0002 21 19.5525 21 19.0002C21 18.448 21.4477 18.0002 22 18.0002H22.7383Z" fill="currentColor"/><path d="M22.7383 15.0002C23.2906 15.0002 23.7383 15.448 23.7383 16.0002C23.7383 16.5525 23.2906 17.0002 22.7383 17.0002H22C21.4477 17.0002 21 16.5525 21 16.0002C21 15.448 21.4477 15.0002 22 15.0002H22.7383Z" fill="currentColor"/><path d="M22.5 22.0002C22.2239 22.0002 22 22.2241 22 22.5002L22.0098 22.6008C22.0563 22.8288 22.2583 23.0002 22.5 23.0002C22.7761 23.0002 23 22.7764 23 22.5002C23 22.2241 22.7761 22.0002 22.5 22.0002ZM24 22.5002C24 23.3287 23.3284 24.0002 22.5 24.0002C21.7233 24.0002 21.0846 23.41 21.0078 22.6536L21 22.5002L21.0078 22.3469C21.0846 21.5905 21.7233 21.0002 22.5 21.0002C23.3284 21.0002 24 21.6718 24 22.5002Z" fill="currentColor"/><path d="M13.0801 3.45557C15.2745 3.45567 17.0689 5.16714 17.2021 7.32861L15.2061 7.45166C15.1374 6.33838 14.2112 5.45567 13.0801 5.45557C11.9489 5.45557 11.0228 6.33832 10.9541 7.45166L8.95801 7.32861C9.0913 5.16707 10.8855 3.45557 13.0801 3.45557Z" fill="currentColor"/><path d="M7.24977 0.338153C7.61532 -0.0757542 8.24792 -0.115189 8.66188 0.250262L12.574 3.70632C12.9878 4.07189 13.0273 4.70354 12.6619 5.11745C12.2963 5.53141 11.6637 5.57093 11.2498 5.20534L7.33766 1.75026C6.92376 1.38471 6.88432 0.752112 7.24977 0.338153Z" fill="currentColor"/><path d="M18.7917 0.338153C18.4262 -0.0757542 17.7936 -0.115189 17.3796 0.250262L13.4675 3.70632C13.0537 4.07189 13.0142 4.70354 13.3796 5.11745C13.7452 5.53141 14.3778 5.57093 14.7917 5.20534L18.7038 1.75026C19.1177 1.38471 19.1572 0.752112 18.7917 0.338153Z" fill="currentColor"/></svg><div class="label">social</div></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 37 35" xmlns="http://www.w3.org/2000/svg"><path d="M30.0969 13.5C30.0969 7.22316 24.7788 2.0002 18.0489 2C11.3189 2 6.00001 7.22304 6.00001 13.5C6.00001 19.777 11.3189 25 18.0489 25V27L17.6856 26.9951C10.0946 26.8101 4 20.8392 4 13.5C4 6.04416 10.2901 0 18.0489 0L18.4112 0.00488281C26.0024 0.189753 32.0969 6.16069 32.0969 13.5C32.0969 20.9557 25.8075 26.9998 18.0489 27V25C24.7788 24.9998 30.0969 19.7768 30.0969 13.5Z" fill="currentColor"/></svg><div class="label">profile</div></div>
+  </div>
+
+  <h3>Active state — hot-pink fill + glow (uniform across all tabs)</h3>
+  <div class="icon-row">
+    <div class="icon-cell icon-active"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M15.333 16.4401C15.333 14.8753 14.0648 13.6071 12.5 13.6071C10.9352 13.6071 9.66699 14.8753 9.66699 16.4401V22.9703H15.333V16.4401ZM17.333 22.9703H19C21.2091 22.9703 23 21.1795 23 18.9703V12.4225C23 11.3535 22.5718 10.3292 21.8115 9.57776L15.3115 3.15393C13.7534 1.61453 11.2466 1.61453 9.68848 3.15393L3.18848 9.57776C2.42815 10.3292 2.00001 11.3535 2 12.4225V18.9703C2 21.1795 3.79086 22.9703 6 22.9703H7.66699V16.4401C7.66699 13.7707 9.83062 11.6071 12.5 11.6071C15.1694 11.6071 17.333 13.7707 17.333 16.4401V22.9703ZM25 18.9703C25 22.284 22.3137 24.9703 19 24.9703H6C2.68629 24.9703 0 22.284 0 18.9703V12.4225C1.2726e-05 10.8188 0.642482 9.2821 1.7832 8.15491L8.2832 1.73206C10.6204 -0.577354 14.3796 -0.577351 16.7168 1.73206L23.2168 8.15491C24.3575 9.2821 25 10.8188 25 12.4225V18.9703Z" fill="currentColor"/></svg><div class="label">home</div></div>
+    <div class="icon-cell icon-active wallet"><svg viewBox="0 0 29 25" xmlns="http://www.w3.org/2000/svg"><path d="M0 4.37793C0.000250914 1.92287 2.05977 0 4.51562 0V2C3.08855 2 2.00026 3.10174 2 4.37793C2 5.65431 3.08838 6.75684 4.51562 6.75684V8.75684C2.05962 8.75684 0 6.8332 0 4.37793Z" fill="currentColor"/><path d="M21.0938 3C21.0938 2.44772 20.646 2 20.0938 2H4.51562V0H20.0938C21.7506 0 23.0938 1.34315 23.0938 3V7.75684H21.0938V3Z" fill="currentColor"/><path d="M0 21.9731V4.37842C0 3.82613 0.447715 3.37842 1 3.37842C1.55228 3.37842 2 3.82613 2 4.37842V21.9731C2.00007 22.5254 2.44776 22.9731 3 22.9731H22.2031C22.7554 22.9731 23.2031 22.5254 23.2031 21.9731V19.5679H17.4688C16.3643 19.5679 15.4689 18.6723 15.4688 17.5679V14.8374C15.469 13.7331 16.3643 12.8374 17.4688 12.8374H23.2031V9.75635C23.2029 9.20427 22.7553 8.75635 22.2031 8.75635H4.51562C3.96334 8.75635 3.51562 8.30863 3.51562 7.75635C3.51587 7.20427 3.96349 6.75635 4.51562 6.75635H22.2031C23.8598 6.75635 25.2029 8.0997 25.2031 9.75635V12.8833C26.7986 13.1468 28.0156 14.5325 28.0156 16.2026C28.0156 17.8728 26.7986 19.2574 25.2031 19.521V21.9731C25.2031 23.6299 23.8599 24.9731 22.2031 24.9731H3C1.34319 24.9731 7.21542e-05 23.6299 0 21.9731ZM17.4688 17.5679H24.6504C25.4042 17.5679 26.0156 16.9564 26.0156 16.2026C26.0156 15.4489 25.4042 14.8374 24.6504 14.8374H17.4688V17.5679Z" fill="currentColor"/></svg><div class="label">wallet</div></div>
+    <div class="icon-cell icon-active punchbowl"><svg viewBox="0 0 33 28" xmlns="http://www.w3.org/2000/svg"><path d="M0 9.8042C9.39274e-05 7.53362 1.84075 5.69296 4.11133 5.69287H21.1191V7.69287H4.11133C2.94532 7.69296 2.00009 8.63819 2 9.8042C2 16.8332 7.69849 22.5317 14.7275 22.5317H17.4512C24.4801 22.5316 30.1777 16.8332 30.1777 9.8042C30.1776 8.63813 29.2325 7.69287 28.0664 7.69287H25.0303V5.69287H28.0664C30.3371 5.69287 32.1776 7.53356 32.1777 9.8042C32.1777 17.9377 25.5847 24.5316 17.4512 24.5317H14.7275C6.59393 24.5317 0 17.9378 0 9.8042Z" fill="currentColor"/><path d="M22.4414 10.4945C24.1996 9.44123 26.3951 9.44133 28.1533 10.4945L29.4697 11.2836C29.9858 11.5927 30.5761 11.7562 31.1777 11.7562V13.7562C30.214 13.7562 29.2681 13.4947 28.4414 12.9994L27.126 12.2103C26.0006 11.5361 24.5952 11.5363 23.4697 12.2103C21.7114 13.2638 19.5152 13.2638 17.7568 12.2103C16.6314 11.5363 15.2259 11.5361 14.1006 12.2103C12.3423 13.2637 10.1469 13.2638 8.38867 12.2103C7.26323 11.5362 5.85782 11.5361 4.73242 12.2103L3.14258 13.1635C2.49526 13.5513 1.7546 13.7562 1 13.7562V11.7562C1.3925 11.7562 1.77755 11.6493 2.11426 11.4476L3.70508 10.4945C5.46329 9.44137 7.65885 9.44119 9.41699 10.4945C10.5425 11.1688 11.9477 11.1688 13.0732 10.4945C14.8314 9.4413 17.027 9.44126 18.7852 10.4945C19.9107 11.1688 21.3159 11.1688 22.4414 10.4945Z" fill="currentColor"/><path d="M25.4931 3.60796C25.6389 3.39008 25.5758 3.10138 25.3528 2.96345C25.1298 2.82573 24.831 2.89047 24.685 3.1081L18.9898 11.6103L17.2889 10.5581L22.9841 2.05597C23.7448 0.92063 25.3035 0.583009 26.4658 1.3018C27.6282 2.0208 27.9545 3.5245 27.194 4.66009L22.1684 12.1627L20.4675 11.1105L25.4931 3.60796Z" fill="currentColor"/><path d="M22.4236 21.8906C22.6507 21.3873 23.2424 21.1637 23.7458 21.3906C24.3527 21.6643 24.8645 22.1122 25.2156 22.6777L25.5291 23.1826C26.6542 24.995 25.3508 27.3379 23.2175 27.3379H8.79175C6.73257 27.3377 5.47415 25.0757 6.5603 23.3262L6.84253 22.8721C7.28849 22.1538 7.97373 21.6151 8.7771 21.3516C9.30188 21.1795 9.86669 21.4655 10.0388 21.9902C10.2109 22.5149 9.92561 23.0797 9.40112 23.252C9.04454 23.3689 8.73968 23.6079 8.54175 23.9268L8.25952 24.3809C8.0005 24.7981 8.30075 25.3377 8.79175 25.3379H23.2175C23.7826 25.3379 24.1279 24.7174 23.8298 24.2373L23.5164 23.7324C23.3748 23.5044 23.1683 23.3232 22.9236 23.2129C22.4204 22.9858 22.1966 22.394 22.4236 21.8906Z" fill="currentColor"/><path d="M5.52734 14.5181C6.02139 14.2746 6.62341 14.4787 6.87118 14.9738C7.18065 15.5924 7.78382 16.3687 8.5514 17.0729C9.31935 17.7775 10.1727 18.338 10.9356 18.6018C11.4591 18.7828 11.7397 19.3519 11.5625 19.8732C11.3852 20.3944 10.8173 20.6703 10.2938 20.4894C9.18469 20.106 8.09726 19.3592 7.20355 18.5393C6.30948 17.719 5.52984 16.7531 5.08125 15.8564C4.83353 15.3613 5.03334 14.7617 5.52734 14.5181Z" fill="currentColor"/></svg><div class="label">punchbowl</div></div>
+    <div class="icon-cell icon-active trade"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M7.61068 0.209158C8.04729 -0.12881 8.67587 -0.048665 9.014 0.387869C9.35197 0.824479 9.27183 1.45305 8.83529 1.79119L3.92416 5.5949H23.391C23.943 5.59513 24.391 6.04276 24.391 6.5949C24.3909 7.14698 23.943 7.59467 23.391 7.5949H3.69565L8.87533 12.0529C9.29391 12.4132 9.341 13.0445 8.9808 13.4631C8.62053 13.8817 7.98924 13.9288 7.57065 13.5685L0.347989 7.35271C0.120428 7.15686 -0.00741176 6.86867 0.0003326 6.56853C0.00820089 6.26855 0.150779 5.98766 0.388028 5.80388L7.61068 0.209158Z" fill="currentColor"/><path d="M16.7804 24.7913C16.3438 25.1293 15.7152 25.0492 15.3771 24.6126C15.0391 24.176 15.1193 23.5474 15.5558 23.2093L20.467 19.4056L1.00016 19.4056C0.448064 19.4054 0.000155789 18.9577 0.000155733 18.4056C0.00022958 17.8535 0.44811 17.4058 1.00016 17.4056L20.6955 17.4056L15.5158 12.9476C15.0972 12.5873 15.0501 11.956 15.4103 11.5374C15.7706 11.1188 16.4019 11.0717 16.8205 11.432L24.0431 17.6478C24.2707 17.8436 24.3985 18.1318 24.3908 18.432C24.3829 18.7319 24.2403 19.0128 24.0031 19.1966L16.7804 24.7913Z" fill="currentColor"/></svg><div class="label">trade</div></div>
+    <div class="icon-cell icon-active"><svg viewBox="0 0 27 29" xmlns="http://www.w3.org/2000/svg"><path d="M8.125 26.5002V27.5002C8.125 27.8619 7.97039 28.1534 7.79492 28.3528C7.62545 28.5453 7.42089 28.6736 7.23926 28.759C7.05267 28.8468 6.85403 28.9058 6.66016 28.9436C6.46451 28.9817 6.2622 29.0002 6.0625 29.0002C5.8628 29.0002 5.66049 28.9817 5.46484 28.9436C5.27097 28.9058 5.07233 28.8468 4.88574 28.759C4.70411 28.6736 4.49955 28.5453 4.33008 28.3528C4.15461 28.1534 4 27.8619 4 27.5002V26.5002H8.125Z" fill="currentColor"/><path d="M23 26.5002V27.5002C23 27.8619 22.8454 28.1534 22.6699 28.3528C22.5004 28.5453 22.2959 28.6736 22.1143 28.759C21.9277 28.8468 21.729 28.9058 21.5352 28.9436C21.3395 28.9817 21.1372 29.0002 20.9375 29.0002C20.7378 29.0002 20.5355 28.9817 20.3398 28.9436C20.146 28.9058 19.9473 28.8468 19.7607 28.759C19.5791 28.6736 19.3746 28.5453 19.2051 28.3528C19.0296 28.1534 18.875 27.8619 18.875 27.5002V26.5002H23Z" fill="currentColor"/><path d="M25 10.0002C25 8.89567 24.1046 8.00024 23 8.00024H4C2.89543 8.00024 2 8.89567 2 10.0002V24.0002C2 25.1048 2.89543 26.0002 4 26.0002H23C24.1046 26.0002 25 25.1048 25 24.0002V10.0002ZM27 24.0002C27 26.2094 25.2091 28.0002 23 28.0002H4C1.79086 28.0002 0 26.2094 0 24.0002V10.0002C0 7.79111 1.79086 6.00024 4 6.00024H23C25.2091 6.00024 27 7.79111 27 10.0002V24.0002Z" fill="currentColor"/><path d="M18 17.0002C18 15.5752 17.9988 14.5816 17.9209 13.8157C17.8447 13.0664 17.7031 12.646 17.4941 12.3333C17.2754 12.0059 16.9943 11.7249 16.667 11.5061C16.3542 11.2971 15.9338 11.1556 15.1846 11.0793C14.4186 11.0015 13.425 11.0002 12 11.0002H11C9.57496 11.0002 8.58137 11.0015 7.81543 11.0793C7.06616 11.1556 6.64576 11.2971 6.33301 11.5061C6.00568 11.7249 5.72463 12.0059 5.50586 12.3333C5.29689 12.646 5.15532 13.0664 5.0791 13.8157C5.00122 14.5816 5 15.5752 5 17.0002C5 18.4253 5.00122 19.4189 5.0791 20.1848C5.15532 20.9341 5.29689 21.3545 5.50586 21.6672C5.72463 21.9946 6.00568 22.2756 6.33301 22.4944C6.64576 22.7034 7.06616 22.8449 7.81543 22.9211C8.58137 22.999 9.57496 23.0002 11 23.0002H12C13.425 23.0002 14.4186 22.999 15.1846 22.9211C15.9338 22.8449 16.3542 22.7034 16.667 22.4944C16.9943 22.2756 17.2754 21.9946 17.4941 21.6672C17.7031 21.3545 17.8447 20.9341 17.9209 20.1848C17.9988 19.4189 18 18.4253 18 17.0002ZM20 17.0002C20 18.3839 20.0008 19.4972 19.9102 20.3879C19.8178 21.2952 19.6223 22.0825 19.1572 22.7786C18.7926 23.3242 18.324 23.7928 17.7783 24.1575C17.0823 24.6226 16.2949 24.8181 15.3877 24.9104C14.497 25.001 13.3836 25.0002 12 25.0002H11C9.61635 25.0002 8.503 25.001 7.6123 24.9104C6.70505 24.8181 5.91773 24.6226 5.22168 24.1575C4.67602 23.7928 4.20745 23.3242 3.84277 22.7786C3.37769 22.0825 3.18217 21.2952 3.08984 20.3879C2.99924 19.4972 3 18.3839 3 17.0002C3 15.6166 2.99924 14.5032 3.08984 13.6125C3.18217 12.7053 3.37769 11.918 3.84277 11.2219C4.20745 10.6763 4.67602 10.2077 5.22168 9.84302C5.91773 9.37793 6.70505 9.18241 7.6123 9.09009C8.503 8.99948 9.61635 9.00024 11 9.00024H12C13.3836 9.00024 14.497 8.99948 15.3877 9.09009C16.2949 9.18241 17.0823 9.37793 17.7783 9.84302C18.324 10.2077 18.7926 10.6763 19.1572 11.2219C19.6223 11.918 19.8178 12.7053 19.9102 13.6125C20.0008 14.5032 20 15.6166 20 17.0002Z" fill="currentColor"/><path d="M22.7383 18.0002C23.2906 18.0002 23.7383 18.448 23.7383 19.0002C23.7383 19.5525 23.2906 20.0002 22.7383 20.0002H22C21.4477 20.0002 21 19.5525 21 19.0002C21 18.448 21.4477 18.0002 22 18.0002H22.7383Z" fill="currentColor"/><path d="M22.7383 15.0002C23.2906 15.0002 23.7383 15.448 23.7383 16.0002C23.7383 16.5525 23.2906 17.0002 22.7383 17.0002H22C21.4477 17.0002 21 16.5525 21 16.0002C21 15.448 21.4477 15.0002 22 15.0002H22.7383Z" fill="currentColor"/><path d="M22.5 22.0002C22.2239 22.0002 22 22.2241 22 22.5002L22.0098 22.6008C22.0563 22.8288 22.2583 23.0002 22.5 23.0002C22.7761 23.0002 23 22.7764 23 22.5002C23 22.2241 22.7761 22.0002 22.5 22.0002ZM24 22.5002C24 23.3287 23.3284 24.0002 22.5 24.0002C21.7233 24.0002 21.0846 23.41 21.0078 22.6536L21 22.5002L21.0078 22.3469C21.0846 21.5905 21.7233 21.0002 22.5 21.0002C23.3284 21.0002 24 21.6718 24 22.5002Z" fill="currentColor"/><path d="M13.0801 3.45557C15.2745 3.45567 17.0689 5.16714 17.2021 7.32861L15.2061 7.45166C15.1374 6.33838 14.2112 5.45567 13.0801 5.45557C11.9489 5.45557 11.0228 6.33832 10.9541 7.45166L8.95801 7.32861C9.0913 5.16707 10.8855 3.45557 13.0801 3.45557Z" fill="currentColor"/><path d="M7.24977 0.338153C7.61532 -0.0757542 8.24792 -0.115189 8.66188 0.250262L12.574 3.70632C12.9878 4.07189 13.0273 4.70354 12.6619 5.11745C12.2963 5.53141 11.6637 5.57093 11.2498 5.20534L7.33766 1.75026C6.92376 1.38471 6.88432 0.752112 7.24977 0.338153Z" fill="currentColor"/><path d="M18.7917 0.338153C18.4262 -0.0757542 17.7936 -0.115189 17.3796 0.250262L13.4675 3.70632C13.0537 4.07189 13.0142 4.70354 13.3796 5.11745C13.7452 5.53141 14.3778 5.57093 14.7917 5.20534L18.7038 1.75026C19.1177 1.38471 19.1572 0.752112 18.7917 0.338153Z" fill="currentColor"/></svg><div class="label">social</div></div>
+    <div class="icon-cell icon-active profile"><svg viewBox="0 0 37 35" xmlns="http://www.w3.org/2000/svg"><path d="M30.0969 13.5C30.0969 7.22316 24.7788 2.0002 18.0489 2C11.3189 2 6.00001 7.22304 6.00001 13.5C6.00001 19.777 11.3189 25 18.0489 25V27L17.6856 26.9951C10.0946 26.8101 4 20.8392 4 13.5C4 6.04416 10.2901 0 18.0489 0L18.4112 0.00488281C26.0024 0.189753 32.0969 6.16069 32.0969 13.5C32.0969 20.9557 25.8075 26.9998 18.0489 27V25C24.7788 24.9998 30.0969 19.7768 30.0969 13.5Z" fill="currentColor"/></svg><div class="label">profile</div></div>
+  </div>
+
+  <h3>Bottom-nav demo (one tab active)</h3>
+  <div class="nav-demo">
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M15.333 16.4401C15.333 14.8753 14.0648 13.6071 12.5 13.6071C10.9352 13.6071 9.66699 14.8753 9.66699 16.4401V22.9703H15.333V16.4401ZM17.333 22.9703H19C21.2091 22.9703 23 21.1795 23 18.9703V12.4225C23 11.3535 22.5718 10.3292 21.8115 9.57776L15.3115 3.15393C13.7534 1.61453 11.2466 1.61453 9.68848 3.15393L3.18848 9.57776C2.42815 10.3292 2.00001 11.3535 2 12.4225V18.9703C2 21.1795 3.79086 22.9703 6 22.9703H7.66699V16.4401C7.66699 13.7707 9.83062 11.6071 12.5 11.6071C15.1694 11.6071 17.333 13.7707 17.333 16.4401V22.9703ZM25 18.9703C25 22.284 22.3137 24.9703 19 24.9703H6C2.68629 24.9703 0 22.284 0 18.9703V12.4225C1.2726e-05 10.8188 0.642482 9.2821 1.7832 8.15491L8.2832 1.73206C10.6204 -0.577354 14.3796 -0.577351 16.7168 1.73206L23.2168 8.15491C24.3575 9.2821 25 10.8188 25 12.4225V18.9703Z" fill="currentColor"/></svg></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 29 25" xmlns="http://www.w3.org/2000/svg"><path d="M0 4.37793C0.000250914 1.92287 2.05977 0 4.51562 0V2C3.08855 2 2.00026 3.10174 2 4.37793C2 5.65431 3.08838 6.75684 4.51562 6.75684V8.75684C2.05962 8.75684 0 6.8332 0 4.37793Z" fill="currentColor"/><path d="M21.0938 3C21.0938 2.44772 20.646 2 20.0938 2H4.51562V0H20.0938C21.7506 0 23.0938 1.34315 23.0938 3V7.75684H21.0938V3Z" fill="currentColor"/><path d="M0 21.9731V4.37842C0 3.82613 0.447715 3.37842 1 3.37842C1.55228 3.37842 2 3.82613 2 4.37842V21.9731C2.00007 22.5254 2.44776 22.9731 3 22.9731H22.2031C22.7554 22.9731 23.2031 22.5254 23.2031 21.9731V19.5679H17.4688C16.3643 19.5679 15.4689 18.6723 15.4688 17.5679V14.8374C15.469 13.7331 16.3643 12.8374 17.4688 12.8374H23.2031V9.75635C23.2029 9.20427 22.7553 8.75635 22.2031 8.75635H4.51562C3.96334 8.75635 3.51562 8.30863 3.51562 7.75635C3.51587 7.20427 3.96349 6.75635 4.51562 6.75635H22.2031C23.8598 6.75635 25.2029 8.0997 25.2031 9.75635V12.8833C26.7986 13.1468 28.0156 14.5325 28.0156 16.2026C28.0156 17.8728 26.7986 19.2574 25.2031 19.521V21.9731C25.2031 23.6299 23.8599 24.9731 22.2031 24.9731H3C1.34319 24.9731 7.21542e-05 23.6299 0 21.9731ZM17.4688 17.5679H24.6504C25.4042 17.5679 26.0156 16.9564 26.0156 16.2026C26.0156 15.4489 25.4042 14.8374 24.6504 14.8374H17.4688V17.5679Z" fill="currentColor"/></svg></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 33 28" xmlns="http://www.w3.org/2000/svg"><path d="M0 9.8042C9.39274e-05 7.53362 1.84075 5.69296 4.11133 5.69287H21.1191V7.69287H4.11133C2.94532 7.69296 2.00009 8.63819 2 9.8042C2 16.8332 7.69849 22.5317 14.7275 22.5317H17.4512C24.4801 22.5316 30.1777 16.8332 30.1777 9.8042C30.1776 8.63813 29.2325 7.69287 28.0664 7.69287H25.0303V5.69287H28.0664C30.3371 5.69287 32.1776 7.53356 32.1777 9.8042C32.1777 17.9377 25.5847 24.5316 17.4512 24.5317H14.7275C6.59393 24.5317 0 17.9378 0 9.8042Z" fill="currentColor"/><path d="M22.4414 10.4945C24.1996 9.44123 26.3951 9.44133 28.1533 10.4945L29.4697 11.2836C29.9858 11.5927 30.5761 11.7562 31.1777 11.7562V13.7562C30.214 13.7562 29.2681 13.4947 28.4414 12.9994L27.126 12.2103C26.0006 11.5361 24.5952 11.5363 23.4697 12.2103C21.7114 13.2638 19.5152 13.2638 17.7568 12.2103C16.6314 11.5363 15.2259 11.5361 14.1006 12.2103C12.3423 13.2637 10.1469 13.2638 8.38867 12.2103C7.26323 11.5362 5.85782 11.5361 4.73242 12.2103L3.14258 13.1635C2.49526 13.5513 1.7546 13.7562 1 13.7562V11.7562C1.3925 11.7562 1.77755 11.6493 2.11426 11.4476L3.70508 10.4945C5.46329 9.44137 7.65885 9.44119 9.41699 10.4945C10.5425 11.1688 11.9477 11.1688 13.0732 10.4945C14.8314 9.4413 17.027 9.44126 18.7852 10.4945C19.9107 11.1688 21.3159 11.1688 22.4414 10.4945Z" fill="currentColor"/><path d="M25.4931 3.60796C25.6389 3.39008 25.5758 3.10138 25.3528 2.96345C25.1298 2.82573 24.831 2.89047 24.685 3.1081L18.9898 11.6103L17.2889 10.5581L22.9841 2.05597C23.7448 0.92063 25.3035 0.583009 26.4658 1.3018C27.6282 2.0208 27.9545 3.5245 27.194 4.66009L22.1684 12.1627L20.4675 11.1105L25.4931 3.60796Z" fill="currentColor"/><path d="M22.4236 21.8906C22.6507 21.3873 23.2424 21.1637 23.7458 21.3906C24.3527 21.6643 24.8645 22.1122 25.2156 22.6777L25.5291 23.1826C26.6542 24.995 25.3508 27.3379 23.2175 27.3379H8.79175C6.73257 27.3377 5.47415 25.0757 6.5603 23.3262L6.84253 22.8721C7.28849 22.1538 7.97373 21.6151 8.7771 21.3516C9.30188 21.1795 9.86669 21.4655 10.0388 21.9902C10.2109 22.5149 9.92561 23.0797 9.40112 23.252C9.04454 23.3689 8.73968 23.6079 8.54175 23.9268L8.25952 24.3809C8.0005 24.7981 8.30075 25.3377 8.79175 25.3379H23.2175C23.7826 25.3379 24.1279 24.7174 23.8298 24.2373L23.5164 23.7324C23.3748 23.5044 23.1683 23.3232 22.9236 23.2129C22.4204 22.9858 22.1966 22.394 22.4236 21.8906Z" fill="currentColor"/><path d="M5.52734 14.5181C6.02139 14.2746 6.62341 14.4787 6.87118 14.9738C7.18065 15.5924 7.78382 16.3687 8.5514 17.0729C9.31935 17.7775 10.1727 18.338 10.9356 18.6018C11.4591 18.7828 11.7397 19.3519 11.5625 19.8732C11.3852 20.3944 10.8173 20.6703 10.2938 20.4894C9.18469 20.106 8.09726 19.3592 7.20355 18.5393C6.30948 17.719 5.52984 16.7531 5.08125 15.8564C4.83353 15.3613 5.03334 14.7617 5.52734 14.5181Z" fill="currentColor"/></svg></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M7.61068 0.209158C8.04729 -0.12881 8.67587 -0.048665 9.014 0.387869C9.35197 0.824479 9.27183 1.45305 8.83529 1.79119L3.92416 5.5949H23.391C23.943 5.59513 24.391 6.04276 24.391 6.5949C24.3909 7.14698 23.943 7.59467 23.391 7.5949H3.69565L8.87533 12.0529C9.29391 12.4132 9.341 13.0445 8.9808 13.4631C8.62053 13.8817 7.98924 13.9288 7.57065 13.5685L0.347989 7.35271C0.120428 7.15686 -0.00741176 6.86867 0.0003326 6.56853C0.00820089 6.26855 0.150779 5.98766 0.388028 5.80388L7.61068 0.209158Z" fill="currentColor"/><path d="M16.7804 24.7913C16.3438 25.1293 15.7152 25.0492 15.3771 24.6126C15.0391 24.176 15.1193 23.5474 15.5558 23.2093L20.467 19.4056L1.00016 19.4056C0.448064 19.4054 0.000155789 18.9577 0.000155733 18.4056C0.00022958 17.8535 0.44811 17.4058 1.00016 17.4056L20.6955 17.4056L15.5158 12.9476C15.0972 12.5873 15.0501 11.956 15.4103 11.5374C15.7706 11.1188 16.4019 11.0717 16.8205 11.432L24.0431 17.6478C24.2707 17.8436 24.3985 18.1318 24.3908 18.432C24.3829 18.7319 24.2403 19.0128 24.0031 19.1966L16.7804 24.7913Z" fill="currentColor"/></svg></div>
+    <div class="icon-cell icon-active"><svg viewBox="0 0 27 29" xmlns="http://www.w3.org/2000/svg"><path d="M8.125 26.5002V27.5002C8.125 27.8619 7.97039 28.1534 7.79492 28.3528C7.62545 28.5453 7.42089 28.6736 7.23926 28.759C7.05267 28.8468 6.85403 28.9058 6.66016 28.9436C6.46451 28.9817 6.2622 29.0002 6.0625 29.0002C5.8628 29.0002 5.66049 28.9817 5.46484 28.9436C5.27097 28.9058 5.07233 28.8468 4.88574 28.759C4.70411 28.6736 4.49955 28.5453 4.33008 28.3528C4.15461 28.1534 4 27.8619 4 27.5002V26.5002H8.125Z" fill="currentColor"/><path d="M23 26.5002V27.5002C23 27.8619 22.8454 28.1534 22.6699 28.3528C22.5004 28.5453 22.2959 28.6736 22.1143 28.759C21.9277 28.8468 21.729 28.9058 21.5352 28.9436C21.3395 28.9817 21.1372 29.0002 20.9375 29.0002C20.7378 29.0002 20.5355 28.9817 20.3398 28.9436C20.146 28.9058 19.9473 28.8468 19.7607 28.759C19.5791 28.6736 19.3746 28.5453 19.2051 28.3528C19.0296 28.1534 18.875 27.8619 18.875 27.5002V26.5002H23Z" fill="currentColor"/><path d="M25 10.0002C25 8.89567 24.1046 8.00024 23 8.00024H4C2.89543 8.00024 2 8.89567 2 10.0002V24.0002C2 25.1048 2.89543 26.0002 4 26.0002H23C24.1046 26.0002 25 25.1048 25 24.0002V10.0002ZM27 24.0002C27 26.2094 25.2091 28.0002 23 28.0002H4C1.79086 28.0002 0 26.2094 0 24.0002V10.0002C0 7.79111 1.79086 6.00024 4 6.00024H23C25.2091 6.00024 27 7.79111 27 10.0002V24.0002Z" fill="currentColor"/><path d="M18 17.0002C18 15.5752 17.9988 14.5816 17.9209 13.8157C17.8447 13.0664 17.7031 12.646 17.4941 12.3333C17.2754 12.0059 16.9943 11.7249 16.667 11.5061C16.3542 11.2971 15.9338 11.1556 15.1846 11.0793C14.4186 11.0015 13.425 11.0002 12 11.0002H11C9.57496 11.0002 8.58137 11.0015 7.81543 11.0793C7.06616 11.1556 6.64576 11.2971 6.33301 11.5061C6.00568 11.7249 5.72463 12.0059 5.50586 12.3333C5.29689 12.646 5.15532 13.0664 5.0791 13.8157C5.00122 14.5816 5 15.5752 5 17.0002C5 18.4253 5.00122 19.4189 5.0791 20.1848C5.15532 20.9341 5.29689 21.3545 5.50586 21.6672C5.72463 21.9946 6.00568 22.2756 6.33301 22.4944C6.64576 22.7034 7.06616 22.8449 7.81543 22.9211C8.58137 22.999 9.57496 23.0002 11 23.0002H12C13.425 23.0002 14.4186 22.999 15.1846 22.9211C15.9338 22.8449 16.3542 22.7034 16.667 22.4944C16.9943 22.2756 17.2754 21.9946 17.4941 21.6672C17.7031 21.3545 17.8447 20.9341 17.9209 20.1848C17.9988 19.4189 18 18.4253 18 17.0002ZM20 17.0002C20 18.3839 20.0008 19.4972 19.9102 20.3879C19.8178 21.2952 19.6223 22.0825 19.1572 22.7786C18.7926 23.3242 18.324 23.7928 17.7783 24.1575C17.0823 24.6226 16.2949 24.8181 15.3877 24.9104C14.497 25.001 13.3836 25.0002 12 25.0002H11C9.61635 25.0002 8.503 25.001 7.6123 24.9104C6.70505 24.8181 5.91773 24.6226 5.22168 24.1575C4.67602 23.7928 4.20745 23.3242 3.84277 22.7786C3.37769 22.0825 3.18217 21.2952 3.08984 20.3879C2.99924 19.4972 3 18.3839 3 17.0002C3 15.6166 2.99924 14.5032 3.08984 13.6125C3.18217 12.7053 3.37769 11.918 3.84277 11.2219C4.20745 10.6763 4.67602 10.2077 5.22168 9.84302C5.91773 9.37793 6.70505 9.18241 7.6123 9.09009C8.503 8.99948 9.61635 9.00024 11 9.00024H12C13.3836 9.00024 14.497 8.99948 15.3877 9.09009C16.2949 9.18241 17.0823 9.37793 17.7783 9.84302C18.324 10.2077 18.7926 10.6763 19.1572 11.2219C19.6223 11.918 19.8178 12.7053 19.9102 13.6125C20.0008 14.5032 20 15.6166 20 17.0002Z" fill="currentColor"/><path d="M22.7383 18.0002C23.2906 18.0002 23.7383 18.448 23.7383 19.0002C23.7383 19.5525 23.2906 20.0002 22.7383 20.0002H22C21.4477 20.0002 21 19.5525 21 19.0002C21 18.448 21.4477 18.0002 22 18.0002H22.7383Z" fill="currentColor"/><path d="M22.7383 15.0002C23.2906 15.0002 23.7383 15.448 23.7383 16.0002C23.7383 16.5525 23.2906 17.0002 22.7383 17.0002H22C21.4477 17.0002 21 16.5525 21 16.0002C21 15.448 21.4477 15.0002 22 15.0002H22.7383Z" fill="currentColor"/><path d="M22.5 22.0002C22.2239 22.0002 22 22.2241 22 22.5002L22.0098 22.6008C22.0563 22.8288 22.2583 23.0002 22.5 23.0002C22.7761 23.0002 23 22.7764 23 22.5002C23 22.2241 22.7761 22.0002 22.5 22.0002ZM24 22.5002C24 23.3287 23.3284 24.0002 22.5 24.0002C21.7233 24.0002 21.0846 23.41 21.0078 22.6536L21 22.5002L21.0078 22.3469C21.0846 21.5905 21.7233 21.0002 22.5 21.0002C23.3284 21.0002 24 21.6718 24 22.5002Z" fill="currentColor"/><path d="M13.0801 3.45557C15.2745 3.45567 17.0689 5.16714 17.2021 7.32861L15.2061 7.45166C15.1374 6.33838 14.2112 5.45567 13.0801 5.45557C11.9489 5.45557 11.0228 6.33832 10.9541 7.45166L8.95801 7.32861C9.0913 5.16707 10.8855 3.45557 13.0801 3.45557Z" fill="currentColor"/><path d="M7.24977 0.338153C7.61532 -0.0757542 8.24792 -0.115189 8.66188 0.250262L12.574 3.70632C12.9878 4.07189 13.0273 4.70354 12.6619 5.11745C12.2963 5.53141 11.6637 5.57093 11.2498 5.20534L7.33766 1.75026C6.92376 1.38471 6.88432 0.752112 7.24977 0.338153Z" fill="currentColor"/><path d="M18.7917 0.338153C18.4262 -0.0757542 17.7936 -0.115189 17.3796 0.250262L13.4675 3.70632C13.0537 4.07189 13.0142 4.70354 13.3796 5.11745C13.7452 5.53141 14.3778 5.57093 14.7917 5.20534L18.7038 1.75026C19.1177 1.38471 19.1572 0.752112 18.7917 0.338153Z" fill="currentColor"/></svg></div>
+    <div class="icon-cell icon-inactive"><svg viewBox="0 0 37 35" xmlns="http://www.w3.org/2000/svg"><path d="M30.0969 13.5C30.0969 7.22316 24.7788 2.0002 18.0489 2C11.3189 2 6.00001 7.22304 6.00001 13.5C6.00001 19.777 11.3189 25 18.0489 25V27L17.6856 26.9951C10.0946 26.8101 4 20.8392 4 13.5C4 6.04416 10.2901 0 18.0489 0L18.4112 0.00488281C26.0024 0.189753 32.0969 6.16069 32.0969 13.5C32.0969 20.9557 25.8075 26.9998 18.0489 27V25C24.7788 24.9998 30.0969 19.7768 30.0969 13.5Z" fill="currentColor"/></svg></div>
+  </div>
+
+  <h3>Active token</h3>
+  <pre class="code">
+all tabs (active) → <span class="v">--hot-pink-500</span>   (#FF3B7A)
+glow recipe       → <span class="v">drop-shadow</span> 4px / 10px / 20px @ 40% / 20% / 10% alpha
+inactive          → <span class="v">#FFFFFF</span> @ 0.85 opacity, no filter</pre>
+  <p style="color:var(--text-secondary);margin-top:8px">Uniform hot-pink keeps the active affordance instantly recognizable across every screen. The brand color becomes the "you are here" signal — no per-tab learning required.</p>
+
+  <h3>Implementation notes</h3>
+  <ul>
+    <li><b>Single source.</b> SVGs use <code>fill="currentColor"</code> so the icon color is driven entirely by parent CSS — no duplicate active/inactive markup.</li>
+    <li><b>Glow recipe.</b> Active state uses three layered <code>drop-shadow()</code> filters at 40% / 20% / 10% alpha — same canonical recipe as element glow.</li>
+    <li><b>Transitions.</b> 200ms ease on <code>filter</code> and <code>color</code>; tap feels responsive without flickering.</li>
+    <li><b>One active at a time.</b> Only the current screen's nav icon glows. Others stay white. Mirrors the "at most one featured card per screen" glow discipline.</li>
+  </ul>
+
+  <h3>Do's & don'ts</h3>
+  <div class="dodont">
+    <div class="col do"><h5>Do</h5>Use uniform hot-pink for every active nav tab — same color, same glow recipe.</div>
+    <div class="col dont"><h5>Don't</h5>Glow multiple nav icons simultaneously. Only the active screen glows.</div>
+    <div class="col do"><h5>Do</h5>Use <code>currentColor</code> in SVG so a single icon file serves both states.</div>
+    <div class="col dont"><h5>Don't</h5>Per-screen colors on the nav. Save accent colors for sector chips, charts, and content — not navigation chrome.</div>
+  </div>
+</section>
+
+<!-- ─── Components ─────────────────────────────────────────────────────── -->
+<section id="components">
+  <header>
+    <div class="eyebrow">Components</div>
+    <h2>Component gallery</h2>
+    <p>Every component has the state vocabulary: default, hover/press, focus, active, disabled, loading, error.</p>
+  </header>
+
+  <h3>Buttons</h3>
+  <div class="card" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button class="btn btn-primary">Place investment</button>
+    <button class="btn btn-secondary">View round</button>
+    <button class="btn btn-tertiary">Cancel</button>
+    <button class="btn btn-sell">Sell stake</button>
+    <button class="btn btn-destructive">Delete account</button>
+    <button class="btn btn-disabled" disabled>Connect wallet</button>
+    <button class="btn btn-primary btn-compact">Compact</button>
+    <button class="btn btn-secondary btn-pill btn-compact">Pill</button>
+  </div>
+
+  <h3>Inputs</h3>
+  <div class="grid grid-2">
+    <div class="card">
+      <h4>Default</h4>
+      <input class="input" placeholder="Search rounds…" />
+      <div class="helper">Helper text in tertiary.</div>
+    </div>
+    <div class="card">
+      <h4>Mono / Amount</h4>
+      <input class="input mono" value="$500.00" />
+      <div class="helper">Use mono variant for amounts, addresses, OTP.</div>
+    </div>
+    <div class="card">
+      <h4>Focus</h4>
+      <input class="input" autofocus placeholder="Click here…" />
+      <div class="helper">Border green + 3px green ring.</div>
+    </div>
+    <div class="card">
+      <h4>Error</h4>
+      <input class="input error" value="Invalid amount" />
+      <div class="helper error">Enter a value greater than $0.</div>
+    </div>
+  </div>
+
+  <h3>Chips, badges, sectors</h3>
+  <div class="card" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <button class="chip active">All</button>
+    <button class="chip">Pre-Seed</button>
+    <button class="chip">Seed</button>
+    <button class="chip">Series A</button>
+    <span class="badge positive">↑ 19.6%</span>
+    <span class="badge negative">↓ 4.2%</span>
+    <span class="badge pending">Pending</span>
+    <span class="sector-chip aiml">AI / ML</span>
+    <span class="sector-chip climate">Climate</span>
+    <span class="sector-chip consumer">Consumer</span>
+    <span class="sector-chip space">Space</span>
+    <span class="sector-chip deeptech">Deep Tech</span>
+    <span class="sector-chip biotech">Biotech</span>
+    <span class="sector-chip fintech">Fintech</span>
+    <span class="sector-chip defi">DeFi</span>
+  </div>
+
+  <h3>Segmented control</h3>
+  <div class="card">
+    <div class="seg">
+      <button class="on">Buy</button>
+      <button>Sell</button>
+      <button>History</button>
+    </div>
+  </div>
+
+  <h3>Progress bars</h3>
+  <div class="card">
+    <div class="upper" style="font-size:11px;color:var(--text-secondary);font-weight:600;margin-bottom:8px">Round progress</div>
+    <div class="progress"><div class="fill" style="width:68%"></div></div>
+    <div class="mono" style="font-size:12px;color:var(--text-tertiary);margin-top:8px;display:flex;justify-content:space-between">
+      <span>$680,000 raised</span><span>$1,000,000 goal · 12 days left</span>
+    </div>
+  </div>
+
+  <h3>Tab bar (iOS)</h3>
+  <p style="color:var(--text-secondary);margin-bottom:12px">Six tabs, matching the production app. Active tab uses hot-pink.500 with element glow — uniform across all tabs; inactive uses text.tertiary.</p>
+  <div class="card" style="padding:0;overflow:hidden;background:transparent;border:none">
+    <div class="tabbar">
+      <!-- Floors (Dance Floor) — custom home icon -->
+      <div class="tab on">
+        <svg class="ic" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.333 16.4401C15.333 14.8753 14.0648 13.6071 12.5 13.6071C10.9352 13.6071 9.66699 14.8753 9.66699 16.4401V22.9703H15.333V16.4401ZM17.333 22.9703H19C21.2091 22.9703 23 21.1795 23 18.9703V12.4225C23 11.3535 22.5718 10.3292 21.8115 9.57776L15.3115 3.15393C13.7534 1.61453 11.2466 1.61453 9.68848 3.15393L3.18848 9.57776C2.42815 10.3292 2.00001 11.3535 2 12.4225V18.9703C2 21.1795 3.79086 22.9703 6 22.9703H7.66699V16.4401C7.66699 13.7707 9.83062 11.6071 12.5 11.6071C15.1694 11.6071 17.333 13.7707 17.333 16.4401V22.9703ZM25 18.9703C25 22.284 22.3137 24.9703 19 24.9703H6C2.68629 24.9703 0 22.284 0 18.9703V12.4225C1.2726e-05 10.8188 0.642482 9.2821 1.7832 8.15491L8.2832 1.73206C10.6204 -0.577354 14.3796 -0.577351 16.7168 1.73206L23.2168 8.15491C24.3575 9.2821 25 10.8188 25 12.4225V18.9703Z" fill="currentColor"/></svg>
+        <div>Floors</div>
+      </div>
+      <!-- Wallet — custom wallet icon -->
+      <div class="tab">
+        <svg class="ic" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 4.37793C0.000250914 1.92287 2.05977 0 4.51562 0V2C3.08855 2 2.00026 3.10174 2 4.37793C2 5.65431 3.08838 6.75684 4.51562 6.75684V8.75684C2.05962 8.75684 0 6.8332 0 4.37793Z" fill="currentColor"/><path d="M21.0938 3C21.0938 2.44772 20.646 2 20.0938 2H4.51562V0H20.0938C21.7506 0 23.0938 1.34315 23.0938 3V7.75684H21.0938V3Z" fill="currentColor"/><path d="M0 21.9731V4.37842C0 3.82613 0.447715 3.37842 1 3.37842C1.55228 3.37842 2 3.82613 2 4.37842V21.9731C2.00007 22.5254 2.44776 22.9731 3 22.9731H22.2031C22.7554 22.9731 23.2031 22.5254 23.2031 21.9731V19.5679H17.4688C16.3643 19.5679 15.4689 18.6723 15.4688 17.5679V14.8374C15.469 13.7331 16.3643 12.8374 17.4688 12.8374H23.2031V9.75635C23.2029 9.20427 22.7553 8.75635 22.2031 8.75635H4.51562C3.96334 8.75635 3.51562 8.30863 3.51562 7.75635C3.51587 7.20427 3.96349 6.75635 4.51562 6.75635H22.2031C23.8598 6.75635 25.2029 8.0997 25.2031 9.75635V12.8833C26.7986 13.1468 28.0156 14.5325 28.0156 16.2026C28.0156 17.8728 26.7986 19.2574 25.2031 19.521V21.9731C25.2031 23.6299 23.8599 24.9731 22.2031 24.9731H3C1.34319 24.9731 7.21542e-05 23.6299 0 21.9731ZM17.4688 17.5679H24.6504C25.4042 17.5679 26.0156 16.9564 26.0156 16.2026C26.0156 15.4489 25.4042 14.8374 24.6504 14.8374H17.4688V17.5679Z" fill="currentColor"/></svg>
+        <div>Wallet</div>
+      </div>
+      <!-- Punch Bowl — custom bowl icon -->
+      <div class="tab">
+        <svg class="ic" viewBox="0 0 33 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 9.8042C9.39274e-05 7.53362 1.84075 5.69296 4.11133 5.69287H21.1191V7.69287H4.11133C2.94532 7.69296 2.00009 8.63819 2 9.8042C2 16.8332 7.69849 22.5317 14.7275 22.5317H17.4512C24.4801 22.5316 30.1777 16.8332 30.1777 9.8042C30.1776 8.63813 29.2325 7.69287 28.0664 7.69287H25.0303V5.69287H28.0664C30.3371 5.69287 32.1776 7.53356 32.1777 9.8042C32.1777 17.9377 25.5847 24.5316 17.4512 24.5317H14.7275C6.59393 24.5317 0 17.9378 0 9.8042Z" fill="currentColor"/><path d="M22.4414 10.4945C24.1996 9.44123 26.3951 9.44133 28.1533 10.4945L29.4697 11.2836C29.9858 11.5927 30.5761 11.7562 31.1777 11.7562V13.7562C30.214 13.7562 29.2681 13.4947 28.4414 12.9994L27.126 12.2103C26.0006 11.5361 24.5952 11.5363 23.4697 12.2103C21.7114 13.2638 19.5152 13.2638 17.7568 12.2103C16.6314 11.5363 15.2259 11.5361 14.1006 12.2103C12.3423 13.2637 10.1469 13.2638 8.38867 12.2103C7.26323 11.5362 5.85782 11.5361 4.73242 12.2103L3.14258 13.1635C2.49526 13.5513 1.7546 13.7562 1 13.7562V11.7562C1.3925 11.7562 1.77755 11.6493 2.11426 11.4476L3.70508 10.4945C5.46329 9.44137 7.65885 9.44119 9.41699 10.4945C10.5425 11.1688 11.9477 11.1688 13.0732 10.4945C14.8314 9.4413 17.027 9.44126 18.7852 10.4945C19.9107 11.1688 21.3159 11.1688 22.4414 10.4945Z" fill="currentColor"/><path d="M25.4931 3.60796C25.6389 3.39008 25.5758 3.10138 25.3528 2.96345C25.1298 2.82573 24.831 2.89047 24.685 3.1081L18.9898 11.6103L17.2889 10.5581L22.9841 2.05597C23.7448 0.92063 25.3035 0.583009 26.4658 1.3018C27.6282 2.0208 27.9545 3.5245 27.194 4.66009L22.1684 12.1627L20.4675 11.1105L25.4931 3.60796Z" fill="currentColor"/><path d="M22.4236 21.8906C22.6507 21.3873 23.2424 21.1637 23.7458 21.3906C24.3527 21.6643 24.8645 22.1122 25.2156 22.6777L25.5291 23.1826C26.6542 24.995 25.3508 27.3379 23.2175 27.3379H8.79175C6.73257 27.3377 5.47415 25.0757 6.5603 23.3262L6.84253 22.8721C7.28849 22.1538 7.97373 21.6151 8.7771 21.3516C9.30188 21.1795 9.86669 21.4655 10.0388 21.9902C10.2109 22.5149 9.92561 23.0797 9.40112 23.252C9.04454 23.3689 8.73968 23.6079 8.54175 23.9268L8.25952 24.3809C8.0005 24.7981 8.30075 25.3377 8.79175 25.3379H23.2175C23.7826 25.3379 24.1279 24.7174 23.8298 24.2373L23.5164 23.7324C23.3748 23.5044 23.1683 23.3232 22.9236 23.2129C22.4204 22.9858 22.1966 22.394 22.4236 21.8906Z" fill="currentColor"/><path d="M5.52734 14.5181C6.02139 14.2746 6.62341 14.4787 6.87118 14.9738C7.18065 15.5924 7.78382 16.3687 8.5514 17.0729C9.31935 17.7775 10.1727 18.338 10.9356 18.6018C11.4591 18.7828 11.7397 19.3519 11.5625 19.8732C11.3852 20.3944 10.8173 20.6703 10.2938 20.4894C9.18469 20.106 8.09726 19.3592 7.20355 18.5393C6.30948 17.719 5.52984 16.7531 5.08125 15.8564C4.83353 15.3613 5.03334 14.7617 5.52734 14.5181Z" fill="currentColor"/></svg>
+        <div>Punch Bowl</div>
+      </div>
+      <!-- Social — custom TV icon -->
+      <div class="tab">
+        <svg class="ic" viewBox="0 0 27 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.125 26.5002V27.5002C8.125 27.8619 7.97039 28.1534 7.79492 28.3528C7.62545 28.5453 7.42089 28.6736 7.23926 28.759C7.05267 28.8468 6.85403 28.9058 6.66016 28.9436C6.46451 28.9817 6.2622 29.0002 6.0625 29.0002C5.8628 29.0002 5.66049 28.9817 5.46484 28.9436C5.27097 28.9058 5.07233 28.8468 4.88574 28.759C4.70411 28.6736 4.49955 28.5453 4.33008 28.3528C4.15461 28.1534 4 27.8619 4 27.5002V26.5002H8.125Z" fill="currentColor"/><path d="M23 26.5002V27.5002C23 27.8619 22.8454 28.1534 22.6699 28.3528C22.5004 28.5453 22.2959 28.6736 22.1143 28.759C21.9277 28.8468 21.729 28.9058 21.5352 28.9436C21.3395 28.9817 21.1372 29.0002 20.9375 29.0002C20.7378 29.0002 20.5355 28.9817 20.3398 28.9436C20.146 28.9058 19.9473 28.8468 19.7607 28.759C19.5791 28.6736 19.3746 28.5453 19.2051 28.3528C19.0296 28.1534 18.875 27.8619 18.875 27.5002V26.5002H23Z" fill="currentColor"/><path d="M25 10.0002C25 8.89567 24.1046 8.00024 23 8.00024H4C2.89543 8.00024 2 8.89567 2 10.0002V24.0002C2 25.1048 2.89543 26.0002 4 26.0002H23C24.1046 26.0002 25 25.1048 25 24.0002V10.0002ZM27 24.0002C27 26.2094 25.2091 28.0002 23 28.0002H4C1.79086 28.0002 0 26.2094 0 24.0002V10.0002C0 7.79111 1.79086 6.00024 4 6.00024H23C25.2091 6.00024 27 7.79111 27 10.0002V24.0002Z" fill="currentColor"/><path d="M18 17.0002C18 15.5752 17.9988 14.5816 17.9209 13.8157C17.8447 13.0664 17.7031 12.646 17.4941 12.3333C17.2754 12.0059 16.9943 11.7249 16.667 11.5061C16.3542 11.2971 15.9338 11.1556 15.1846 11.0793C14.4186 11.0015 13.425 11.0002 12 11.0002H11C9.57496 11.0002 8.58137 11.0015 7.81543 11.0793C7.06616 11.1556 6.64576 11.2971 6.33301 11.5061C6.00568 11.7249 5.72463 12.0059 5.50586 12.3333C5.29689 12.646 5.15532 13.0664 5.0791 13.8157C5.00122 14.5816 5 15.5752 5 17.0002C5 18.4253 5.00122 19.4189 5.0791 20.1848C5.15532 20.9341 5.29689 21.3545 5.50586 21.6672C5.72463 21.9946 6.00568 22.2756 6.33301 22.4944C6.64576 22.7034 7.06616 22.8449 7.81543 22.9211C8.58137 22.999 9.57496 23.0002 11 23.0002H12C13.425 23.0002 14.4186 22.999 15.1846 22.9211C15.9338 22.8449 16.3542 22.7034 16.667 22.4944C16.9943 22.2756 17.2754 21.9946 17.4941 21.6672C17.7031 21.3545 17.8447 20.9341 17.9209 20.1848C17.9988 19.4189 18 18.4253 18 17.0002ZM20 17.0002C20 18.3839 20.0008 19.4972 19.9102 20.3879C19.8178 21.2952 19.6223 22.0825 19.1572 22.7786C18.7926 23.3242 18.324 23.7928 17.7783 24.1575C17.0823 24.6226 16.2949 24.8181 15.3877 24.9104C14.497 25.001 13.3836 25.0002 12 25.0002H11C9.61635 25.0002 8.503 25.001 7.6123 24.9104C6.70505 24.8181 5.91773 24.6226 5.22168 24.1575C4.67602 23.7928 4.20745 23.3242 3.84277 22.7786C3.37769 22.0825 3.18217 21.2952 3.08984 20.3879C2.99924 19.4972 3 18.3839 3 17.0002C3 15.6166 2.99924 14.5032 3.08984 13.6125C3.18217 12.7053 3.37769 11.918 3.84277 11.2219C4.20745 10.6763 4.67602 10.2077 5.22168 9.84302C5.91773 9.37793 6.70505 9.18241 7.6123 9.09009C8.503 8.99948 9.61635 9.00024 11 9.00024H12C13.3836 9.00024 14.497 8.99948 15.3877 9.09009C16.2949 9.18241 17.0823 9.37793 17.7783 9.84302C18.324 10.2077 18.7926 10.6763 19.1572 11.2219C19.6223 11.918 19.8178 12.7053 19.9102 13.6125C20.0008 14.5032 20 15.6166 20 17.0002Z" fill="currentColor"/><path d="M22.7383 18.0002C23.2906 18.0002 23.7383 18.448 23.7383 19.0002C23.7383 19.5525 23.2906 20.0002 22.7383 20.0002H22C21.4477 20.0002 21 19.5525 21 19.0002C21 18.448 21.4477 18.0002 22 18.0002H22.7383Z" fill="currentColor"/><path d="M22.7383 15.0002C23.2906 15.0002 23.7383 15.448 23.7383 16.0002C23.7383 16.5525 23.2906 17.0002 22.7383 17.0002H22C21.4477 17.0002 21 16.5525 21 16.0002C21 15.448 21.4477 15.0002 22 15.0002H22.7383Z" fill="currentColor"/><path d="M22.5 22.0002C22.2239 22.0002 22 22.2241 22 22.5002L22.0098 22.6008C22.0563 22.8288 22.2583 23.0002 22.5 23.0002C22.7761 23.0002 23 22.7764 23 22.5002C23 22.2241 22.7761 22.0002 22.5 22.0002ZM24 22.5002C24 23.3287 23.3284 24.0002 22.5 24.0002C21.7233 24.0002 21.0846 23.41 21.0078 22.6536L21 22.5002L21.0078 22.3469C21.0846 21.5905 21.7233 21.0002 22.5 21.0002C23.3284 21.0002 24 21.6718 24 22.5002Z" fill="currentColor"/><path d="M13.0801 3.45557C15.2745 3.45567 17.0689 5.16714 17.2021 7.32861L15.2061 7.45166C15.1374 6.33838 14.2112 5.45567 13.0801 5.45557C11.9489 5.45557 11.0228 6.33832 10.9541 7.45166L8.95801 7.32861C9.0913 5.16707 10.8855 3.45557 13.0801 3.45557Z" fill="currentColor"/><path d="M7.24977 0.338153C7.61532 -0.0757542 8.24792 -0.115189 8.66188 0.250262L12.574 3.70632C12.9878 4.07189 13.0273 4.70354 12.6619 5.11745C12.2963 5.53141 11.6637 5.57093 11.2498 5.20534L7.33766 1.75026C6.92376 1.38471 6.88432 0.752112 7.24977 0.338153Z" fill="currentColor"/><path d="M18.7917 0.338153C18.4262 -0.0757542 17.7936 -0.115189 17.3796 0.250262L13.4675 3.70632C13.0537 4.07189 13.0142 4.70354 13.3796 5.11745C13.7452 5.53141 14.3778 5.57093 14.7917 5.20534L18.7038 1.75026C19.1177 1.38471 19.1572 0.752112 18.7917 0.338153Z" fill="currentColor"/></svg>
+        <div>Social</div>
+      </div>
+      <!-- Profile — custom avatar arc icon -->
+      <div class="tab">
+        <svg class="ic" viewBox="0 0 37 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30.0969 13.5C30.0969 7.22316 24.7788 2.0002 18.0489 2C11.3189 2 6.00001 7.22304 6.00001 13.5C6.00001 19.777 11.3189 25 18.0489 25V27L17.6856 26.9951C10.0946 26.8101 4 20.8392 4 13.5C4 6.04416 10.2901 0 18.0489 0L18.4112 0.00488281C26.0024 0.189753 32.0969 6.16069 32.0969 13.5C32.0969 20.9557 25.8075 26.9998 18.0489 27V25C24.7788 24.9998 30.0969 19.7768 30.0969 13.5Z" fill="currentColor"/></svg>
+        <div>Profile</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Toast / banner</h3>
+  <div class="card-elev card" style="display:flex;align-items:center;gap:12px;max-width:420px">
+    <div style="width:32px;height:32px;border-radius:50%;background:var(--green-500);box-shadow:var(--glow-green);display:flex;align-items:center;justify-content:center;color:#000;font-weight:800">✓</div>
+    <div>
+      <div style="font-weight:600">Investment placed</div>
+      <div style="font-size:12px;color:var(--text-secondary)">$500 in Helion Energy. You're Founding Investor #312.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Hyper Charts widgets ──────────────────────────────────────────── -->
+<section id="charts">
+  <header>
+    <div class="eyebrow">Hyper Charts ✦</div>
+    <h2>Chart vocabulary</h2>
+    <p>Eleven chart types, inherited from Alien Pixels' Hyper Charts template. Resist the urge to invent a twelfth — these cover every analytics surface Disco Capital needs.</p>
+  </header>
+
+  <h3>Widget header anatomy</h3>
+  <pre class="code">[Title] ───────────────── [✦]
+[$Metric] [↑Delta]
+[Compared to ... last X]
+─────────────────────────────
+[Chart fills remaining space]</pre>
+
+  <h3>Widget size tiers</h3>
+  <p style="color:var(--text-secondary);margin-bottom:16px">Small tiles for inline metrics, the Large card for full analytics surfaces. The Large carries the three-metric strip and a footer table.</p>
+
+  <!-- Small tiers: two side by side -->
+  <div class="grid grid-2" style="margin-bottom:16px">
+    <div class="widget">
+      <header><h5>Income · Vertical Small</h5><span class="star">✦</span></header>
+      <div class="metric mono">$32,134 <span class="delta up">↑2.5%</span></div>
+      <div class="compared">301.082 USD</div>
+      <div class="chart-area" style="height:80px;margin-top:8px">
+        <div class="bars">
+          <div class="bar" style="height:30%"></div><div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:48%"></div><div class="bar" style="height:72%"></div>
+          <div class="bar" style="height:38%"></div><div class="bar" style="height:65%"></div>
+          <div class="bar" style="height:90%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <header><h5>Sales Report · Medium</h5><span class="star">✦</span></header>
+      <div class="metric mono">$8,438 <span class="delta up">↑2.5%</span></div>
+      <div class="compared">Avg. score $185,301</div>
+      <div class="chart-area">
+        <div class="bars">
+          <div class="bar" style="height:35%"></div><div class="bar" style="height:58%"></div>
+          <div class="bar" style="height:42%"></div><div class="bar" style="height:78%"></div>
+          <div class="bar" style="height:50%"></div><div class="bar" style="height:88%"></div>
+          <div class="bar" style="height:62%"></div><div class="bar" style="height:95%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Large tier: full row -->
+  <div class="widget">
+    <header><h5>Sales Report · Large</h5><span class="star">✦</span></header>
+    <div class="metric-strip">
+      <div class="col"><h6>Weekly</h6><div class="v mono">$2,197 <span class="delta" style="color:var(--green-500)">↑19.6%</span></div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Compared to $1,340 last week</div></div>
+      <div class="col"><h6>Monthly</h6><div class="v mono">$8,903 <span class="delta" style="color:var(--green-500)">↑1.9%</span></div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Compared to $5,441 last month</div></div>
+      <div class="col"><h6>Yearly</h6><div class="v mono">$98,134 <span class="delta" style="color:var(--green-500)">↑22%</span></div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Compared to $76,330 last year</div></div>
+    </div>
+    <div class="chart-area" style="height:120px">
+      <div class="shb">
+        <div class="row"><div class="pill fill" style="flex:0.4"></div><div class="pill" style="flex:0.6"></div></div>
+        <div class="row"><div class="pill fill" style="flex:0.6"></div><div class="pill" style="flex:0.4"></div></div>
+        <div class="row"><div class="pill fill" style="flex:0.85"></div><div class="pill" style="flex:0.15"></div></div>
+        <div class="row"><div class="pill fill" style="flex:0.7"></div><div class="pill" style="flex:0.3"></div></div>
+      </div>
+    </div>
+    <div class="footer-table">
+      <div class="row"><span>Los Angeles</span><span class="v mono">$201,192</span></div>
+      <div class="row"><span>New York</span><span class="v mono">$192,054</span></div>
+      <div class="row"><span>Canada</span><span class="v mono">$166,401</span></div>
+    </div>
+  </div>
+
+  <h3>The eleven chart types</h3>
+  <div class="grid grid-3">
+    <!-- Basic Bar -->
+    <div class="widget">
+      <header><h5>Basic Bar</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px">
+        <div class="bars">
+          <div class="bar" style="height:35%"></div><div class="bar" style="height:48%"></div>
+          <div class="bar" style="height:38%"></div><div class="bar" style="height:62%"></div>
+          <div class="bar" style="height:55%"></div><div class="bar" style="height:88%"></div>
+          <div class="bar" style="height:72%"></div><div class="bar" style="height:90%"></div>
+          <div class="bar" style="height:65%"></div><div class="bar" style="height:78%"></div>
+        </div>
+      </div>
+      <div class="footnote">Single-series growth over time.</div>
+    </div>
+
+    <!-- Detailed Bar -->
+    <div class="widget">
+      <header><h5>Detailed Bar</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px">
+        <div class="bars" style="gap:1px">
+          <div class="bar" style="height:30%"></div><div class="bar" style="height:42%"></div><div class="bar" style="height:38%"></div>
+          <div class="bar" style="height:55%"></div><div class="bar" style="height:48%"></div><div class="bar" style="height:65%"></div>
+          <div class="bar" style="height:58%"></div><div class="bar" style="height:72%"></div><div class="bar" style="height:62%"></div>
+          <div class="bar" style="height:88%"></div><div class="bar" style="height:78%"></div><div class="bar" style="height:95%"></div>
+          <div class="bar" style="height:82%"></div><div class="bar" style="height:90%"></div><div class="bar" style="height:85%"></div>
+          <div class="bar" style="height:75%"></div><div class="bar" style="height:68%"></div><div class="bar" style="height:55%"></div>
+        </div>
+      </div>
+      <div class="footnote">Dense daily series, no labels.</div>
+    </div>
+
+    <!-- Column with Data Labels -->
+    <div class="widget">
+      <header><h5>Column with Labels</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px">
+        <div class="bars">
+          <div class="bar cyan" style="height:55%"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">128</div></div>
+          <div class="bar cyan" style="height:62%"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">137</div></div>
+          <div class="bar cyan" style="height:48%"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">112</div></div>
+          <div class="bar cyan" style="height:55%"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">128</div></div>
+          <div class="bar cyan" style="height:75%"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">156</div></div>
+          <div class="bar cyan" style="height:60%"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">129</div></div>
+          <div class="bar cyan" style="height:50%"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">114</div></div>
+        </div>
+      </div>
+      <div class="footnote">Each bar carries its value above.</div>
+    </div>
+
+    <!-- Grouped Bar -->
+    <div class="widget">
+      <header><h5>Grouped Bar</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px">
+        <div class="bars" style="gap:8px">
+          <div style="display:flex;flex:1;gap:2px;align-items:flex-end;height:100%"><div class="bar cyan" style="flex:1;height:60%"></div><div class="bar purple" style="flex:1;height:75%"></div><div class="bar pink" style="flex:1;height:45%"></div></div>
+          <div style="display:flex;flex:1;gap:2px;align-items:flex-end;height:100%"><div class="bar cyan" style="flex:1;height:80%"></div><div class="bar purple" style="flex:1;height:65%"></div><div class="bar pink" style="flex:1;height:55%"></div></div>
+          <div style="display:flex;flex:1;gap:2px;align-items:flex-end;height:100%"><div class="bar cyan" style="flex:1;height:50%"></div><div class="bar purple" style="flex:1;height:70%"></div><div class="bar pink" style="flex:1;height:88%"></div></div>
+        </div>
+      </div>
+      <div class="footnote">Multi-series side-by-side comparison.</div>
+    </div>
+
+    <!-- Stacked Columns with Dots -->
+    <div class="widget">
+      <header><h5>Stacked Columns</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px">
+        <div class="reels">
+          <div class="reel">
+            <div class="seg" style="background:var(--green-500);box-shadow:var(--glow-green)"></div>
+            <div class="seg" style="background:var(--cyan-500);box-shadow:var(--glow-cyan)"></div>
+            <div class="seg" style="background:var(--purple-500);box-shadow:var(--glow-purple)"></div>
+            <div class="seg" style="background:var(--hot-pink-500);box-shadow:var(--glow-pink)"></div>
+            <div class="seg" style="background:var(--gray-500)"></div>
+          </div>
+          <div class="reel">
+            <div class="seg" style="background:var(--green-500);box-shadow:var(--glow-green)"></div>
+            <div class="seg" style="background:var(--cyan-500);box-shadow:var(--glow-cyan)"></div>
+            <div class="seg" style="background:var(--purple-500);box-shadow:var(--glow-purple)"></div>
+            <div class="seg" style="background:var(--gray-500)"></div>
+          </div>
+          <div class="reel">
+            <div class="seg" style="background:var(--green-500);box-shadow:var(--glow-green)"></div>
+            <div class="seg" style="background:var(--cyan-500);box-shadow:var(--glow-cyan)"></div>
+            <div class="seg" style="background:var(--purple-500);box-shadow:var(--glow-purple)"></div>
+            <div class="seg" style="background:var(--hot-pink-500);box-shadow:var(--glow-pink)"></div>
+            <div class="seg" style="background:var(--hot-pink-500);box-shadow:var(--glow-pink)"></div>
+          </div>
+          <div class="reel">
+            <div class="seg" style="background:var(--green-500);box-shadow:var(--glow-green)"></div>
+            <div class="seg" style="background:var(--cyan-500);box-shadow:var(--glow-cyan)"></div>
+            <div class="seg" style="background:var(--gray-500)"></div>
+          </div>
+          <div class="reel">
+            <div class="seg" style="background:var(--green-500);box-shadow:var(--glow-green)"></div>
+            <div class="seg" style="background:var(--cyan-500);box-shadow:var(--glow-cyan)"></div>
+            <div class="seg" style="background:var(--purple-500);box-shadow:var(--glow-purple)"></div>
+            <div class="seg" style="background:var(--hot-pink-500);box-shadow:var(--glow-pink)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="footnote">Slot-reel style. Dot markers per segment.</div>
+    </div>
+
+    <!-- Stacked Horizontal Bar -->
+    <div class="widget">
+      <header><h5>Stacked Horizontal Bar</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px">
+        <div class="shb">
+          <div class="row"><div class="pill fill" style="flex:0.3"></div><div class="pill" style="flex:0.7"></div></div>
+          <div class="row"><div class="pill fill" style="flex:0.5"></div><div class="pill" style="flex:0.5"></div></div>
+          <div class="row"><div class="pill fill" style="flex:0.65"></div><div class="pill" style="flex:0.35"></div></div>
+          <div class="row"><div class="pill fill" style="flex:0.8"></div><div class="pill" style="flex:0.2"></div></div>
+          <div class="row"><div class="pill fill" style="flex:0.9"></div><div class="pill" style="flex:0.1"></div></div>
+        </div>
+      </div>
+      <div class="footnote">The signature look. Broken-pill segments.</div>
+    </div>
+
+    <!-- Waterfall -->
+    <div class="widget">
+      <header><h5>Waterfall</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px">
+        <div class="bars">
+          <div class="bar" style="height:60%"></div>
+          <div class="bar" style="height:75%"></div>
+          <div class="bar pink" style="height:35%"></div>
+          <div class="bar" style="height:55%"></div>
+          <div class="bar pink" style="height:25%"></div>
+          <div class="bar" style="height:80%"></div>
+          <div class="bar" style="height:90%"></div>
+          <div class="bar pink" style="height:40%"></div>
+        </div>
+      </div>
+      <div class="footnote">Sequential up/down flow. Pink for negative.</div>
+    </div>
+
+    <!-- Bubble Bar -->
+    <div class="widget">
+      <header><h5>Bubble Bar</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px">
+        <div class="bubble-row" style="height:50%">
+          <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+          <div class="bubble" style="background:#FFE066;box-shadow:0 0 12px rgba(255,224,102,0.6)"></div>
+          <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+          <div class="bubble" style="background:#FFE066;box-shadow:0 0 12px rgba(255,224,102,0.6)"></div>
+          <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+        </div>
+      </div>
+      <div class="footnote">Outcome over magnitude. Glowing yellow dots.</div>
+    </div>
+
+    <!-- Rainfall -->
+    <div class="widget">
+      <header><h5>Rainfall</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px;display:flex;align-items:flex-start">
+        <div class="bars" style="align-items:flex-start;height:100%">
+          <div class="bar yellow" style="height:40%"></div>
+          <div class="bar yellow" style="height:55%"></div>
+          <div class="bar yellow" style="height:32%"></div>
+          <div class="bar yellow" style="height:65%"></div>
+          <div class="bar yellow" style="height:48%"></div>
+          <div class="bar yellow" style="height:72%"></div>
+          <div class="bar yellow" style="height:38%"></div>
+          <div class="bar yellow" style="height:58%"></div>
+          <div class="bar yellow" style="height:42%"></div>
+        </div>
+      </div>
+      <div class="footnote">Bars descending from a curved baseline.</div>
+    </div>
+
+    <!-- Multiply Bars -->
+    <div class="widget">
+      <header><h5>Multiply Bars</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px;position:relative">
+        <div class="bars" style="position:absolute;inset:0;align-items:flex-end">
+          <div class="bar" style="height:50%;opacity:0.7"></div>
+          <div class="bar" style="height:65%;opacity:0.7"></div>
+          <div class="bar" style="height:80%;opacity:0.7"></div>
+          <div class="bar" style="height:55%;opacity:0.7"></div>
+          <div class="bar" style="height:72%;opacity:0.7"></div>
+          <div class="bar" style="height:60%;opacity:0.7"></div>
+        </div>
+        <div class="bars" style="position:absolute;inset:0;align-items:flex-end">
+          <div class="bar cyan" style="height:35%;opacity:0.7"></div>
+          <div class="bar cyan" style="height:42%;opacity:0.7"></div>
+          <div class="bar cyan" style="height:50%;opacity:0.7"></div>
+          <div class="bar cyan" style="height:38%;opacity:0.7"></div>
+          <div class="bar cyan" style="height:48%;opacity:0.7"></div>
+          <div class="bar cyan" style="height:40%;opacity:0.7"></div>
+        </div>
+      </div>
+      <div class="footnote">Two overlapping series, shared baseline.</div>
+    </div>
+
+    <!-- Line and Column -->
+    <div class="widget">
+      <header><h5>Line and Column</h5><span class="star">✦</span></header>
+      <div class="chart-area" style="height:120px;position:relative">
+        <div class="bars">
+          <div class="bar cyan" style="height:50%"></div>
+          <div class="bar cyan" style="height:75%"></div>
+          <div class="bar cyan" style="height:42%"></div>
+          <div class="bar cyan" style="height:88%"></div>
+          <div class="bar cyan" style="height:55%"></div>
+          <div class="bar cyan" style="height:80%"></div>
+        </div>
+        <svg viewBox="0 0 240 120" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">
+          <path d="M 20 60 L 60 30 L 100 70 L 140 20 L 180 50 L 220 25" stroke="#FBBF24" stroke-width="2" fill="none" filter="drop-shadow(0 0 6px rgba(251,191,36,0.5))"/>
+          <circle cx="20" cy="60" r="3" fill="#FBBF24"/><circle cx="60" cy="30" r="3" fill="#FBBF24"/><circle cx="100" cy="70" r="3" fill="#FBBF24"/><circle cx="140" cy="20" r="3" fill="#FBBF24"/><circle cx="180" cy="50" r="3" fill="#FBBF24"/><circle cx="220" cy="25" r="3" fill="#FBBF24"/>
+        </svg>
+      </div>
+      <div class="footnote">Volume bars with price line overlay.</div>
+    </div>
+
+    <!-- Donut -->
+    <div class="widget">
+      <header><h5>Donut / Allocation</h5><span class="star">✦</span></header>
+      <div class="donut">
+        <svg width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="60" stroke="#222328" stroke-width="20" fill="none"/>
+          <circle cx="80" cy="80" r="60" stroke="#00E87B" stroke-width="20" fill="none"
+            stroke-dasharray="120 376" stroke-linecap="round" filter="drop-shadow(0 0 6px rgba(0,232,123,0.5))"/>
+          <circle cx="80" cy="80" r="60" stroke="#00D4FF" stroke-width="20" fill="none"
+            stroke-dasharray="80 376" stroke-dashoffset="-130" stroke-linecap="round" filter="drop-shadow(0 0 6px rgba(0,212,255,0.5))"/>
+          <circle cx="80" cy="80" r="60" stroke="#8B5CF6" stroke-width="20" fill="none"
+            stroke-dasharray="60 376" stroke-dashoffset="-220" stroke-linecap="round" filter="drop-shadow(0 0 6px rgba(139,92,246,0.5))"/>
+          <circle cx="80" cy="80" r="60" stroke="#FF3B7A" stroke-width="20" fill="none"
+            stroke-dasharray="40 376" stroke-dashoffset="-290" stroke-linecap="round" filter="drop-shadow(0 0 6px rgba(255,59,122,0.5))"/>
+        </svg>
+        <div class="center"><div class="v">$8,903</div><div class="lbl">Allocation</div></div>
+      </div>
+      <div class="footnote" style="text-align:center">Profile sector allocation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Patterns ───────────────────────────────────────────────────────── -->
+<section id="patterns">
+  <header>
+    <div class="eyebrow">Patterns</div>
+    <h2>Production patterns</h2>
+    <p>Real screens are built from these. If you're designing something that doesn't match a pattern below, write the new pattern down before shipping.</p>
+  </header>
+
+  <h3>Wallet hero card</h3>
+  <div class="wallet">
+    <h6>Portfolio value</h6>
+    <div class="total">$8,903</div>
+    <div class="delta mono">↑ 1.9% &nbsp; <span style="color:var(--text-tertiary);font-weight:400">Compared to last 7 days</span></div>
+    <div class="holdings-mini">
+      <div class="mini" style="background:linear-gradient(135deg,#00E87B,#00C466);box-shadow:var(--glow-green)">H</div>
+      <div class="mini" style="background:linear-gradient(135deg,#00D4FF,#3B82F6);box-shadow:var(--glow-cyan)">O</div>
+      <div class="mini" style="background:linear-gradient(135deg,#8B5CF6,#A855F7);box-shadow:var(--glow-purple)">A</div>
+      <div class="mini" style="background:linear-gradient(135deg,#FF3B7A,#EC4899);box-shadow:var(--glow-pink)">D</div>
+    </div>
+  </div>
+
+  <h3>Dance Floor card (round in progress)</h3>
+  <div class="grid grid-2">
+    <div class="card df-card card-featured">
+      <div class="df-head">
+        <div class="df-mark" style="background:linear-gradient(135deg,#00E87B,#00C466);box-shadow:var(--glow-green)">H</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:18px">Helion Energy</div>
+          <div class="upper" style="font-size:10px;color:var(--text-secondary);font-weight:600;letter-spacing:0.06em">Pre-Seed · Climate</div>
+        </div>
+        <span class="sector-chip aiml">AI / ML</span>
+      </div>
+      <div class="tagline">Net-positive fusion via pulsed magnetic compression.</div>
+      <div class="upper" style="font-size:11px;color:var(--text-secondary);font-weight:600">Funding</div>
+      <div class="mono" style="font-size:20px;font-weight:700;margin:4px 0 8px">$680,000 <span style="color:var(--text-tertiary);font-size:12px;font-weight:400">/ $1,000,000 goal</span></div>
+      <div class="progress"><div class="fill" style="width:68%"></div></div>
+      <div class="progress-line"><span>$680,000 raised</span><span>12 days left</span></div>
+      <button class="btn btn-secondary" style="width:100%;margin-top:14px">View round</button>
+    </div>
+    <div class="card df-card">
+      <div class="df-head">
+        <div class="df-mark" style="background:linear-gradient(135deg,#FF3B7A,#EC4899);box-shadow:var(--glow-pink)">D</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:18px">Dynastik Defense</div>
+          <div class="upper" style="font-size:10px;color:var(--text-secondary);font-weight:600;letter-spacing:0.06em">Seed · Defense</div>
+        </div>
+        <span class="sector-chip deeptech">Deep Tech</span>
+      </div>
+      <div class="tagline">Autonomous loitering munitions for allied forces.</div>
+      <div class="upper" style="font-size:11px;color:var(--text-secondary);font-weight:600">Funding</div>
+      <div class="mono" style="font-size:20px;font-weight:700;margin:4px 0 8px">$1,420,000 <span style="color:var(--text-tertiary);font-size:12px;font-weight:400">/ $2,000,000 goal</span></div>
+      <div class="progress"><div class="fill" style="width:71%"></div></div>
+      <div class="progress-line"><span>$1,420,000 raised</span><span>23 days left</span></div>
+      <button class="btn btn-secondary" style="width:100%;margin-top:14px">View round</button>
+    </div>
+  </div>
+
+  <h3>Inline company link (Greenroom)</h3>
+  <div class="card">
+    <div style="font-size:14px;line-height:1.7">
+      "Spent 3 hours with the team at <a style="color:var(--green-500);font-weight:600;text-shadow:0 0 8px var(--green-glow);text-decoration:none" href="#">Helion Energy</a> last week. The compression rig is real. <a style="color:var(--green-500);font-weight:600;text-shadow:0 0 8px var(--green-glow);text-decoration:none" href="#">Founders Fund</a> just led a $300M round and I think they're underselling the timeline."
+      <div style="font-size:11px;color:var(--text-tertiary);margin-top:8px;font-family:var(--font-mono)">@apinski · 2h</div>
+    </div>
+  </div>
+
+  <h3>Holding list card</h3>
+  <div class="grid grid-2">
+    <div class="card" style="display:flex;align-items:center;gap:14px;padding:16px">
+      <div class="df-mark" style="width:40px;height:40px;font-size:16px;background:linear-gradient(135deg,#00E87B,#00C466);box-shadow:var(--glow-green)">H</div>
+      <div style="flex:1">
+        <div style="font-weight:600">Helion Energy</div>
+        <div class="upper" style="font-size:10px;color:var(--text-secondary);font-weight:600;letter-spacing:0.06em">AI / ML</div>
+      </div>
+      <div style="text-align:right">
+        <div class="mono" style="font-weight:600">$2,340</div>
+        <div class="mono badge positive">↑ 12.4%</div>
+      </div>
+    </div>
+    <div class="card" style="display:flex;align-items:center;gap:14px;padding:16px">
+      <div class="df-mark" style="width:40px;height:40px;font-size:16px;background:linear-gradient(135deg,#FF3B7A,#EC4899);box-shadow:var(--glow-pink)">D</div>
+      <div style="flex:1">
+        <div style="font-weight:600">Dynastik Defense</div>
+        <div class="upper" style="font-size:10px;color:var(--text-secondary);font-weight:600;letter-spacing:0.06em">Deep Tech</div>
+      </div>
+      <div style="text-align:right">
+        <div class="mono" style="font-weight:600">$1,680</div>
+        <div class="mono badge negative">↓ 4.2%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Filters ────────────────────────────────────────────────────────── -->
+<section id="filters">
+  <header>
+    <div class="eyebrow">Filters</div>
+    <h2>Multi-select filter dropdown</h2>
+    <p>The grouped multi-select pattern used on Dance Floors, Trading, and any list view that needs cross-axis filtering. Multi-select within each group, no mutual exclusion, no cap. Selections persist across navigation.</p>
+  </header>
+
+  <style>
+    /* ─── Filter pattern ──────────────────────────────────────────────── */
+    .filter-component { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-lg); padding: 18px; }
+    .filter-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+    .filter-header .filter-title-block { display: inline-flex; align-items: baseline; gap: 8px; }
+    .filter-header .filter-title { color: var(--green-500); font-weight: 700; font-size: 14px; letter-spacing: 0.2px; }
+    .filter-header .filter-sep { color: var(--text-tertiary); font-weight: 400; }
+    .filter-header .filter-count { color: var(--text-secondary); font-weight: 500; font-size: 13px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.2px; }
+    .filter-header .chev { width: 14px; height: 14px; color: var(--green-500); transition: transform 200ms ease; }
+    .filter-header.open .chev { transform: rotate(180deg); }
+    .filter-summary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 14px 0 4px; border-bottom: 1px solid var(--border-card); margin-bottom: 16px; }
+    .filter-body { padding-top: 4px; }
+    .filter-group { margin-bottom: 22px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-group .group-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 1.2px; color: var(--text-tertiary); margin-bottom: 12px; text-transform: uppercase; }
+    .chip-cluster { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.6px;
+      text-transform: uppercase;
+      background: transparent; color: var(--text-secondary);
+      border: 1px solid var(--border-card);
+      cursor: pointer;
+      transition: background 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+      white-space: nowrap;
+    }
+    .filter-chip:hover { color: var(--text-primary); border-color: var(--text-tertiary); }
+    .filter-chip.active {
+      background: var(--green-500); color: #062612; border-color: var(--green-500);
+      box-shadow: 0 0 0 1px var(--green-500), 0 0 12px rgba(0,232,123,0.18);
+    }
+    .filter-chip.summary { padding: 6px 10px 6px 12px; font-size: 10px; }
+    .filter-chip .x { font-size: 13px; line-height: 1; opacity: 0.85; margin-left: 2px; }
+    .clear-all {
+      margin-left: auto;
+      background: transparent; border: none; cursor: pointer;
+      color: var(--text-tertiary); font-size: 11px; font-weight: 600; letter-spacing: 0.4px;
+      padding: 6px 10px; border-radius: 6px;
+      transition: color 150ms ease, background 150ms ease;
+    }
+    .clear-all:hover { color: var(--red-500); background: rgba(255,59,48,0.08); }
+    /* anatomy callout boxes */
+    .anatomy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    @media (max-width: 720px) { .anatomy-grid { grid-template-columns: 1fr; } }
+  </style>
+
+  <h3>Anatomy</h3>
+  <div class="anatomy-grid">
+    <div class="card">
+      <h4 style="margin-bottom:8px">Header</h4>
+      <p style="margin:0;color:var(--text-secondary);font-size:13px">Collapsible row with two-piece label. Primary: <code>"All Categories"</code> or <code>"{N} Filters Active"</code> in <code>--green-500</code>. Secondary: live result count <code>"{N} Rounds"</code> in <code>--text-secondary</code> mono, separated by <code>·</code>. Chevron rotates 180° on expand. Click anywhere on the row toggles.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-bottom:8px">Summary bar</h4>
+      <p style="margin:0;color:var(--text-secondary);font-size:13px">Shown only when ≥1 filter is selected. Each active filter renders as a pill with <code>×</code>. Right-aligned <b>Clear All</b> ghost button removes everything in one tap.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-bottom:8px">Group label</h4>
+      <p style="margin:0;color:var(--text-secondary);font-size:13px">All caps, mono, <code>--text-tertiary</code>, 10px, 1.2px letter-spacing. Examples: <code>INDUSTRY VERTICALS</code>, <code>FUNDING STAGE</code>, <code>VC HOST</code>. Group labels are descriptive only — they never carry data. Result counts live in the header.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-bottom:8px">Chip</h4>
+      <p style="margin:0;color:var(--text-secondary);font-size:13px">Pill, 7×13 padding, uppercase, 10.5px / 700 weight. Inactive: outlined, <code>--text-secondary</code>. Active: solid <code>--green-500</code> fill with subtle green glow. Hover: brighter text + brighter border. Click toggles.</p>
+    </div>
+  </div>
+
+  <h3>States</h3>
+
+  <div style="margin-bottom:18px">
+    <div class="mono" style="font-size:11px;color:var(--text-secondary);margin-bottom:6px">1. Collapsed · no selections</div>
+    <div class="filter-component" style="max-width:520px">
+      <div class="filter-header">
+        <span class="filter-title-block">
+          <span class="filter-title">All Categories</span>
+          <span class="filter-sep">·</span>
+          <span class="filter-count">28 Rounds</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:18px">
+    <div class="mono" style="font-size:11px;color:var(--text-secondary);margin-bottom:6px">2. Expanded · no selections</div>
+    <div class="filter-component" style="max-width:520px">
+      <div class="filter-header open">
+        <span class="filter-title-block">
+          <span class="filter-title">All Categories</span>
+          <span class="filter-sep">·</span>
+          <span class="filter-count">28 Rounds</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="filter-body" style="padding-top:18px">
+        <div class="filter-group">
+          <div class="group-label">Industry verticals</div>
+          <div class="chip-cluster">
+            <span class="filter-chip">Nuclear Energy</span>
+            <span class="filter-chip">Transportation</span>
+            <span class="filter-chip">Robotics &amp; Automation</span>
+            <span class="filter-chip">Renewable Energy</span>
+            <span class="filter-chip">AI &amp; Machine Learning</span>
+            <span class="filter-chip">Fintech &amp; Blockchain</span>
+            <span class="filter-chip">Advanced Manufacturing</span>
+            <span class="filter-chip">Genetics</span>
+            <span class="filter-chip">Materials</span>
+            <span class="filter-chip">EdTech</span>
+            <span class="filter-chip">AgTech</span>
+            <span class="filter-chip">Space</span>
+            <span class="filter-chip">Cybersecurity</span>
+            <span class="filter-chip">Rebuilding the Grid</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="group-label">Funding Stage</div>
+          <div class="chip-cluster">
+            <span class="filter-chip">Seed</span>
+            <span class="filter-chip">Series A</span>
+            <span class="filter-chip">Series B</span>
+            <span class="filter-chip">Series C</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="group-label">VC Host</div>
+          <div class="chip-cluster">
+            <span class="filter-chip">Sequoia Capital</span>
+            <span class="filter-chip">Y Combinator</span>
+            <span class="filter-chip">A16Z</span>
+            <span class="filter-chip">Khosla Ventures</span>
+            <span class="filter-chip">Tiger Global</span>
+            <span class="filter-chip">Flagship Pioneering</span>
+            <span class="filter-chip">Ribbit Capital</span>
+            <span class="filter-chip">Andreessen Horowitz</span>
+            <span class="filter-chip">Breakthrough Energy</span>
+            <span class="filter-chip">Lux Capital</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:18px">
+    <div class="mono" style="font-size:11px;color:var(--text-secondary);margin-bottom:6px">3. Expanded · 9 filters active · with summary bar &amp; clear-all</div>
+    <div class="filter-component" style="max-width:520px">
+      <div class="filter-header open">
+        <span class="filter-title-block">
+          <span class="filter-title">9 Filters Active</span>
+          <span class="filter-sep">·</span>
+          <span class="filter-count">23 Rounds</span>
+        </span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="filter-summary">
+        <span class="filter-chip active summary">Nuclear Energy <span class="x">×</span></span>
+        <span class="filter-chip active summary">Transportation <span class="x">×</span></span>
+        <span class="filter-chip active summary">Adv. Manufacturing <span class="x">×</span></span>
+        <span class="filter-chip active summary">Series A <span class="x">×</span></span>
+        <span class="filter-chip active summary">Series B <span class="x">×</span></span>
+        <span class="filter-chip active summary">Sequoia <span class="x">×</span></span>
+        <span class="filter-chip active summary">Y Combinator <span class="x">×</span></span>
+        <span class="filter-chip active summary">A16Z <span class="x">×</span></span>
+        <span class="filter-chip active summary">Andreessen Horowitz <span class="x">×</span></span>
+        <button class="clear-all">Clear all</button>
+      </div>
+      <div class="filter-body">
+        <div class="filter-group">
+          <div class="group-label">Industry verticals</div>
+          <div class="chip-cluster">
+            <span class="filter-chip active">Nuclear Energy</span>
+            <span class="filter-chip active">Transportation</span>
+            <span class="filter-chip">Robotics &amp; Automation</span>
+            <span class="filter-chip">Renewable Energy</span>
+            <span class="filter-chip">AI &amp; Machine Learning</span>
+            <span class="filter-chip">Fintech &amp; Blockchain</span>
+            <span class="filter-chip active">Advanced Manufacturing</span>
+            <span class="filter-chip">Genetics</span>
+            <span class="filter-chip">Materials</span>
+            <span class="filter-chip">EdTech</span>
+            <span class="filter-chip">AgTech</span>
+            <span class="filter-chip">Space</span>
+            <span class="filter-chip">Cybersecurity</span>
+            <span class="filter-chip">Rebuilding the Grid</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="group-label">Funding Stage</div>
+          <div class="chip-cluster">
+            <span class="filter-chip">Seed</span>
+            <span class="filter-chip active">Series A</span>
+            <span class="filter-chip active">Series B</span>
+            <span class="filter-chip">Series C</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="group-label">VC Host</div>
+          <div class="chip-cluster">
+            <span class="filter-chip active">Sequoia Capital</span>
+            <span class="filter-chip active">Y Combinator</span>
+            <span class="filter-chip active">A16Z</span>
+            <span class="filter-chip">Khosla Ventures</span>
+            <span class="filter-chip">Tiger Global</span>
+            <span class="filter-chip">Flagship Pioneering</span>
+            <span class="filter-chip">Ribbit Capital</span>
+            <span class="filter-chip active">Andreessen Horowitz</span>
+            <span class="filter-chip">Breakthrough Energy</span>
+            <span class="filter-chip">Lux Capital</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Tokens</h3>
+  <pre class="code">
+header.label.idle      → <span class="v">--green-500</span>          ("All Categories")
+header.label.active    → <span class="v">--green-500</span>          ("9 Filters Active")
+header.separator       → <span class="v">--text-tertiary</span>     "·" between label and count
+header.count           → <span class="v">--text-secondary</span>    mono, 13px, 500 weight ("23 Rounds")
+chip.bg.idle           → <span class="v">transparent</span>
+chip.text.idle         → <span class="v">--text-secondary</span>
+chip.border.idle       → <span class="v">--border-card</span>
+chip.bg.active         → <span class="v">--green-500</span>          (#00E87B)
+chip.text.active       → <span class="v">#062612</span>            (high-contrast on green)
+chip.glow.active       → <span class="v">0 0 12px rgba(0,232,123,0.18)</span>
+group-label            → <span class="v">--text-tertiary</span>     mono, 10px, uppercase, 1.2px tracking
+clear-all.idle         → <span class="v">--text-tertiary</span>     ghost button
+clear-all.hover        → <span class="v">--red-500</span>          destructive accent on hover</pre>
+
+  <h3>Behavior rules</h3>
+  <ul>
+    <li><b>Multi-select within each group.</b> Picking "Series A" doesn't deselect "Series B". Users can mix freely across all three groups.</li>
+    <li><b>No mutual exclusion.</b> No filter blocks any other.</li>
+    <li><b>No cap.</b> User can select every chip if they want.</li>
+    <li><b>Persistence.</b> Selected filters survive when the user navigates away from the screen and comes back. Wipe only on Clear All or session reset.</li>
+    <li><b>Live header label.</b> "{N} Filters Active" updates in real time. When N=0, label reverts to "All Categories".</li>
+    <li><b>Live header count.</b> "{N} Rounds" suffix in the header always reflects the current filtered result count. Updates as filters are added or removed. When no filters are active, this shows the unfiltered total. Group labels stay purely descriptive — counts live ONLY in the header.</li>
+    <li><b>Two-way deselect.</b> Removing a chip from the summary bar (× button) ALSO un-fills it in the dropdown. Same chip, two views.</li>
+    <li><b>Clear All</b> button is visible in the summary bar whenever ≥1 filter is selected. One tap removes everything; header reverts to "All Categories"; summary bar disappears.</li>
+    <li><b>Collapse independent of selections.</b> User can collapse the dropdown without losing selections. The summary bar stays visible if there are any active filters.</li>
+  </ul>
+
+  <h3>Do's & don'ts</h3>
+  <div class="dodont">
+    <div class="col do"><h5>Do</h5>Show the live count in the header so users know their filter state at a glance.</div>
+    <div class="col dont"><h5>Don't</h5>Hide selected filters when collapsed. The summary bar must stay visible whenever filters are active.</div>
+    <div class="col do"><h5>Do</h5>Always show Clear All when ≥1 filter is selected. Friction-free reset matters when users over-filter.</div>
+    <div class="col dont"><h5>Don't</h5>Cap selections or mutually exclude. Over-filtering is the user's problem to solve, not the UI's to prevent.</div>
+    <div class="col do"><h5>Do</h5>Persist filters across navigation. If a user filters Dance Floors, leaves, and returns, their filters stay.</div>
+    <div class="col dont"><h5>Don't</h5>Reset filters on every screen entry. That trains users to distrust the filter system and stop using it.</div>
+    <div class="col do"><h5>Do</h5>Use uppercase mono for group labels. Visual rhythm signals "this is metadata, not content."</div>
+    <div class="col dont"><h5>Don't</h5>Title-case group labels. They'll read as content headers and compete with the page title.</div>
+  </div>
+</section>
+
+<!-- ─── NFTs ───────────────────────────────────────────────────────────── -->
+<section id="nft">
+  <header>
+    <div class="eyebrow">NFT identity</div>
+    <h2>Stake-NFT cards</h2>
+    <p>Each stake is a collectible. Two startups should never look interchangeable. Sector gradient + letter glyph + glow does the work.</p>
+  </header>
+  <div class="grid grid-3">
+    <div>
+      <div class="stake aiml">
+        <div class="corner"></div>
+        <div class="glyph">H</div>
+        <div class="band">
+          <div class="name">Helion Energy</div>
+          <span class="sector-chip aiml">AI / ML</span>
+        </div>
+      </div>
+      <div class="stake-meta"><span>Pre-Seed Round 1</span><span>2026-01-12</span><span>#312</span></div>
+    </div>
+    <div>
+      <div class="stake defi">
+        <div class="corner"></div>
+        <div class="glyph">O</div>
+        <div class="band">
+          <div class="name">Ondo Finance</div>
+          <span class="sector-chip defi">DeFi</span>
+        </div>
+      </div>
+      <div class="stake-meta"><span>Series A Round 2</span><span>2026-02-04</span><span>#118</span></div>
+    </div>
+    <div>
+      <div class="stake biotech">
+        <div class="corner"></div>
+        <div class="glyph">A</div>
+        <div class="band">
+          <div class="name">Altos Labs</div>
+          <span class="sector-chip biotech">Biotech</span>
+        </div>
+      </div>
+      <div class="stake-meta"><span>Seed Round 1</span><span>2026-03-22</span><span>#048</span></div>
+    </div>
+    <div>
+      <div class="stake deeptech">
+        <div class="corner"></div>
+        <div class="glyph">D</div>
+        <div class="band">
+          <div class="name">Dynastik Defense</div>
+          <span class="sector-chip deeptech">Deep Tech</span>
+        </div>
+      </div>
+      <div class="stake-meta"><span>Seed Round 1</span><span>2026-02-18</span><span>#087</span></div>
+    </div>
+    <div>
+      <div class="stake space">
+        <div class="corner"></div>
+        <div class="glyph">V</div>
+        <div class="band">
+          <div class="name">Varda Space</div>
+          <span class="sector-chip space">Space</span>
+        </div>
+      </div>
+      <div class="stake-meta"><span>Series B Round 1</span><span>2026-01-30</span><span>#021</span></div>
+    </div>
+    <div>
+      <div class="stake climate">
+        <div class="corner"></div>
+        <div class="glyph">F</div>
+        <div class="band">
+          <div class="name">Form Energy</div>
+          <span class="sector-chip climate">Climate</span>
+        </div>
+      </div>
+      <div class="stake-meta"><span>Series A Round 3</span><span>2026-02-22</span><span>#194</span></div>
+    </div>
+    <div>
+      <div class="stake fintech">
+        <div class="corner"></div>
+        <div class="glyph">M</div>
+        <div class="band">
+          <div class="name">Mercury</div>
+          <span class="sector-chip fintech">Fintech</span>
+        </div>
+      </div>
+      <div class="stake-meta"><span>Series B Round 1</span><span>2026-03-15</span><span>#066</span></div>
+    </div>
+    <div>
+      <div class="stake consumer">
+        <div class="corner"></div>
+        <div class="glyph">P</div>
+        <div class="band">
+          <div class="name">Patreon</div>
+          <span class="sector-chip consumer">Consumer</span>
+        </div>
+      </div>
+      <div class="stake-meta"><span>Series C Round 1</span><span>2026-01-08</span><span>#412</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Motion ─────────────────────────────────────────────────────────── -->
+<section id="motion">
+  <header>
+    <div class="eyebrow">Motion</div>
+    <h2>Durations & easing</h2>
+    <p>Five durations, four easings. Use the named tokens in tokens.js — never raw values in component code.</p>
+  </header>
+  <div class="card">
+    <div class="type-row"><div class="label">fast</div><div class="specs">150ms</div><div class="sample">Hover, focus, button-press feedback.</div></div>
+    <div class="type-row"><div class="label">normal</div><div class="specs">250ms</div><div class="sample">Tab switch, segmented selection, toggle.</div></div>
+    <div class="type-row"><div class="label">slow</div><div class="specs">400ms</div><div class="sample">Modal entry, sheet slides, card fade-in.</div></div>
+    <div class="type-row"><div class="label">chart</div><div class="specs">600ms</div><div class="sample">Line draws, bar growth, donut sweep.</div></div>
+    <div class="type-row"><div class="label">splash</div><div class="specs">1200ms</div><div class="sample">Disco-ball intro on first launch only.</div></div>
+  </div>
+
+  <h3>Glow-pulse (featured cards, live indicators)</h3>
+  <div class="grid grid-3">
+    <div class="glow-tile"><div class="glow-orb green pulse"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">live</div></div>
+    <div class="glow-tile"><div class="glow-orb cyan pulse"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">trending</div></div>
+    <div class="glow-tile"><div class="glow-orb pink pulse"></div><div class="mono" style="font-size:11px;color:var(--text-secondary)">closing soon</div></div>
+  </div>
+</section>
+
+<!-- ─── iOS / phone preview ────────────────────────────────────────────── -->
+<section id="ios">
+  <header>
+    <div class="eyebrow">iOS preview</div>
+    <h2>System on a real screen</h2>
+    <p>Every component above, wired together inside an iPhone frame. Safe areas honored, tab bar at the bottom.</p>
+  </header>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="statusbar">
+        <span>9:41</span>
+        <span style="display:flex;gap:6px;align-items:center"><span style="opacity:0.7">●●●●</span><span style="opacity:0.5">▲</span><span style="opacity:0.7">▮</span></span>
+      </div>
+      <div class="body">
+        <div class="upper" style="font-size:11px;color:var(--text-secondary);font-weight:600;letter-spacing:0.06em;margin:8px 0">DANCE FLOOR</div>
+        <div class="wallet" style="padding:18px;margin-bottom:16px">
+          <h6 style="font-size:10px">Portfolio value</h6>
+          <div class="total" style="font-size:30px">$8,903</div>
+          <div class="delta mono" style="font-size:12px">↑ 1.9% <span style="color:var(--text-tertiary);font-weight:400">last 7d</span></div>
+        </div>
+        <div class="card df-card card-featured" style="padding:16px;margin-bottom:12px">
+          <div class="df-head" style="margin-bottom:8px">
+            <div class="df-mark" style="width:36px;height:36px;font-size:15px;background:linear-gradient(135deg,#00E87B,#00C466);box-shadow:var(--glow-green)">H</div>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:14px">Helion Energy</div>
+              <div class="upper" style="font-size:9px;color:var(--text-secondary);font-weight:600;letter-spacing:0.06em">Pre-Seed · Climate</div>
+            </div>
+            <span class="sector-chip aiml" style="height:20px;padding:0 8px;font-size:9px">AI / ML</span>
+          </div>
+          <div class="progress"><div class="fill" style="width:68%"></div></div>
+          <div class="progress-line" style="font-size:10px"><span>$680K raised</span><span>12 days left</span></div>
+        </div>
+        <div class="card df-card" style="padding:16px;margin-bottom:12px">
+          <div class="df-head" style="margin-bottom:8px">
+            <div class="df-mark" style="width:36px;height:36px;font-size:15px;background:linear-gradient(135deg,#8B5CF6,#A855F7);box-shadow:var(--glow-purple)">A</div>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:14px">Altos Labs</div>
+              <div class="upper" style="font-size:9px;color:var(--text-secondary);font-weight:600;letter-spacing:0.06em">Seed · Biotech</div>
+            </div>
+            <span class="sector-chip biotech" style="height:20px;padding:0 8px;font-size:9px">Biotech</span>
+          </div>
+          <div class="progress"><div class="fill" style="width:42%"></div></div>
+          <div class="progress-line" style="font-size:10px"><span>$420K raised</span><span>30 days left</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tab on">
+          <svg class="ic" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.333 16.4401C15.333 14.8753 14.0648 13.6071 12.5 13.6071C10.9352 13.6071 9.66699 14.8753 9.66699 16.4401V22.9703H15.333V16.4401ZM17.333 22.9703H19C21.2091 22.9703 23 21.1795 23 18.9703V12.4225C23 11.3535 22.5718 10.3292 21.8115 9.57776L15.3115 3.15393C13.7534 1.61453 11.2466 1.61453 9.68848 3.15393L3.18848 9.57776C2.42815 10.3292 2.00001 11.3535 2 12.4225V18.9703C2 21.1795 3.79086 22.9703 6 22.9703H7.66699V16.4401C7.66699 13.7707 9.83062 11.6071 12.5 11.6071C15.1694 11.6071 17.333 13.7707 17.333 16.4401V22.9703ZM25 18.9703C25 22.284 22.3137 24.9703 19 24.9703H6C2.68629 24.9703 0 22.284 0 18.9703V12.4225C1.2726e-05 10.8188 0.642482 9.2821 1.7832 8.15491L8.2832 1.73206C10.6204 -0.577354 14.3796 -0.577351 16.7168 1.73206L23.2168 8.15491C24.3575 9.2821 25 10.8188 25 12.4225V18.9703Z" fill="currentColor"/></svg>
+          <div>Floors</div>
+        </div>
+        <div class="tab">
+          <svg class="ic" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 4.37793C0.000250914 1.92287 2.05977 0 4.51562 0V2C3.08855 2 2.00026 3.10174 2 4.37793C2 5.65431 3.08838 6.75684 4.51562 6.75684V8.75684C2.05962 8.75684 0 6.8332 0 4.37793Z" fill="currentColor"/><path d="M21.0938 3C21.0938 2.44772 20.646 2 20.0938 2H4.51562V0H20.0938C21.7506 0 23.0938 1.34315 23.0938 3V7.75684H21.0938V3Z" fill="currentColor"/><path d="M0 21.9731V4.37842C0 3.82613 0.447715 3.37842 1 3.37842C1.55228 3.37842 2 3.82613 2 4.37842V21.9731C2.00007 22.5254 2.44776 22.9731 3 22.9731H22.2031C22.7554 22.9731 23.2031 22.5254 23.2031 21.9731V19.5679H17.4688C16.3643 19.5679 15.4689 18.6723 15.4688 17.5679V14.8374C15.469 13.7331 16.3643 12.8374 17.4688 12.8374H23.2031V9.75635C23.2029 9.20427 22.7553 8.75635 22.2031 8.75635H4.51562C3.96334 8.75635 3.51562 8.30863 3.51562 7.75635C3.51587 7.20427 3.96349 6.75635 4.51562 6.75635H22.2031C23.8598 6.75635 25.2029 8.0997 25.2031 9.75635V12.8833C26.7986 13.1468 28.0156 14.5325 28.0156 16.2026C28.0156 17.8728 26.7986 19.2574 25.2031 19.521V21.9731C25.2031 23.6299 23.8599 24.9731 22.2031 24.9731H3C1.34319 24.9731 7.21542e-05 23.6299 0 21.9731ZM17.4688 17.5679H24.6504C25.4042 17.5679 26.0156 16.9564 26.0156 16.2026C26.0156 15.4489 25.4042 14.8374 24.6504 14.8374H17.4688V17.5679Z" fill="currentColor"/></svg>
+          <div>Wallet</div>
+        </div>
+        <div class="tab">
+          <svg class="ic" viewBox="0 0 33 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 9.8042C9.39274e-05 7.53362 1.84075 5.69296 4.11133 5.69287H21.1191V7.69287H4.11133C2.94532 7.69296 2.00009 8.63819 2 9.8042C2 16.8332 7.69849 22.5317 14.7275 22.5317H17.4512C24.4801 22.5316 30.1777 16.8332 30.1777 9.8042C30.1776 8.63813 29.2325 7.69287 28.0664 7.69287H25.0303V5.69287H28.0664C30.3371 5.69287 32.1776 7.53356 32.1777 9.8042C32.1777 17.9377 25.5847 24.5316 17.4512 24.5317H14.7275C6.59393 24.5317 0 17.9378 0 9.8042Z" fill="currentColor"/><path d="M22.4414 10.4945C24.1996 9.44123 26.3951 9.44133 28.1533 10.4945L29.4697 11.2836C29.9858 11.5927 30.5761 11.7562 31.1777 11.7562V13.7562C30.214 13.7562 29.2681 13.4947 28.4414 12.9994L27.126 12.2103C26.0006 11.5361 24.5952 11.5363 23.4697 12.2103C21.7114 13.2638 19.5152 13.2638 17.7568 12.2103C16.6314 11.5363 15.2259 11.5361 14.1006 12.2103C12.3423 13.2637 10.1469 13.2638 8.38867 12.2103C7.26323 11.5362 5.85782 11.5361 4.73242 12.2103L3.14258 13.1635C2.49526 13.5513 1.7546 13.7562 1 13.7562V11.7562C1.3925 11.7562 1.77755 11.6493 2.11426 11.4476L3.70508 10.4945C5.46329 9.44137 7.65885 9.44119 9.41699 10.4945C10.5425 11.1688 11.9477 11.1688 13.0732 10.4945C14.8314 9.4413 17.027 9.44126 18.7852 10.4945C19.9107 11.1688 21.3159 11.1688 22.4414 10.4945Z" fill="currentColor"/><path d="M25.4931 3.60796C25.6389 3.39008 25.5758 3.10138 25.3528 2.96345C25.1298 2.82573 24.831 2.89047 24.685 3.1081L18.9898 11.6103L17.2889 10.5581L22.9841 2.05597C23.7448 0.92063 25.3035 0.583009 26.4658 1.3018C27.6282 2.0208 27.9545 3.5245 27.194 4.66009L22.1684 12.1627L20.4675 11.1105L25.4931 3.60796Z" fill="currentColor"/><path d="M22.4236 21.8906C22.6507 21.3873 23.2424 21.1637 23.7458 21.3906C24.3527 21.6643 24.8645 22.1122 25.2156 22.6777L25.5291 23.1826C26.6542 24.995 25.3508 27.3379 23.2175 27.3379H8.79175C6.73257 27.3377 5.47415 25.0757 6.5603 23.3262L6.84253 22.8721C7.28849 22.1538 7.97373 21.6151 8.7771 21.3516C9.30188 21.1795 9.86669 21.4655 10.0388 21.9902C10.2109 22.5149 9.92561 23.0797 9.40112 23.252C9.04454 23.3689 8.73968 23.6079 8.54175 23.9268L8.25952 24.3809C8.0005 24.7981 8.30075 25.3377 8.79175 25.3379H23.2175C23.7826 25.3379 24.1279 24.7174 23.8298 24.2373L23.5164 23.7324C23.3748 23.5044 23.1683 23.3232 22.9236 23.2129C22.4204 22.9858 22.1966 22.394 22.4236 21.8906Z" fill="currentColor"/><path d="M5.52734 14.5181C6.02139 14.2746 6.62341 14.4787 6.87118 14.9738C7.18065 15.5924 7.78382 16.3687 8.5514 17.0729C9.31935 17.7775 10.1727 18.338 10.9356 18.6018C11.4591 18.7828 11.7397 19.3519 11.5625 19.8732C11.3852 20.3944 10.8173 20.6703 10.2938 20.4894C9.18469 20.106 8.09726 19.3592 7.20355 18.5393C6.30948 17.719 5.52984 16.7531 5.08125 15.8564C4.83353 15.3613 5.03334 14.7617 5.52734 14.5181Z" fill="currentColor"/></svg>
+          <div>Bowl</div>
+        </div>
+        <div class="tab">
+          <svg class="ic" viewBox="0 0 27 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.125 26.5002V27.5002C8.125 27.8619 7.97039 28.1534 7.79492 28.3528C7.62545 28.5453 7.42089 28.6736 7.23926 28.759C7.05267 28.8468 6.85403 28.9058 6.66016 28.9436C6.46451 28.9817 6.2622 29.0002 6.0625 29.0002C5.8628 29.0002 5.66049 28.9817 5.46484 28.9436C5.27097 28.9058 5.07233 28.8468 4.88574 28.759C4.70411 28.6736 4.49955 28.5453 4.33008 28.3528C4.15461 28.1534 4 27.8619 4 27.5002V26.5002H8.125Z" fill="currentColor"/><path d="M23 26.5002V27.5002C23 27.8619 22.8454 28.1534 22.6699 28.3528C22.5004 28.5453 22.2959 28.6736 22.1143 28.759C21.9277 28.8468 21.729 28.9058 21.5352 28.9436C21.3395 28.9817 21.1372 29.0002 20.9375 29.0002C20.7378 29.0002 20.5355 28.9817 20.3398 28.9436C20.146 28.9058 19.9473 28.8468 19.7607 28.759C19.5791 28.6736 19.3746 28.5453 19.2051 28.3528C19.0296 28.1534 18.875 27.8619 18.875 27.5002V26.5002H23Z" fill="currentColor"/><path d="M25 10.0002C25 8.89567 24.1046 8.00024 23 8.00024H4C2.89543 8.00024 2 8.89567 2 10.0002V24.0002C2 25.1048 2.89543 26.0002 4 26.0002H23C24.1046 26.0002 25 25.1048 25 24.0002V10.0002ZM27 24.0002C27 26.2094 25.2091 28.0002 23 28.0002H4C1.79086 28.0002 0 26.2094 0 24.0002V10.0002C0 7.79111 1.79086 6.00024 4 6.00024H23C25.2091 6.00024 27 7.79111 27 10.0002V24.0002Z" fill="currentColor"/><path d="M18 17.0002C18 15.5752 17.9988 14.5816 17.9209 13.8157C17.8447 13.0664 17.7031 12.646 17.4941 12.3333C17.2754 12.0059 16.9943 11.7249 16.667 11.5061C16.3542 11.2971 15.9338 11.1556 15.1846 11.0793C14.4186 11.0015 13.425 11.0002 12 11.0002H11C9.57496 11.0002 8.58137 11.0015 7.81543 11.0793C7.06616 11.1556 6.64576 11.2971 6.33301 11.5061C6.00568 11.7249 5.72463 12.0059 5.50586 12.3333C5.29689 12.646 5.15532 13.0664 5.0791 13.8157C5.00122 14.5816 5 15.5752 5 17.0002C5 18.4253 5.00122 19.4189 5.0791 20.1848C5.15532 20.9341 5.29689 21.3545 5.50586 21.6672C5.72463 21.9946 6.00568 22.2756 6.33301 22.4944C6.64576 22.7034 7.06616 22.8449 7.81543 22.9211C8.58137 22.999 9.57496 23.0002 11 23.0002H12C13.425 23.0002 14.4186 22.999 15.1846 22.9211C15.9338 22.8449 16.3542 22.7034 16.667 22.4944C16.9943 22.2756 17.2754 21.9946 17.4941 21.6672C17.7031 21.3545 17.8447 20.9341 17.9209 20.1848C17.9988 19.4189 18 18.4253 18 17.0002ZM20 17.0002C20 18.3839 20.0008 19.4972 19.9102 20.3879C19.8178 21.2952 19.6223 22.0825 19.1572 22.7786C18.7926 23.3242 18.324 23.7928 17.7783 24.1575C17.0823 24.6226 16.2949 24.8181 15.3877 24.9104C14.497 25.001 13.3836 25.0002 12 25.0002H11C9.61635 25.0002 8.503 25.001 7.6123 24.9104C6.70505 24.8181 5.91773 24.6226 5.22168 24.1575C4.67602 23.7928 4.20745 23.3242 3.84277 22.7786C3.37769 22.0825 3.18217 21.2952 3.08984 20.3879C2.99924 19.4972 3 18.3839 3 17.0002C3 15.6166 2.99924 14.5032 3.08984 13.6125C3.18217 12.7053 3.37769 11.918 3.84277 11.2219C4.20745 10.6763 4.67602 10.2077 5.22168 9.84302C5.91773 9.37793 6.70505 9.18241 7.6123 9.09009C8.503 8.99948 9.61635 9.00024 11 9.00024H12C13.3836 9.00024 14.497 8.99948 15.3877 9.09009C16.2949 9.18241 17.0823 9.37793 17.7783 9.84302C18.324 10.2077 18.7926 10.6763 19.1572 11.2219C19.6223 11.918 19.8178 12.7053 19.9102 13.6125C20.0008 14.5032 20 15.6166 20 17.0002Z" fill="currentColor"/><path d="M22.7383 18.0002C23.2906 18.0002 23.7383 18.448 23.7383 19.0002C23.7383 19.5525 23.2906 20.0002 22.7383 20.0002H22C21.4477 20.0002 21 19.5525 21 19.0002C21 18.448 21.4477 18.0002 22 18.0002H22.7383Z" fill="currentColor"/><path d="M22.7383 15.0002C23.2906 15.0002 23.7383 15.448 23.7383 16.0002C23.7383 16.5525 23.2906 17.0002 22.7383 17.0002H22C21.4477 17.0002 21 16.5525 21 16.0002C21 15.448 21.4477 15.0002 22 15.0002H22.7383Z" fill="currentColor"/><path d="M22.5 22.0002C22.2239 22.0002 22 22.2241 22 22.5002L22.0098 22.6008C22.0563 22.8288 22.2583 23.0002 22.5 23.0002C22.7761 23.0002 23 22.7764 23 22.5002C23 22.2241 22.7761 22.0002 22.5 22.0002ZM24 22.5002C24 23.3287 23.3284 24.0002 22.5 24.0002C21.7233 24.0002 21.0846 23.41 21.0078 22.6536L21 22.5002L21.0078 22.3469C21.0846 21.5905 21.7233 21.0002 22.5 21.0002C23.3284 21.0002 24 21.6718 24 22.5002Z" fill="currentColor"/><path d="M13.0801 3.45557C15.2745 3.45567 17.0689 5.16714 17.2021 7.32861L15.2061 7.45166C15.1374 6.33838 14.2112 5.45567 13.0801 5.45557C11.9489 5.45557 11.0228 6.33832 10.9541 7.45166L8.95801 7.32861C9.0913 5.16707 10.8855 3.45557 13.0801 3.45557Z" fill="currentColor"/><path d="M7.24977 0.338153C7.61532 -0.0757542 8.24792 -0.115189 8.66188 0.250262L12.574 3.70632C12.9878 4.07189 13.0273 4.70354 12.6619 5.11745C12.2963 5.53141 11.6637 5.57093 11.2498 5.20534L7.33766 1.75026C6.92376 1.38471 6.88432 0.752112 7.24977 0.338153Z" fill="currentColor"/><path d="M18.7917 0.338153C18.4262 -0.0757542 17.7936 -0.115189 17.3796 0.250262L13.4675 3.70632C13.0537 4.07189 13.0142 4.70354 13.3796 5.11745C13.7452 5.53141 14.3778 5.57093 14.7917 5.20534L18.7038 1.75026C19.1177 1.38471 19.1572 0.752112 18.7917 0.338153Z" fill="currentColor"/></svg>
+          <div>Social</div>
+        </div>
+        <div class="tab">
+          <svg class="ic" viewBox="0 0 37 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30.0969 13.5C30.0969 7.22316 24.7788 2.0002 18.0489 2C11.3189 2 6.00001 7.22304 6.00001 13.5C6.00001 19.777 11.3189 25 18.0489 25V27L17.6856 26.9951C10.0946 26.8101 4 20.8392 4 13.5C4 6.04416 10.2901 0 18.0489 0L18.4112 0.00488281C26.0024 0.189753 32.0969 6.16069 32.0969 13.5C32.0969 20.9557 25.8075 26.9998 18.0489 27V25C24.7788 24.9998 30.0969 19.7768 30.0969 13.5Z" fill="currentColor"/></svg>
+          <div>Profile</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Accessibility ──────────────────────────────────────────────────── -->
+<section id="a11y">
+  <header>
+    <div class="eyebrow">Accessibility</div>
+    <h2>WCAG 2.1 AA + Apple HIG</h2>
+    <p>Minimum standards. Test every new pattern against this list.</p>
+  </header>
+  <div class="grid grid-2">
+    <div class="card"><h4>Color contrast</h4>White on bg.app is 19.5:1 — passes AAA. text.tertiary on bg.app is 4.7:1 — labels and metadata only, never body.</div>
+    <div class="card"><h4>Touch targets</h4>44 × 44 pt minimum on every interactive element. Use hitSlop on icon buttons.</div>
+    <div class="card"><h4>Don't rely on color alone</h4>Positive deltas always carry ↑. Negative always carry ↓. Sector chips pair color with the sector name.</div>
+    <div class="card"><h4>Dynamic Type</h4>Test layouts at xSmall through Accessibility 5. Mono numbers scale with the rest.</div>
+    <div class="card"><h4>VoiceOver</h4>Every interactive has an accessibilityLabel: imperative verb + object. Charts get an accessibilitySummary.</div>
+    <div class="card"><h4>Reduce Motion</h4>Glow-pulse and shimmer freeze. Celebrate-burst becomes opacity fade. Disco-spin disappears.</div>
+  </div>
+</section>
+
+<!-- ─── Master do/don't ────────────────────────────────────────────────── -->
+<section id="rules">
+  <header>
+    <div class="eyebrow">Master rules</div>
+    <h2>Do's and don'ts</h2>
+    <p>The non-negotiables. If you have to break one, write down why in the PR.</p>
+  </header>
+  <div class="dodont">
+    <div class="col do"><h5>Do</h5>Use mono for every number.</div>
+    <div class="col dont"><h5>Don't</h5>Mix sans-serif and mono inside the same metric line.</div>
+    <div class="col do"><h5>Do</h5>Reserve green for the primary action and positive state.</div>
+    <div class="col dont"><h5>Don't</h5>Use green for body text or large filled backgrounds.</div>
+    <div class="col do"><h5>Do</h5>Glow data and interactive elements.</div>
+    <div class="col dont"><h5>Don't</h5>Glow text or every card on screen.</div>
+    <div class="col do"><h5>Do</h5>Use a single primary CTA per screen.</div>
+    <div class="col dont"><h5>Don't</h5>Stack two primary buttons together.</div>
+    <div class="col do"><h5>Do</h5>Honor 44pt minimum touch targets and Dynamic Type.</div>
+    <div class="col dont"><h5>Don't</h5>Trust an icon's visual size as the tap area.</div>
+    <div class="col do"><h5>Do</h5>Reserve the disco-ball for splash and the post-investment celebration.</div>
+    <div class="col dont"><h5>Don't</h5>Sprinkle disco motifs across the product.</div>
+    <div class="col do"><h5>Do</h5>Add new tokens by editing tokens.js + tokens.css together.</div>
+    <div class="col dont"><h5>Don't</h5>Hard-code a hex anywhere in a component file.</div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div style="color:var(--text-secondary);font-weight:600">Disco Capital · Design System v1.0</div>
+    <div>Source of truth for the iOS app. When in doubt, this wins.</div>
+  </div>
+  <div class="links">
+    <a href="./tokens/tokens.js">tokens.js</a>
+    <a href="./tokens/tokens.css">tokens.css</a>
+    <a href="./Disco_Capital_Design_Guide.docx">Design Guide (.docx)</a>
+  </div>
+</footer>
+
+<script>
+// Spacing visualizer
+const spacing = [
+  ['space.1', 4,  'Hairline gaps inside chips, between an icon and a label.'],
+  ['space.2', 8,  'Compact padding, gap between a delta and a value.'],
+  ['space.3', 12, 'Tight padding inside small elements.'],
+  ['space.4', 16, 'Default vertical rhythm — gap between rows, list items.'],
+  ['space.5', 20, 'Screen edge padding (iPhone). Major card section gaps.'],
+  ['space.6', 24, 'Default card inner padding.'],
+  ['space.8', 32, 'Gap between major sections on a screen.'],
+  ['space.10', 40, 'Top padding under the nav bar.'],
+  ['space.12', 48, 'Hero block bottom padding.'],
+  ['space.16', 64, 'Splash, onboarding hero margins.'],
+];
+const sl = document.getElementById('spacing-list');
+spacing.forEach(([n, px, d]) => {
+  const r = document.createElement('div');
+  r.className = 'spacing-row';
+  r.innerHTML = `<div class="name">${n}</div><div class="px">${px}px</div><div><div class="bar" style="width:${px*4}px"></div></div><div class="desc">${d}</div>`;
+  sl.appendChild(r);
+});
+
+// Click-to-copy for swatches
+document.querySelectorAll('.swatch').forEach(s => {
+  s.addEventListener('click', async () => {
+    const hex = s.dataset.hex;
+    try {
+      await navigator.clipboard.writeText(hex);
+      s.classList.add('copied');
+      setTimeout(() => s.classList.remove('copied'), 1400);
+    } catch (e) { /* clipboard not available */ }
+  });
+});
+</script>
+
+</body>
+</html>
