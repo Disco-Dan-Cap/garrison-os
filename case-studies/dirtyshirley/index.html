@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dirty Shirley — Spec Brand Campaign · Garrison Bullock</title>
+<meta name="description" content="An unsolicited spec brand campaign for Dirty Shirley — 1950s sailor pin-ups, Americana, and cherry red. AI-planned and generated, edited in DaVinci Resolve, with the art-direction mood board. By Garrison Bullock.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5EDE0; --panel:#FBF6EC; --ink:#1B1A18; --ink-2:#6A6358;
+    --red:#D81F2C; --red-d:#A8141F; --navy:#1E3A5F; --line:#E2D7C4;
+    --display:'Oswald',sans-serif; --sans:'Inter',-apple-system,system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{ background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.62;
+    -webkit-font-smoothing:antialiased; position:relative; }
+  body::before{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:50px 40px 110px; position:relative; z-index:1; }
+  @media(max-width:700px){ .wrap{ padding:34px 18px 80px; } }
+  a{ color:var(--red); text-decoration:none; } a:hover{ color:var(--red-d); }
+
+  header.mast{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    padding-bottom:22px; border-bottom:3px solid var(--red); }
+  .brand-name{ font-family:var(--display); font-weight:700; font-size:34px; letter-spacing:.01em; line-height:.95; color:var(--red); text-transform:uppercase; }
+  .brand-sub{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.2em; color:var(--ink-2); margin-top:8px; }
+  .meta{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-2); text-align:right; }
+  .meta div+div{ margin-top:5px; } .meta b{ color:var(--navy); font-weight:600; }
+
+  .eyebrow{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.22em; color:var(--red); }
+  .hero{ padding:50px 0 20px; }
+  .hero-grid{ display:grid; grid-template-columns:1fr 300px; gap:50px; align-items:center; }
+  @media(max-width:820px){ .hero-grid{ grid-template-columns:1fr; gap:34px; } .hero-fig .phone{ margin:0 auto; } }
+  .hero h1{ font-family:var(--display); font-weight:700; font-size:clamp(40px,6.6vw,78px); line-height:.98;
+    text-transform:uppercase; letter-spacing:.005em; margin:16px 0 0; color:var(--ink); }
+  .hero h1 .r{ color:var(--red); }
+  .hero .kicker{ color:#4a463e; font-size:19px; max-width:46ch; margin:20px 0 0; }
+
+  .phone{ width:300px; max-width:100%; background:#111; border-radius:40px; padding:9px;
+    box-shadow:0 26px 60px rgba(27,26,24,.35), 0 0 0 1px rgba(0,0,0,.1); }
+  .phone video{ width:100%; display:block; aspect-ratio:9/19.5; border-radius:32px; background:#000; object-fit:cover; }
+  .cap{ font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-2); text-align:center; margin-top:14px; }
+
+  section{ padding:52px 0; border-top:1px solid var(--line); }
+  .sec-eye{ margin-bottom:20px; }
+  .sec-title{ font-family:var(--display); font-weight:700; font-size:clamp(28px,4vw,46px); line-height:1.02;
+    text-transform:uppercase; letter-spacing:.01em; margin:12px 0 0; color:var(--ink); }
+  .sec-title .r{ color:var(--red); }
+  .prose{ color:#4a463e; max-width:62ch; } .prose.lead{ font-size:20px; line-height:1.55; }
+  .prose b{ color:var(--navy); } .prose em{ font-style:italic; color:var(--red); }
+
+  /* mood board (masonry) */
+  .mb-intro{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .mood{ columns:5 190px; column-gap:8px; margin-top:26px; }
+  @media(max-width:900px){ .mood{ columns:3 150px; } }
+  @media(max-width:540px){ .mood{ columns:2 130px; } }
+  .mood > *{ break-inside:avoid; margin:0 0 8px; }
+  .mood img{ width:100%; display:block; border-radius:3px; box-shadow:0 4px 14px rgba(27,26,24,.14); }
+  .tile{ padding:20px 15px; border-radius:3px; font-family:var(--display); font-weight:700; text-transform:uppercase;
+    letter-spacing:.01em; font-size:clamp(15px,1.5vw,21px); line-height:1.08; box-shadow:0 4px 14px rgba(27,26,24,.14); }
+  .tile.red{ background:var(--red); color:#fff; } .tile.navy{ background:var(--navy); color:#fff; }
+  .tile.cream{ background:#fff; color:var(--red); border:1px solid var(--line); }
+  .tile small{ display:block; font-family:var(--mono); font-weight:400; font-size:10px; letter-spacing:.14em; opacity:.8; margin-top:8px; }
+
+  .credits{ display:grid; grid-template-columns:max-content 1fr; gap:0 34px; max-width:720px; }
+  .credits dt{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-2); padding:13px 0; border-top:1px solid var(--line); }
+  .credits dd{ margin:0; padding:13px 0; border-top:1px solid var(--line); color:#4a463e; }
+  .note{ font-size:13px; color:var(--ink-2); margin-top:14px; }
+  footer{ padding:46px 0 0; border-top:3px solid var(--red); text-align:center; }
+  .foot{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-2); }
+  .foot+.foot{ margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div>
+      <div class="brand-name">Dirty Shirley</div>
+      <div class="brand-sub">Spec brand campaign · Pin-up Americana</div>
+    </div>
+    <div class="meta">
+      <div><b>Role</b> &nbsp;Concept · Art direction · Edit</div>
+      <div><b>Tools</b> &nbsp;Generative AI · DaVinci Resolve</div>
+      <div><b>Year</b> &nbsp;2024</div>
+    </div>
+  </header>
+
+  <!-- HERO + FILM -->
+  <div class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Unsolicited / self-initiated</div>
+        <h1>An all-American <span class="r">pour.</span></h1>
+        <p class="kicker">A spec brand campaign for Dirty Shirley — 1950s sailor pin-ups, cherry red, and a poolside pop-up that feels like a forgotten Americana ad. Made on my own, for the fun and the job hunt.</p>
+      </div>
+      <figure class="hero-fig">
+        <div class="phone">
+          <video controls preload="metadata" poster="assets/poster.webp" playsinline>
+            <source src="assets/film.mp4" type="video/mp4">
+            Your browser doesn't support embedded video — <a href="assets/film.mp4">download the film</a>.
+          </video>
+        </div>
+        <figcaption class="cap">Final edit · 1:00 · sound on</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- THE IDEA -->
+  <section>
+    <div class="sec-eye"><div class="eyebrow">01 — The idea</div><h2 class="sec-title">Pin-ups, planes, and a <span class="r">perfect pour.</span></h2></div>
+    <p class="prose lead">Keep Dirty Shirley's cherry-red world and existing can — then give it a <em>flare.</em> The campaign borrows from the most American imagery there is: the <b>V-J Day kiss</b> in Times Square, the pin-up nose art painted on WWII bombers, and the sailor-stripe, red-bandana, red-lip pin-up girls of the '40s and '50s.</p>
+    <p class="prose" style="margin-top:18px;">The activation is a poolside <b>pop-up at a music festival</b> — turf underfoot, a four-pack with the pin-up painted down the side of the can, and servers in sailor stripes carrying trays of the drink. The film is the sizzle reel for that world: classy, retro, a little cheeky.</p>
+    <p class="prose" style="margin-top:18px;">No client, no brief but my own — the same self-initiated spec exercise as the Herradura film, made to keep the reps up during a job search.</p>
+  </section>
+
+  <!-- MOOD BOARD -->
+  <section>
+    <div class="mb-intro">
+      <div class="sec-eye" style="margin-bottom:0;"><div class="eyebrow">02 — Art direction</div><h2 class="sec-title">The <span class="r">mood board.</span></h2></div>
+      <div class="cap" style="margin:0;">53 references · cherry red, sailor stripes, Americana</div>
+    </div>
+    <div class="mood">
+      <img src="assets/mood/mood01.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood02.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood03.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <div class="tile red">1950s Sailor Pin-up<small>stripes · red lip</small></div>
+      <img src="assets/mood/mood04.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood05.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood06.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood07.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood08.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood09.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood10.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <div class="tile navy">V-J Day energy<small>the Times Square kiss</small></div>
+      <img src="assets/mood/mood11.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood12.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood13.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood14.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood15.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood16.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood17.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood18.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <div class="tile cream">Cherry Red<small>keep the brand color</small></div>
+      <img src="assets/mood/mood19.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood20.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood21.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood22.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood23.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood24.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood25.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood26.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood27.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <div class="tile red">Bandana &amp; Bombshell<small>40s–50s glamour</small></div>
+      <img src="assets/mood/mood28.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood29.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood30.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood31.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood32.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood33.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood34.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood35.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood36.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <div class="tile navy">WWII Nose-Art<small>pin-ups on the fuselage</small></div>
+      <img src="assets/mood/mood37.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood38.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood39.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood40.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood41.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood42.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood43.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood44.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood45.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <div class="tile cream">Festival Pop-Up<small>turf, trays, sailors</small></div>
+      <img src="assets/mood/mood46.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood47.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood48.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood49.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood50.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood51.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood52.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+      <img src="assets/mood/mood53.webp" loading="lazy" alt="Dirty Shirley art-direction reference">
+    </div>
+  </section>
+
+  <!-- CREDITS -->
+  <section>
+    <div class="sec-eye"><div class="eyebrow">03 — Credits</div><h2 class="sec-title">How it was made.</h2></div>
+    <dl class="credits">
+      <dt>Concept &amp; art direction</dt><dd>Garrison Bullock — self-initiated spec campaign.</dd>
+      <dt>Curation &amp; clips</dt><dd>Planned and art-directed with generative AI; the moving clips were AI-generated from the reference images on the mood board.</dd>
+      <dt>Edit, grade &amp; sound</dt><dd>DaVinci Resolve — assembly, color, music and titles.</dd>
+      <dt>Status</dt><dd>Spec / portfolio — not affiliated with or commissioned by Dirty Shirley.</dd>
+    </dl>
+    <p class="note">A self-directed concept built to demonstrate art direction and an AI-to-edit pipeline. All reference imagery belongs to its respective owners and is shown here only as art-direction inspiration.</p>
+  </section>
+
+  <footer>
+    <div class="foot">Dirty Shirley — Spec brand campaign by Garrison Bullock</div>
+    <div class="foot">© 2026 Garrison Bullock · Not affiliated with Dirty Shirley</div>
+  </footer>
+
+</div>
+</body>
+</html>
