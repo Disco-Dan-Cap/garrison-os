@@ -73,6 +73,9 @@
   /* newest projects — center stage */
   #icons-center{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);z-index:20;
     display:flex;gap:34px;}
+  /* right-side vertical stack */
+  #icons-right{position:absolute;top:50%;right:30px;transform:translateY(-50%);z-index:20;
+    display:flex;flex-direction:column;align-items:center;gap:16px;}
   .folder{width:124px;text-align:center;cursor:pointer;color:#fff;}
   .folder svg{width:94px;height:auto;display:block;margin:0 auto 5px;
     filter:drop-shadow(0 3px 0 rgba(0,0,0,.25));}
@@ -187,6 +190,7 @@
     #icons{top:44px;left:12px;right:12px;width:auto;
       grid-template-columns:repeat(3,1fr);gap:16px 6px;}
     #icons-center{top:47vh;left:42%;gap:18px;}
+    #icons-right{right:6px;gap:10px;}
     .folder{width:auto;}
     .folder svg{width:75px;}
     .folder .lbl{font-size:7px;}
@@ -209,6 +213,7 @@
   <img class="bg" id="bgimg" alt="" aria-hidden="true">
   <div id="icons"></div>
   <div id="icons-center"></div>
+  <div id="icons-right"></div>
 </div>
 
 <!-- menu bar -->
@@ -268,7 +273,11 @@ const SYMBOLS={
   inhaler:[".XXXXXX.","X.....XX","X....X.X","X...X..X","X..X...X","X.X....X","XX.....X",".XXXXXX."],
   /* disco ball: multicolor checkered facets + hanger (W white, C ice blue, L lavender, Y gold, K black) */
   disco:["....KK....","...WCWL...","..CWLYWC..",".WLYWCWLY.",".YWCLWYCW.",".WCWYCWLC.",".LYWCWLWY.","..WCLYWC..","...LWCW..."],
-  apple:["....XX..","...XX...",".XXXXXX.","XXXXXXXX","XXXXXXXX","XXXXXXXX",".XXXXXX.","..XXXX.."]
+  apple:["....XX..","...XX...",".XXXXXX.","XXXXXXXX","XXXXXXXX","XXXXXXXX",".XXXXXX.","..XXXX.."],
+  /* horseshoe (Herradura) — U-shape open at top, flared heels, rounded base */
+  horseshoe:[".XXX...XXX.",".XXX...XXX.","..XX...XX..","..XX...XX..","..XX...XX..","..XX...XX..","..XX...XX..","..XX...XX..","..XXX.XXX..","...XXXXX...","....XXX...."],
+  /* cocktail glass (Dirty Shirley) */
+  cocktail:["XXXXXXXX",".XXXXXX.","..XXXX..","...XX...","...XX...","...XX...","...XX...",".XXXXXX."]
 };
 
 /* Pixel folder — classic open-folder shape per reference.
@@ -351,16 +360,28 @@ document.getElementById('ufo').innerHTML=pixelSVG(UFO_ROWS,UFO_PAL);
 
 /* ================= PROJECT DATA (placeholder copy) ================= */
 const PROJECTS=[
-  {id:"alani", name:"Alani Nu", color:"#ff7bac", dark:"#c2417e", sym:"bolt",
+  {id:"alani", name:"Alani Nu", color:"#ff7bac", dark:"#c2417e", sym:"bolt", rightStack:true,
     one:"“It's a no brainer” — a research-led nootropic line pitch, art-directed with 2023 AI, re-executed with 2026 AI.",
     cover:"case-studies/alani-nu/assets/cover.webp",
     role:"Concept & Art Direction", year:"2023 → 2026",
     embed:"case-studies/alani-nu/index.html"},
-  {id:"korbel", name:"Korbel", color:"#f2b531", dark:"#b57f12", sym:"bottle",
+  {id:"korbel", name:"Korbel", color:"#f2b531", dark:"#b57f12", sym:"bottle", rightStack:true,
     one:"“Chalet Elixir” — a champagne house sent to a 1960s ski resort. Same art direction, three years of AI apart.",
     cover:"case-studies/korbel/assets/cover.webp",
     role:"Brand Direction / Packaging", year:"2023 → 2026",
     embed:"case-studies/korbel/index.html"},
+  {id:"herradura", name:"Tequila Herradura", color:"#B5701F", dark:"#6e430f", sym:"horseshoe", rightStack:true,
+    one:"Tequila Herradura — brand & packaging concept. [Garrison to add copy.]",
+    role:"Brand / Packaging", year:"2026",
+    challenge:"[Garrison to supply — challenge/brief]",
+    process:"[Garrison to supply — process]",
+    outcome:"[Garrison to supply — outcome]"},
+  {id:"dirtyshirley", name:"Dirty Shirley", color:"#E23E57", dark:"#9c2438", sym:"cocktail", rightStack:true,
+    one:"Dirty Shirley — brand concept. [Garrison to add copy.]",
+    role:"Brand / Concept", year:"2026",
+    challenge:"[Garrison to supply — challenge/brief]",
+    process:"[Garrison to supply — process]",
+    outcome:"[Garrison to supply — outcome]"},
   {id:"disco", name:"Disco Capital", color:"#ff2d95", dark:"#b80f66", sym:"disco", center:true,
     one:"Co-invest alongside the venture funds shaping the future you'll inherit. Buy startup equity and hold it in your wallet as an NFT.<br><br>Disco Capital — We get everyone on the dance floor.",
     role:"Founder · Brand · Design System · App", year:"2026",
@@ -405,12 +426,13 @@ const PROJECTS=[
 /* ================= BUILD FOLDERS ================= */
 const icons=document.getElementById('icons');
 const iconsCenter=document.getElementById('icons-center');
+const iconsRight=document.getElementById('icons-right');
 PROJECTS.forEach(p=>{
   const el=document.createElement('div');
   el.className='folder';
   el.innerHTML=folderSVG(p.color,p.dark,p.sym)+`<div class="lbl">${p.name}</div>`;
   el.addEventListener('click',()=>openPreview(p,el));
-  (p.center?iconsCenter:icons).appendChild(el);
+  (p.rightStack?iconsRight:(p.center?iconsCenter:icons)).appendChild(el);
 });
 
 /* ================= WINDOWS ================= */
@@ -451,6 +473,7 @@ function openPreview(p,anchor){
   if(p.previewLarge){ centerCase(w); return; }
   const a=anchor.getBoundingClientRect();
   if(innerWidth<=640){ placeNear(w,(innerWidth-w.getBoundingClientRect().width)/2,a.bottom+10); }
+  else if(p.rightStack){ placeNear(w,a.left-w.getBoundingClientRect().width-12,a.top); }
   else placeNear(w,a.right+12,a.top);
 }
 
