@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Herradura — Spec Brand Film · Garrison Bullock</title>
+<meta name="description" content="An unsolicited spec brand film for Tequila Herradura — heritage, the rodeo, and the horseshoe — edited in DaVinci Resolve from stock and archival footage. By Garrison Bullock.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0A08; --panel:#131110; --ink:#ECE5D7; --ink-2:#A79F8E; --ink-3:#6E665705;
+    --line:#2A251D; --amber:#C79A4E; --amber-2:#E0B96A;
+    --display:'Playfair Display',Georgia,serif;
+    --sans:'Inter',-apple-system,system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.65;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden; }
+  /* film grain */
+  body::before{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  body::after{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:radial-gradient(120vw 80vh at 50% -10%, rgba(199,154,78,.10), transparent 60%); }
+  .wrap{ max-width:1000px; margin:0 auto; padding:54px 40px 110px; position:relative; z-index:1; }
+  @media(max-width:700px){ .wrap{ padding:36px 20px 80px; } }
+  a{ color:var(--amber-2); text-decoration:none; } a:hover{ color:#f0d79a; }
+
+  header.mast{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    padding-bottom:24px; border-bottom:1px solid var(--line); }
+  .brand-name{ font-family:var(--display); font-weight:800; font-size:30px; letter-spacing:.02em; color:var(--ink); line-height:1; }
+  .brand-sub{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.22em; color:var(--ink-2); margin-top:9px; }
+  .meta{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.14em; color:var(--ink-2); text-align:right; }
+  .meta div+div{ margin-top:5px; } .meta b{ color:var(--amber); font-weight:500; }
+
+  .eyebrow{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.24em; color:var(--amber); }
+  .hero{ padding:52px 0 30px; text-align:center; }
+  .hero h1{ font-family:var(--display); font-weight:700; font-size:clamp(36px,6.4vw,72px); line-height:1.04;
+    letter-spacing:.01em; margin:18px auto 0; max-width:16ch; color:var(--ink); }
+  .hero h1 em{ font-style:italic; color:var(--amber-2); }
+  .hero .kicker{ color:var(--ink-2); font-size:18px; max-width:54ch; margin:20px auto 0; }
+
+  /* main film */
+  .player{ margin:38px 0 0; border:1px solid var(--line); border-radius:6px; overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(199,154,78,.06); background:#000; }
+  .player video{ width:100%; display:block; aspect-ratio:16/9; background:#000; }
+  .cap{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-2);
+    text-align:center; margin-top:16px; }
+
+  section{ padding:54px 0; border-top:1px solid var(--line); }
+  .sec-eye{ margin-bottom:20px; }
+  .sec-title{ font-family:var(--display); font-weight:700; font-size:clamp(26px,3.6vw,40px); line-height:1.1;
+    margin:12px 0 0; color:var(--ink); }
+  .prose{ color:#C9C1B0; max-width:64ch; }
+  .prose.lead{ font-size:20px; line-height:1.55; color:#D8D1C1; }
+  .prose em{ font-family:var(--display); font-style:italic; color:var(--amber-2); }
+
+  /* vertical cut in a phone */
+  .vcut{ display:grid; grid-template-columns:300px 1fr; gap:48px; align-items:center; }
+  @media(max-width:760px){ .vcut{ grid-template-columns:1fr; gap:30px; } .phone{ margin:0 auto; } }
+  .phone{ width:300px; max-width:100%; background:#000; border-radius:40px; padding:9px;
+    box-shadow:0 26px 60px rgba(0,0,0,.6), 0 0 0 1px #2a251d; }
+  .phone video{ width:100%; display:block; aspect-ratio:9/19.5; border-radius:32px; background:#000; object-fit:cover; }
+
+  /* stills */
+  .stills{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:700px){ .stills{ grid-template-columns:1fr; } }
+  .stills img{ width:100%; display:block; border:1px solid var(--line); border-radius:5px; filter:saturate(.96); }
+
+  /* credits */
+  .credits{ display:grid; grid-template-columns:max-content 1fr; gap:0 36px; max-width:680px; }
+  .credits dt{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--ink-2);
+    padding:13px 0; border-top:1px solid var(--line); }
+  .credits dd{ margin:0; padding:13px 0; border-top:1px solid var(--line); color:#D8D1C1; }
+
+  footer{ padding:48px 0 0; border-top:1px solid var(--line); text-align:center; }
+  .foot{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-2); }
+  .foot+.foot{ margin-top:6px; }
+  .note{ font-size:13px; color:var(--ink-2); margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div>
+      <div class="brand-name">Herradura</div>
+      <div class="brand-sub">Tequila · Spec brand film</div>
+    </div>
+    <div class="meta">
+      <div><b>Role</b> &nbsp;Concept · Edit · Direction</div>
+      <div><b>Tool</b> &nbsp;DaVinci Resolve</div>
+      <div><b>Year</b> &nbsp;2024</div>
+    </div>
+  </header>
+
+  <!-- HERO + FILM -->
+  <div class="hero">
+    <div class="eyebrow">Unsolicited / self-initiated</div>
+    <h1>A heritage, the rodeo, and a <em>horseshoe.</em></h1>
+    <p class="kicker">A 60-second spec brand film for Tequila Herradura — made on my own while applying for a job. It turned out too good to leave in the folder.</p>
+  </div>
+
+  <figure class="player" style="margin-top:34px;">
+    <video controls preload="metadata" poster="assets/poster.webp" playsinline>
+      <source src="assets/film-horizontal.mp4" type="video/mp4">
+      Your browser doesn't support embedded video — <a href="assets/film-horizontal.mp4">download the film</a>.
+    </video>
+  </figure>
+  <div class="cap">Herradura — Edit #1 · 1:08 · sound on</div>
+
+  <!-- THE IDEA -->
+  <section>
+    <div class="sec-eye"><div class="eyebrow">01 — The idea</div><h2 class="sec-title">Where the horseshoe comes from.</h2></div>
+    <p class="prose lead">Herradura means <em>horseshoe</em> — the hacienda was named for one found on the grounds in 1870. So the film starts in Mexico: ancient stone, open country, then the dust and the lights of the rodeo, the animal and the rider, cut to the cadence of the brand. The mark lands last, the way a brand should — once you already feel it.</p>
+    <p class="prose" style="margin-top:18px;">No client, no brief but my own. I wanted to see if I could build something that felt like a national ad out of nothing but an idea and an editing timeline — a test of taste and craft more than of budget.</p>
+  </section>
+
+  <!-- VERTICAL CUT -->
+  <section>
+    <div class="sec-eye"><div class="eyebrow">02 — Built for the feed too</div><h2 class="sec-title">A vertical cut.</h2></div>
+    <div class="vcut">
+      <figure class="phone">
+        <video controls preload="none" poster="assets/still-2.webp" playsinline>
+          <source src="assets/film-vertical.mp4" type="video/mp4">
+        </video>
+      </figure>
+      <div>
+        <p class="prose">The same story re-cut 9:16 for stories and reels — reframed shot by shot, not just letterboxed, so the rider and the mark still hit in a phone-shaped frame. A real campaign ships in both shapes; so does this one.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STILLS -->
+  <section>
+    <div class="sec-eye"><div class="eyebrow">03 — Frames</div><h2 class="sec-title">The look.</h2></div>
+    <p class="prose" style="margin-bottom:22px;">High-contrast black-and-white, grain left in, the horseshoe rendered as light in the dust — Herradura's premium, heritage register, just darker and more cinematic.</p>
+    <div class="stills">
+      <img src="assets/still-1.webp" alt="Black-and-white rodeo arena: a bronc rider in the dust under the lights, the Herradura horseshoe mark beside them.">
+      <img src="assets/still-2.webp" alt="The Herradura horseshoe mark centered over a horse and rider in a spotlit, dusty arena.">
+    </div>
+  </section>
+
+  <!-- CREDITS -->
+  <section>
+    <div class="sec-eye"><div class="eyebrow">04 — Credits</div><h2 class="sec-title">How it was made.</h2></div>
+    <dl class="credits">
+      <dt>Concept &amp; direction</dt><dd>Garrison Bullock — self-initiated spec piece.</dd>
+      <dt>Edit &amp; grade</dt><dd>DaVinci Resolve — edit, color, sound, titles.</dd>
+      <dt>Footage</dt><dd>Assembled from stock and archival footage sourced across multiple libraries; no original cinematography. A pure edit-and-art-direction exercise.</dd>
+      <dt>Status</dt><dd>Spec / portfolio — not affiliated with or commissioned by Herradura.</dd>
+    </dl>
+    <p class="note">A self-directed concept made to demonstrate editing and brand instinct. All third-party footage belongs to its respective owners.</p>
+  </section>
+
+  <footer>
+    <div class="foot">Herradura — Spec brand film by Garrison Bullock</div>
+    <div class="foot">© 2026 Garrison Bullock · Not affiliated with Tequila Herradura</div>
+  </footer>
+
+</div>
+</body>
+</html>
