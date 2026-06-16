@@ -280,8 +280,8 @@ const SYMBOLS={
   cocktail:["XXXXXXXX",".XXXXXX.","..XXXX..","...XX...","...XX...","...XX...","...XX...",".XXXXXX."],
   /* briefcase (Freelance Design Work) */
   briefcase:["..XXXX..","..X..X..","XXXXXXXX","XXXXXXXX","XXX..XXX","XXXXXXXX","XXXXXXXX","XXXXXXXX"],
-  /* guitar (UNUM) — headstock, neck, round body with sound hole */
-  guitar:["..XXX..","...X...","...X...","...X...","..XXX..",".XXXXX.","XXXXXXX","XXX.XXX","XXXXXXX",".XXXXX.","..XXX.."]
+  /* guitar (UNUM) — red electric guitar: R red body/headstock, W white pickguard/dots, K dark neck & bridge */
+  guitar:["....RRR....","...RRRRR...","....RRR....",".....K.....",".....K.....",".....K.....",".....K.....","..RRRRRRR..",".RRRRRRRRR.","RRRRWWWRRRR","RRRRWKWRRRR","RRRRWWWRRRR",".RRRRKRRRR.",".RRRRRRRRR.","..RRRRRRR..","...RRRRR..."]
 };
 
 /* Pixel folder — classic open-folder shape per reference.
@@ -326,7 +326,7 @@ function folderSVG(fill,dark,symbol){
   }
   const px=SYMBOLS[symbol]||[];
   /* symbol pixels: X/W white, plus accent colors for multicolor glyphs */
-  const SYMC={X:'#fff',W:'#fff',C:'#aee2ff',L:'#c9a6f0',Y:'#ffd34d',K:'#16161c',G:'#56c172',v:'#16161c'};
+  const SYMC={X:'#fff',W:'#fff',C:'#aee2ff',L:'#c9a6f0',Y:'#ffd34d',K:'#16161c',G:'#56c172',v:'#16161c',R:'#bd4a3c'};
   /* center the symbol's inked bounding box on the front panel (rendered cols 2-21, rows 9-19) */
   let x0=99,x1=-1,y0=99,y1=-1;
   px.forEach((row,y)=>{for(let x=0;x<row.length;x++){if(SYMC[row[x]]){
