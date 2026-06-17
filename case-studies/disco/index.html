@@ -194,11 +194,72 @@
   <!-- ══════════ DANCE FLOOR · dithered loop ══════════ -->
   <section>
     <div class="sec-head"><div class="eyebrow">On the dance floor</div><h2 class="sec-title">We get everyone on the dance floor.</h2></div>
-    <figure style="margin:0;border-radius:14px;overflow:hidden;border:1px solid rgba(255,45,149,.4);box-shadow:0 0 0 1px rgba(255,45,149,.12), 0 26px 70px rgba(255,45,149,.20);background:#0a0008;">
-      <video autoplay loop muted playsinline preload="metadata" poster="assets/dither-loop-poster.webp" style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover;">
-        <source src="assets/dither-loop.mp4" type="video/mp4">
-      </video>
+    <figure class="floorfx" style="margin:0;position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(255,45,149,.4);box-shadow:0 0 0 1px rgba(255,45,149,.12), 0 26px 70px rgba(255,45,149,.20);background:#0a0008;">
+      <video id="floorSrc" src="assets/floor-source.mp4" autoplay loop muted playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;pointer-events:none;"></video>
+      <canvas id="floorCanvas" style="position:relative;z-index:1;width:100%;display:block;aspect-ratio:16/9;cursor:crosshair;"></canvas>
+      <video id="floorFallback" loop muted playsinline preload="none" poster="assets/dither-loop-poster.webp" style="display:none;width:100%;aspect-ratio:16/9;object-fit:cover;"><source src="assets/dither-loop.mp4" type="video/mp4"></video>
+      <figcaption style="position:absolute;z-index:2;left:14px;bottom:11px;font:600 10.5px/1 ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);pointer-events:none;">Move your cursor across the floor &rarr;</figcaption>
     </figure>
+    <script>
+    (function(){
+      var cvs=document.getElementById('floorCanvas'), vid=document.getElementById('floorSrc'), fb=document.getElementById('floorFallback');
+      function fail(){ try{ cvs.style.display='none'; vid.pause(); vid.style.display='none'; fb.style.display='block'; if(fb.play) fb.play().catch(function(){}); }catch(e){} }
+      var gl=null; try{ gl=cvs.getContext('webgl2',{antialias:false,alpha:false}); }catch(e){}
+      if(!gl){ fail(); return; }
+      var VS=`#version 300 es
+in vec2 p; out vec2 vUv; void main(){ vUv=p*0.5+0.5; gl_Position=vec4(p,0.,1.); }`;
+      var FS=`#version 300 es
+precision highp float;
+in vec2 vUv; uniform sampler2D uTex; uniform vec2 uRes; uniform vec2 uMouse; uniform float uMouseOn; out vec4 frag;
+const float B[64]=float[64](0.,32.,8.,40.,2.,34.,10.,42.,48.,16.,56.,24.,50.,18.,58.,26.,12.,44.,4.,36.,14.,46.,6.,38.,60.,28.,52.,20.,62.,30.,54.,22.,3.,35.,11.,43.,1.,33.,9.,41.,51.,19.,59.,27.,49.,17.,57.,25.,15.,47.,7.,39.,13.,45.,5.,37.,63.,31.,55.,23.,61.,29.,53.,21.);
+vec3 ramp(float L){ if(L<0.5)return vec3(26.,0.,18.)/255.; if(L<1.5)return vec3(150.,12.,82.)/255.; if(L<2.5)return vec3(255.,45.,149.)/255.; return vec3(255.,150.,205.)/255.; }
+void main(){
+  float cells=384.0; vec2 grid=vec2(cells, cells*uRes.y/uRes.x);
+  vec2 cell=floor(vUv*grid); vec2 cuv=(cell+0.5)/grid;
+  vec3 col=texture(uTex, vec2(cuv.x,1.0-cuv.y)).rgb;
+  float luma=dot(col, vec3(0.299,0.587,0.114));
+  luma=clamp((luma-0.5)*1.25+0.5+0.06,0.0,1.0);
+  vec2 a=vec2(uRes.x/uRes.y,1.0); float d=distance(vUv*a, uMouse*a);
+  float disp=(luma-0.5)*0.05; float radius=0.26;
+  float ring=(1.0 - smoothstep(radius*0.35+disp, radius+disp, d))*uMouseOn;
+  luma=clamp(luma+ring*0.5,0.0,1.0);
+  int bx=int(mod(cell.x,8.0)); int by=int(mod(cell.y,8.0)); float th=(B[by*8+bx]+0.5)/64.0;
+  float Ln=4.0; float sc=luma*(Ln-1.0); float lo=floor(sc); float fr=sc-lo;
+  float lvl=clamp(lo+(fr>th?1.0:0.0),0.0,Ln-1.0); vec3 dith=ramp(lvl);
+  vec3 orig=texture(uTex, vec2(vUv.x,1.0-vUv.y)).rgb;
+  float rev=pow(ring,2.0)*0.55; vec3 outc=mix(dith, orig, rev);
+  frag=vec4(outc,1.0);
+}`;
+      function sh(t,s){ var o=gl.createShader(t); gl.shaderSource(o,s); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)){ console.error(gl.getShaderInfoLog(o)); return null; } return o; }
+      var vs=sh(gl.VERTEX_SHADER,VS), fs=sh(gl.FRAGMENT_SHADER,FS);
+      if(!vs||!fs){ fail(); return; }
+      var pr=gl.createProgram(); gl.attachShader(pr,vs); gl.attachShader(pr,fs); gl.linkProgram(pr);
+      if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){ console.error(gl.getProgramInfoLog(pr)); fail(); return; }
+      gl.useProgram(pr);
+      var buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+      var lp=gl.getAttribLocation(pr,'p'); gl.enableVertexAttribArray(lp); gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
+      var tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      var uRes=gl.getUniformLocation(pr,'uRes'), uMouse=gl.getUniformLocation(pr,'uMouse'), uOn=gl.getUniformLocation(pr,'uMouseOn');
+      gl.uniform1i(gl.getUniformLocation(pr,'uTex'),0);
+      var mx=0.5,my=0.5,tmx=0.5,tmy=0.5,on=0.0,ton=0.0;
+      function at(e){ var r=cvs.getBoundingClientRect(); var t=e.touches&&e.touches[0]; var cx=t?t.clientX:e.clientX, cy=t?t.clientY:e.clientY; tmx=(cx-r.left)/r.width; tmy=1.0-(cy-r.top)/r.height; ton=1.0; }
+      cvs.addEventListener('mousemove',at); cvs.addEventListener('mouseenter',function(){ton=1.0;}); cvs.addEventListener('mouseleave',function(){ton=0.0;});
+      cvs.addEventListener('touchmove',function(e){ at(e); e.preventDefault(); },{passive:false}); cvs.addEventListener('touchend',function(){ton=0.0;});
+      function resize(){ var w=cvs.clientWidth||640, dpr=Math.min(window.devicePixelRatio||1,2); var W=Math.round(w*dpr), H=Math.round(w*9/16*dpr); if(cvs.width!==W||cvs.height!==H){ cvs.width=W; cvs.height=H; } gl.viewport(0,0,cvs.width,cvs.height); }
+      if(vid.play) vid.play().catch(function(){});
+      function frame(){
+        resize();
+        if(vid.readyState>=2){ try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,vid); }catch(e){} }
+        mx+=(tmx-mx)*0.18; my+=(tmy-my)*0.18; on+=(ton-on)*0.09;
+        gl.uniform2f(uRes,cvs.width,cvs.height); gl.uniform2f(uMouse,mx,my); gl.uniform1f(uOn,on);
+        gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    })();
+    </script>
   </section>
 
   <!-- ══════════ 01 · AT A GLANCE ══════════ -->
