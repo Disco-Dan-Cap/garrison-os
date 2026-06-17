@@ -190,13 +190,14 @@
     #icons{top:44px;left:12px;right:12px;width:auto;
       grid-template-columns:repeat(3,1fr);gap:16px 6px;}
     #icons-center{top:47vh;left:42%;gap:18px;}
-    #icons-right{right:6px;gap:10px;}
+    /* drop the right-side stack below the full-width grid so it never overlaps on phones */
+    #icons-right{right:6px;gap:10px;top:43vh;transform:none;}
     .folder{width:auto;}
     .folder svg{width:75px;}
     .folder .lbl{font-size:7px;}
     #menubar{gap:10px;height:24px;}
     #menubar .mi{display:none;}
-    #ufo{top:58vh;bottom:auto;right:9%;}
+    #ufo{top:62vh;bottom:auto;right:auto;left:50%;margin-left:-42px;}
     #ufo svg{width:84px;}
     #garrison{left:5vw;bottom:6vh;height:24vh;}
     #garrison-shadow{left:calc(5vw + 2.5vh);bottom:5.5vh;width:12vh;height:2.2vh;}
