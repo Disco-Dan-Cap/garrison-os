@@ -103,11 +103,6 @@
     <div class="eyebrow">In-house · Professional</div>
     <h1>In-house, in motion.</h1>
     <p class="kicker">As Marketing &amp; Branding Coordinator at The Marian Group, I drive creative development across video, web, and print and own brand reporting for a multi-brand real-estate portfolio. This page showcases some of the video work that was part of a creative program that grew organic engagement YoY.</p>
-    <div class="stat-row">
-      <div class="stat"><div class="n">28</div><div class="l">videos</div></div>
-      <div class="stat"><div class="n">In-house</div><div class="l">concept → finish</div></div>
-      <div class="stat"><div class="n">2021–Present</div><div class="l">the run</div></div>
-    </div>
   </div>
 
   <!-- VIDEO GRID -->
@@ -117,6 +112,13 @@
       <div class="cap">Brand · property · motion · social · click to play</div>
     </div>
     <div class="grid" id="mgrid">
+      <a class="vtile" data-video="assets/recent/r1.mp4" role="button" tabindex="0" aria-label="Play Cedar Grove (March 2026)"><img src="assets/recent/r1.webp" loading="eager" alt="The Marian Group — recent video"><span class="play" aria-hidden="true"></span></a>
+      <a class="vtile" data-video="assets/recent/r2.mp4" role="button" tabindex="0" aria-label="Play Trench — full edit"><img src="assets/recent/r2.webp" loading="eager" alt="The Marian Group — recent video"><span class="play" aria-hidden="true"></span></a>
+      <a class="vtile" data-video="assets/recent/r3.mp4" role="button" tabindex="0" aria-label="Play Timeline #2"><img src="assets/recent/r3.webp" loading="eager" alt="The Marian Group — recent video"><span class="play" aria-hidden="true"></span></a>
+      <a class="vtile" data-video="assets/recent/r4.mp4" role="button" tabindex="0" aria-label="Play Symphony story"><img src="assets/recent/r4.webp" loading="eager" alt="The Marian Group — recent video"><span class="play" aria-hidden="true"></span></a>
+      <a class="vtile" data-video="assets/recent/r5.mp4" role="button" tabindex="0" aria-label="Play Ashgrove — video 3"><img src="assets/recent/r5.webp" loading="eager" alt="The Marian Group — recent video"><span class="play" aria-hidden="true"></span></a>
+      <a class="vtile" data-video="assets/recent/r6.mp4" role="button" tabindex="0" aria-label="Play Ashgrove — management edit"><img src="assets/recent/r6.webp" loading="eager" alt="The Marian Group — recent video"><span class="play" aria-hidden="true"></span></a>
+      <a class="vtile" data-video="assets/recent/r7.mp4" role="button" tabindex="0" aria-label="Play Ashgrove — cinematic (Dec 2025)"><img src="assets/recent/r7.webp" loading="eager" alt="The Marian Group — recent video"><span class="play" aria-hidden="true"></span></a>
       <a class="vtile" data-id="FKgmgQn50GU" role="button" tabindex="0" aria-label="Play video 1"><img src="assets/thumbs/FKgmgQn50GU.webp" loading="eager" alt="The Marian Group — video still"><span class="play" aria-hidden="true"></span></a>
       <a class="vtile" data-id="ZTLmHpK_9xY" role="button" tabindex="0" aria-label="Play video 2"><img src="assets/thumbs/ZTLmHpK_9xY.webp" loading="eager" alt="The Marian Group — video still"><span class="play" aria-hidden="true"></span></a>
       <a class="vtile" data-id="k7x7HHwLsJw" role="button" tabindex="0" aria-label="Play video 3"><img src="assets/thumbs/k7x7HHwLsJw.webp" loading="eager" alt="The Marian Group — video still"><span class="play" aria-hidden="true"></span></a>
@@ -171,8 +173,9 @@
 <div class="lb" id="lb" aria-hidden="true">
   <button class="lb-btn lb-close" id="lbClose" aria-label="Close">&times;</button>
   <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous">&#8249;</button>
-  <div class="stage"><iframe id="lbFrame" src="" title="The Marian Group video"
+  <div class="stage" id="lbStage"><iframe id="lbFrame" src="" title="The Marian Group video"
     allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+  <video id="lbVideo" controls playsinline preload="metadata" style="display:none;max-width:92vw;max-height:86vh;border-radius:6px;background:#000;box-shadow:0 24px 70px rgba(0,0,0,.6);"></video>
   <button class="lb-btn lb-next" id="lbNext" aria-label="Next">&#8250;</button>
   <div class="lb-count" id="lbCount"></div>
 </div>
@@ -181,12 +184,14 @@
 (function(){
   var grid=document.getElementById('mgrid'); if(!grid) return;
   var items=Array.prototype.slice.call(grid.querySelectorAll('.vtile'));
-  var lb=document.getElementById('lb'), frame=document.getElementById('lbFrame'), lbCount=document.getElementById('lbCount'), cur=0;
-  function show(i){ cur=(i+items.length)%items.length; var id=items[cur].getAttribute('data-id');
-    frame.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  var lb=document.getElementById('lb'), frame=document.getElementById('lbFrame'), lbVideo=document.getElementById('lbVideo'), stage=document.getElementById('lbStage'), lbCount=document.getElementById('lbCount'), cur=0;
+  function show(i){ cur=(i+items.length)%items.length; var el=items[cur]; var v=el.getAttribute('data-video');
+    if(v){ stage.style.display='none'; frame.src=''; lbVideo.style.display='block'; lbVideo.src=v; var pr=lbVideo.play(); if(pr&&pr.catch)pr.catch(function(){}); }
+    else { lbVideo.pause(); lbVideo.removeAttribute('src'); lbVideo.load(); lbVideo.style.display='none'; stage.style.display='block';
+      frame.src='https://www.youtube-nocookie.com/embed/'+el.getAttribute('data-id')+'?autoplay=1&rel=0&modestbranding=1&playsinline=1'; }
     lbCount.textContent=(cur+1)+' / '+items.length; }
   function openLb(i){ show(i); lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
-  function closeLb(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; frame.src=''; }
+  function closeLb(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; frame.src=''; lbVideo.pause(); lbVideo.removeAttribute('src'); lbVideo.load(); }
   items.forEach(function(el,i){
     el.addEventListener('click',function(){ openLb(i); });
     el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openLb(i); } });
