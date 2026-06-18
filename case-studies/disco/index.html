@@ -89,18 +89,30 @@
   .glance dd a{ font-family:var(--mono); font-size:14px; }
 
   /* flow */
-  .flow{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
-  @media(max-width:820px){ .flow{ grid-template-columns:1fr 1fr; } }
-  @media(max-width:460px){ .flow{ grid-template-columns:1fr; } }
-  .step{ background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; position:relative; overflow:hidden; }
-  .step .n{ font-family:var(--mono); font-size:12px; color:var(--text-3); }
-  .step h3{ font-size:16.5px; margin:10px 0 7px; letter-spacing:-.01em; }
-  .step p{ margin:0; font-size:14px; color:#A9AEB6; line-height:1.5; }
-  .step::after{ content:""; position:absolute; left:0; top:0; width:100%; height:3px; }
-  .step.s1::after{ background:var(--green); box-shadow:var(--glow-green); }
-  .step.s2::after{ background:var(--cyan); box-shadow:var(--glow-cyan); }
-  .step.s3::after{ background:var(--purple); box-shadow:var(--glow-purple); }
-  .step.s4::after{ background:var(--pink); box-shadow:var(--glow-pink); }
+  /* ── 3D coverflow carousel (How it works) ── */
+  .c3d{ position:relative; margin-top:38px; }
+  .c3d-stage{ position:relative; height:236px; perspective:1500px; }
+  .c3d-card{ position:absolute; left:50%; top:50%; width:330px; height:208px; box-sizing:border-box;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r-lg); padding:22px 24px;
+    transform:translate(-50%,-50%); transform-style:preserve-3d; backface-visibility:hidden; cursor:pointer;
+    transition:transform .55s cubic-bezier(.2,.7,.2,1), opacity .5s ease, border-color .35s, box-shadow .35s;
+    will-change:transform,opacity; }
+  .c3d-card .n{ font-family:var(--mono); font-size:13px; color:var(--acc,#9aa0a8); }
+  .c3d-card h3{ font-size:18px; margin:11px 0 8px; letter-spacing:-.01em; }
+  .c3d-card p{ margin:0; font-size:14px; color:#A9AEB6; line-height:1.5; }
+  .c3d-card.is-active{ border-color:color-mix(in srgb, var(--acc) 50%, var(--border));
+    box-shadow:0 22px 60px rgba(0,0,0,.5), 0 0 44px -14px var(--acc); cursor:default; }
+  .c3d-nav{ position:absolute; top:50%; transform:translateY(-50%); z-index:60; width:44px; height:44px;
+    border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;
+    background:rgba(18,20,26,.72); border:1px solid var(--border); color:#e7e9ee; font-size:21px; line-height:1;
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); transition:background .2s, transform .2s, border-color .2s; }
+  .c3d-nav:hover{ background:rgba(30,33,42,.95); transform:translateY(-50%) scale(1.07); }
+  .c3d-prev{ left:0; } .c3d-next{ right:0; }
+  .c3d-dots{ display:flex; gap:9px; justify-content:center; margin-top:24px; }
+  .c3d-dot{ width:8px; height:8px; border-radius:50%; padding:0; cursor:pointer; border:1px solid var(--border); background:transparent;
+    transition:background .25s, transform .25s, border-color .25s; }
+  .c3d-dot.on{ background:#e7e9ee; border-color:#e7e9ee; transform:scale(1.18); }
+  @media(max-width:600px){ .c3d-stage{ height:300px; perspective:1100px; } .c3d-card{ width:80vw; height:268px; } .c3d-nav{ width:38px; height:38px; font-size:19px; } }
 
   /* walkthrough */
   .walk{ display:grid; grid-template-columns:296px 1fr; gap:50px; align-items:center; padding:42px 0; border-top:1px solid var(--border); }
@@ -277,12 +289,52 @@ void main(){
   <!-- ══════════ 02 · HOW IT WORKS ══════════ -->
   <section>
     <div class="sec-head"><div class="eyebrow">02 — How it works</div><h2 class="sec-title">Four steps, no fund admin.</h2></div>
-    <div class="flow">
-      <div class="step s1"><div class="n">01</div><h3>Find a round</h3><p>Browse live rounds on the Dance Floors — filter by sector, stage, or which fund is leading.</p></div>
-      <div class="step s2"><div class="n">02</div><h3>Invest from $100</h3><p>Set an amount and see exactly what you'll get. A top VC already set the terms.</p></div>
-      <div class="step s3"><div class="n">03</div><h3>Hold it as an NFT</h3><p>Your fractional equity lands in your wallet as a token you actually own.</p></div>
-      <div class="step s4"><div class="n">04</div><h3>Get paid automatically</h3><p>Chainlink oracles trigger payouts at exits — no paperwork, no waiting on a fund admin.</p></div>
+    <div class="c3d" id="howFlow" tabindex="0" aria-roledescription="carousel" aria-label="How it works — four steps">
+      <div class="c3d-stage">
+        <article class="c3d-card" style="--acc:var(--green)"><div class="n">01</div><h3>Find a round</h3><p>Browse live rounds on the Dance Floors — filter by sector, stage, or which fund is leading.</p></article>
+        <article class="c3d-card" style="--acc:var(--cyan)"><div class="n">02</div><h3>Invest from $100</h3><p>Set an amount and see exactly what you'll get. A top VC already set the terms.</p></article>
+        <article class="c3d-card" style="--acc:var(--purple)"><div class="n">03</div><h3>Hold it as an NFT</h3><p>Your fractional equity lands in your wallet as a token you actually own.</p></article>
+        <article class="c3d-card" style="--acc:var(--pink)"><div class="n">04</div><h3>Get paid automatically</h3><p>Chainlink oracles trigger payouts at exits — no paperwork, no waiting on a fund admin.</p></article>
+      </div>
+      <button class="c3d-nav c3d-prev" type="button" aria-label="Previous step">&#8249;</button>
+      <button class="c3d-nav c3d-next" type="button" aria-label="Next step">&#8250;</button>
+      <div class="c3d-dots" id="howDots"></div>
     </div>
+    <script>
+    (function(){
+      var root=document.getElementById('howFlow'); if(!root) return;
+      var cards=Array.prototype.slice.call(root.querySelectorAll('.c3d-card'));
+      var dotsWrap=document.getElementById('howDots'), N=cards.length, active=0;
+      var POS=[
+        {x:'0',z:'0px',r:'0deg',s:1,o:1,zi:30},          /* center */
+        {x:'58%',z:'-150px',r:'-36deg',s:.9,o:.5,zi:20}, /* right */
+        {x:'0',z:'-330px',r:'0deg',s:.78,o:0,zi:10},     /* back */
+        {x:'-58%',z:'-150px',r:'36deg',s:.9,o:.5,zi:20}  /* left */
+      ];
+      for(var i=0;i<N;i++){ (function(k){ var d=document.createElement('button'); d.type='button'; d.className='c3d-dot'; d.setAttribute('aria-label','Go to step '+(k+1)); d.addEventListener('click',function(){ go(k); }); dotsWrap.appendChild(d); })(i); }
+      var dots=Array.prototype.slice.call(dotsWrap.children);
+      function layout(){
+        cards.forEach(function(c,i){
+          var rel=((i-active)%N+N)%N;
+          var p = rel===0?POS[0] : rel===1?POS[1] : rel===N-1?POS[3] : POS[2];
+          c.style.transform='translate(-50%,-50%) translateX('+p.x+') translateZ('+p.z+') rotateY('+p.r+') scale('+p.s+')';
+          c.style.opacity=p.o; c.style.zIndex=p.zi;
+          var act=rel===0; c.classList.toggle('is-active',act); c.setAttribute('aria-hidden',act?'false':'true');
+        });
+        dots.forEach(function(d,i){ d.classList.toggle('on', i===active); });
+      }
+      function go(i){ active=((i%N)+N)%N; layout(); }
+      function step(d){ go(active+d); }
+      root.querySelector('.c3d-prev').addEventListener('click',function(){ step(-1); });
+      root.querySelector('.c3d-next').addEventListener('click',function(){ step(1); });
+      cards.forEach(function(c,i){ c.addEventListener('click',function(){ if(i!==active) go(i); }); });
+      root.addEventListener('keydown',function(e){ if(e.key==='ArrowLeft'){ e.preventDefault(); step(-1); } else if(e.key==='ArrowRight'){ e.preventDefault(); step(1); } });
+      var sx=null;
+      root.addEventListener('pointerdown',function(e){ sx=e.clientX; });
+      root.addEventListener('pointerup',function(e){ if(sx===null) return; var dx=e.clientX-sx; if(Math.abs(dx)>45){ step(dx<0?1:-1); } sx=null; });
+      layout();
+    })();
+    </script>
   </section>
 
   <!-- ══════════ 04 · INSIDE THE APP ══════════ -->
