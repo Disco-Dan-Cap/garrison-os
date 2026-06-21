@@ -125,6 +125,8 @@
 
   figure { margin: 0; }
   .fig-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--mid-forest); text-align: center; margin-top: 16px; }
+  .proc-stack { display: flex; flex-direction: column; gap: 28px; margin: 0 0 30px; }
+  .proc-shot { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--hair); box-shadow: 0 16px 44px rgba(30,61,48,0.14); }
 
   /* ── At a glance — typographic definition grid ──────── */
   .glance { display: grid; grid-template-columns: max-content 1fr; gap: 0 40px; max-width: 760px; }
@@ -416,7 +418,12 @@
         <div class="eyebrow">06 — How it was built</div>
         <h2 class="sec-title">How it was built</h2>
       </div>
-      <p class="prose">I directed Claude Code the way a creative director runs a studio: a written design directive with a NEVER list banning the generic-app vocabulary, a paste-ready brief for each build day, and every word of copy reviewed before merge. Every brief is committed alongside the code. One engineering proof: the Coach’s cold first paint went from 16 seconds to 0.26, by fetching the letter behind the brand’s leaf-draw animation.</p>
+      <p class="prose">Before any of it was code, it was wireframes. Copia’s first life was 2021, as EDEN — I designed the branding, the onboarding, and a full low-fidelity buyer flow, sketched and iterated screen by screen in Figma. That groundwork is what made the 2026 rebuild fast: I wasn’t inventing the product while directing the build, I was executing a plan I’d already drawn.</p>
+      <div class="proc-stack">
+        <figure><img class="proc-shot" loading="lazy" src="assets/wireframes-flow.webp" alt="Low-fidelity grayscale wireframes of the EDEN buyer flow in Figma: filters, the seller map, product grids, cart, checkout, and a transaction-complete screen."><figcaption class="fig-label">2021 · Low-fi buyer flow</figcaption></figure>
+        <figure><img class="proc-shot" loading="lazy" src="assets/wireframes-eden.webp" alt="EDEN branding and onboarding wireframe iterations in Figma, with the hand-lettered Eden wordmark on a sage sign-in screen."><figcaption class="fig-label">2021 · EDEN branding &amp; onboarding</figcaption></figure>
+      </div>
+      <p class="prose">Then, in 2026, I directed Claude Code the way a creative director runs a studio: a written design directive with a NEVER list banning the generic-app vocabulary, a paste-ready brief for each build day, and every word of copy reviewed before merge. Every brief is committed alongside the code. One engineering proof: the Coach’s cold first paint went from 16 seconds to 0.26, by fetching the letter behind the brand’s leaf-draw animation.</p>
     </section>
 
     <!-- ══════════ 07 · REFLECTION ══════════ -->
