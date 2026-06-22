@@ -145,6 +145,18 @@
   .proc-fig{ margin:0; }
   .proc-shot{ display:block; width:100%; height:auto; border-radius:14px; border:1px solid var(--border); box-shadow:0 24px 60px rgba(0,0,0,.5); background:#0d0e12; }
   .proc-cap{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-3); margin-top:14px; }
+  /* decisions */
+  .dec{ padding:30px 0; border-top:1px solid var(--border); }
+  .dec-k{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3); margin-bottom:10px; }
+  .dec h3{ font-size:clamp(20px,2.5vw,26px); margin:0 0 16px; letter-spacing:-.01em; line-height:1.16; color:#fff; }
+  .dec-row{ display:grid; grid-template-columns:104px 1fr; gap:18px; align-items:baseline; padding:8px 0; }
+  .dec-row + .dec-row{ border-top:1px solid rgba(255,255,255,.05); }
+  .dec-lbl{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+  .dec-lbl.p{ color:var(--text-3); }
+  .dec-lbl.c{ color:var(--green); }
+  .dec-lbl.t{ color:var(--pink); }
+  .dec-row p{ margin:0; color:#A9AEB6; max-width:60ch; }
+  @media(max-width:640px){ .dec-row{ grid-template-columns:1fr; gap:4px; } }
 
   /* principles + palette */
   .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
@@ -472,9 +484,53 @@ void main(){
   })();
   </script>
 
-  <!-- ══════════ 05 · THE SYSTEM ══════════ -->
+  <!-- ══════════ 05 · DECISIONS ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">05 — The system behind the screens</div><h2 class="sec-title">Six rules every screen obeys.</h2></div>
+    <div class="sec-head"><div class="eyebrow">05 — Decisions</div><h2 class="sec-title">The calls that decided what Disco is.</h2></div>
+    <p class="prose" style="max-width:60ch;margin-bottom:6px;">The hardest choices weren't visual — they were about what the product is, and what it refuses to become. Four mattered most.</p>
+
+    <article class="dec">
+      <div class="dec-k">Decision 01</div>
+      <h3>Fractional equity as NFTs — not a line on a cap table.</h3>
+      <div class="dec-row"><span class="dec-lbl p">Problem</span><p>A normal private stake is an invisible entry on a cap table: illiquid, hard to verify, impossible to move until the company exits. For a first-time, small-check investor, that's an act of pure faith.</p></div>
+      <div class="dec-row"><span class="dec-lbl c">The call</span><p>Issue each stake as an NFT the investor holds in their own wallet — self-custodied, verifiable on-chain, and programmable.</p></div>
+      <div class="dec-row"><span class="dec-lbl t">Tradeoff</span><p>Direct, programmable ownership is what makes secondary trading and automatic payouts possible — but it adds custody responsibility and friction for anyone wary of crypto.</p></div>
+    </article>
+
+    <article class="dec">
+      <div class="dec-k">Decision 02</div>
+      <h3>A live feed as the home screen — not a brokerage dashboard.</h3>
+      <div class="dec-row"><span class="dec-lbl p">Problem</span><p>Trading terminals and cap-table tools are built for professionals. They read as work, and they intimidate exactly the everyday investor Disco is for.</p></div>
+      <div class="dec-row"><span class="dec-lbl c">The call</span><p>Make home — the Dance Floors — a scrollable feed of live rounds that reads like something social you already know how to use.</p></div>
+      <div class="dec-row"><span class="dec-lbl t">Tradeoff</span><p>Instantly approachable and discovery-led, at the cost of the information density a power user might want. The bet: for this audience, approachable wins.</p></div>
+    </article>
+
+    <article class="dec">
+      <div class="dec-k">Decision 03</div>
+      <h3>The Punch Bowl — let people trade and blend positions.</h3>
+      <div class="dec-row"><span class="dec-lbl p">Problem</span><p>Private equity is stuck money. You can't rebalance, exit early, or buy into a round you missed — the illiquidity that scares small investors most.</p></div>
+      <div class="dec-row"><span class="dec-lbl c">The call</span><p>Build a peer-to-peer floor where NFT positions can be traded or blended, settled by smart contract, with nothing required of the company.</p></div>
+      <div class="dec-row"><span class="dec-lbl t">Tradeoff</span><p>It gives investors real optionality and keeps the app alive between rounds — but secondary price discovery and compliance are genuinely hard, so it sits behind the core invest flow.</p></div>
+    </article>
+
+    <article class="dec">
+      <div class="dec-k">Decision 04</div>
+      <h3>A $100 minimum and a receipt that does the math.</h3>
+      <div class="dec-row"><span class="dec-lbl p">Problem</span><p>The wedge investor wants to spread $5K–$10K across a few founders with confidence — not wire a quarter-million into one. High minimums and opaque terms end that before it starts.</p></div>
+      <div class="dec-row"><span class="dec-lbl c">The call</span><p>Set the floor at $100 and show a live receipt — tokens received, fee, network — before anyone commits a dollar.</p></div>
+      <div class="dec-row"><span class="dec-lbl t">Tradeoff</span><p>It serves the beachhead and takes the fear out of a first check, at the cost of thinner revenue per user — a deliberate land-first bet.</p></div>
+    </article>
+
+    <article class="dec">
+      <div class="dec-k">And what I didn't build</div>
+      <h3>No charts to day-trade. No robo-advisor.</h3>
+      <div class="dec-row"><span class="dec-lbl p">Why not</span><p>Price tickers and candlesticks would turn conviction-based backing into anxious speculation — and make Disco the brokerage screen it set out to replace. And no robo-advisor picking for you: the point is to help people back founders they actually understand, not outsource the judgment.</p></div>
+    </article>
+  </section>
+
+  <!-- ══════════ 06 · THE SYSTEM ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">06 — The system behind the screens</div><h2 class="sec-title">Six rules every screen obeys.</h2></div>
     <p class="prose">None of those screens are one-offs. They come from a single dark-mode design system I built first — tokens, type, components, charts and a11y — governed by six principles:</p>
     <div class="grid3" style="margin-top:24px;">
       <div class="pcard"><span class="dot" style="background:var(--bg-app);border:1px solid var(--divider)"></span><h3>Dark-first</h3><p>Background is always near-black. Cards lift by elevation, not borders.</p></div>
@@ -501,7 +557,7 @@ void main(){
 
   <!-- ══════════ 05 · BEFORE THE BUILD ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">06 — Before the build</div><h2 class="sec-title">Wireframed in Figma before a line of code.</h2></div>
+    <div class="sec-head"><div class="eyebrow">07 — Before the build</div><h2 class="sec-title">Wireframed in Figma before a line of code.</h2></div>
     <p class="prose" style="max-width:64ch;margin-bottom:30px;">Disco started on a Figma canvas, not in an editor. I sized the market (the numbers behind <em>The problem</em> above), explored the brand, and wireframed and prototyped every screen before building the live app. The frames below became the product above.</p>
     <div class="proc-stack">
       <figure class="proc-fig"><img class="proc-shot" loading="lazy" src="assets/process-board.webp" alt="Disco Capital concept board in Figma: market-sizing notes on accredited investors, Disco logo and disco-ball icon explorations, wallet-connect studies, and the full app screen flow from login to trade."><figcaption class="proc-cap">Concept board — market sizing, brand exploration, and the full screen flow</figcaption></figure>
@@ -511,7 +567,7 @@ void main(){
 
   <!-- ══════════ 06 · EXPLORE ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">07 — Explore</div><h2 class="sec-title">See it for yourself.</h2></div>
+    <div class="sec-head"><div class="eyebrow">08 — Explore</div><h2 class="sec-title">See it for yourself.</h2></div>
     <div class="explore">
       <a class="xbtn" href="https://disco-capital.com/" target="_blank" rel="noopener"><div class="k">Live prototype</div><div class="t">The app ↗</div><div class="a">disco-capital.com</div></a>
       <a class="xbtn" href="assets/design-system.html" target="_blank" rel="noopener"><div class="k">Design</div><div class="t">Design system ↗</div><div class="a">principles · palette · components</div></a>
