@@ -127,6 +127,10 @@
   .fig-label { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--mid-forest); text-align: center; margin-top: 16px; }
   .proc-stack { display: flex; flex-direction: column; gap: 28px; margin: 0 0 30px; }
   .proc-shot { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--hair); box-shadow: 0 16px 44px rgba(30,61,48,0.14); }
+  .research-arts-intro { font-size: 17.5px; line-height: 1.6; color: var(--charcoal); max-width: 66ch; margin: 40px 0 22px; padding-top: 30px; border-top: 1px solid var(--hair-soft); }
+  .research-art { margin: 0 0 18px; }
+  .art-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 640px) { .art-pair { grid-template-columns: 1fr; } }
 
   /* ── At a glance — typographic definition grid ──────── */
   .glance { display: grid; grid-template-columns: max-content 1fr; gap: 0 40px; max-width: 760px; }
@@ -286,10 +290,19 @@
       <p class="prose lede">I founded Copia in my MBA in 2021, as EDEN. We pitched VCs and were offered $1.2M. I declined: I was the only founder all-in, and I had no technical co-founder to build with. By 2026, AI had removed that barrier — so I went back and built what I’d envisioned all along, alone, directing AI through every screen and every sentence. Seventeen build days, live in production.</p>
     </section>
 
+    <!-- ══════════ 04 · THE PROBLEM ══════════ -->
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">04 — The problem</div>
+        <h2 class="sec-title">Local food runs on a once-a-week clock.</h2>
+      </div>
+      <p class="prose">Farmers markets open for a few hours on a Saturday — the only window most people have to buy produce from the person who grew it, and the only window growers have to sell it. Step outside that window and it breaks down: buyers can’t find trustworthy local growers, and growers can’t find customers. It started during the 2020 food shortages, when the gap between wanting to buy local and actually getting it was at its widest. Copia set out to unbottleneck both sides — an always-open marketplace for buying and selling fresh local produce, any day of the week.</p>
+    </section>
+
     <!-- ══════════ 04 · RESEARCH ══════════ -->
     <section>
       <div class="sec-head">
-        <div class="eyebrow">04 — Research</div>
+        <div class="eyebrow">05 — Research</div>
         <h2 class="sec-title">What 47 interviews said (2021)</h2>
       </div>
       <div class="findings">
@@ -298,12 +311,18 @@
         <div class="finding"><b>Buyers are latent sellers.</b><span>The person buying tomatoes has a yard, and a notion.</span></div>
       </div>
       <p class="surprise">And the surprise: people value <em>local</em> over <em>organic</em>. Some actively avoid the organic label.</p>
+      <p class="research-arts-intro">Alongside the interviews, I mapped every job, pain, and gain on a value-proposition canvas, sized up the competition, and charted the ecosystem Copia would live in.</p>
+      <figure class="research-art"><img class="proc-shot" loading="lazy" src="assets/research-valueprop.webp" alt="EDEN Value Proposition Canvas (Strategyzer): buyer and grower jobs, pains, and gains — including 'farmers markets usually only run on Saturday mornings' and 'cannot find a place to buy fresh produce any day of the week.'"><figcaption class="fig-label">Value-proposition canvas · buyer &amp; grower jobs, pains, gains</figcaption></figure>
+      <div class="art-pair">
+        <figure><img class="proc-shot" loading="lazy" src="assets/research-positioning.webp" alt="Competitive positioning map plotting EDEN against local-food apps like Fresh to Home, Market Wagon, and Daily Farm to Home on quality versus number of features."><figcaption class="fig-label">Competitive map · quality vs. features</figcaption></figure>
+        <figure><img class="proc-shot" loading="lazy" src="assets/research-ecosystem.webp" alt="Ecosystem map showing EDEN connecting local-farm and hobbyist sellers with buyers, with USDA certification and food-advocacy groups (NSAC, NYFC) as partners."><figcaption class="fig-label">Ecosystem · growers, buyers, USDA, advocacy</figcaption></figure>
+      </div>
     </section>
 
     <!-- ══════════ 05 · DECISIONS ══════════ -->
     <section>
       <div class="sec-head">
-        <div class="eyebrow">05 — Decisions</div>
+        <div class="eyebrow">06 — Decisions</div>
         <h2 class="sec-title">Decisions</h2>
       </div>
 
@@ -415,7 +434,7 @@
     <!-- ══════════ 06 · HOW IT WAS BUILT ══════════ -->
     <section>
       <div class="sec-head">
-        <div class="eyebrow">06 — How it was built</div>
+        <div class="eyebrow">07 — How it was built</div>
         <h2 class="sec-title">How it was built</h2>
       </div>
       <p class="prose">Before any of it was code, it was wireframes. Copia’s first life was 2021, as EDEN — I designed the branding, the onboarding, and a full low-fidelity buyer flow, sketched and iterated screen by screen in Figma. That groundwork is what made the 2026 rebuild fast: I wasn’t inventing the product while directing the build, I was executing a plan I’d already drawn.</p>
@@ -429,7 +448,7 @@
     <!-- ══════════ 07 · REFLECTION ══════════ -->
     <section>
       <div class="sec-head">
-        <div class="eyebrow">07 — Reflection</div>
+        <div class="eyebrow">08 — Reflection</div>
         <h2 class="sec-title">Reflection</h2>
       </div>
       <p class="prose">The hardest part wasn’t building — it was refusing: the month grid, the progress bars, the trust badges, the sparkle. Next would be real payments (Stripe for cards; USDC settlement matters most where the local currency doesn’t hold), and the long thread from my 2020 notes: robot-tended backyards removing the last labor barrier between “I’d like to sell some tomatoes” and “I am, in fact, selling tomatoes.”</p>
@@ -438,7 +457,7 @@
     <!-- ══════════ 08 · ON THE HOME SCREEN ══════════ -->
     <section>
       <div class="sec-head">
-        <div class="eyebrow">08 — On the home screen</div>
+        <div class="eyebrow">09 — On the home screen</div>
         <h2 class="sec-title">On the home screen</h2>
       </div>
       <div class="install-strip">
@@ -467,7 +486,7 @@
     <!-- ══════════ 09 · TRY IT ══════════ -->
     <section>
       <div class="sec-head">
-        <div class="eyebrow">09 — Try it</div>
+        <div class="eyebrow">10 — Try it</div>
         <h2 class="sec-title">Try it</h2>
       </div>
       <div class="tryit">
