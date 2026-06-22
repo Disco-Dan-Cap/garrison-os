@@ -131,6 +131,11 @@
   .research-art { margin: 0 0 18px; }
   .art-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
   @media (max-width: 640px) { .art-pair { grid-template-columns: 1fr; } }
+  .decision-wide { padding: 52px 0 8px; border-top: 1px solid var(--hair-soft); }
+  .decision-wide .decision-body { max-width: 70ch; margin-bottom: 30px; }
+  .shot-wide { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--hair); box-shadow: 0 18px 50px rgba(30,61,48,0.16); }
+  .shot-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+  @media (max-width: 640px) { .shot-pair { grid-template-columns: 1fr; } }
 
   /* ── At a glance — typographic definition grid ──────── */
   .glance { display: grid; grid-template-columns: max-content 1fr; gap: 0 40px; max-width: 760px; }
@@ -428,6 +433,22 @@
         <div class="decision-body">
           <h3>Where AI isn’t.</h3>
           <p>When two growers share a market day, the page suggests one trip. That’s geometry, not a model — knowing where <em>not</em> to use AI is part of AI design.</p>
+        </div>
+      </div>
+
+      <!-- 7 · Two surfaces -->
+      <div class="decision-wide">
+        <div class="decision-body">
+          <h3>Two surfaces, two contexts.</h3>
+          <p>Buyers and growers don’t share a job. Buyers shop in spare minutes on a phone, so the buyer side is iPhone-first. Growers told me the opposite — they’d rather run a business on a real screen. So the seller side is a full desktop workstation: dashboard, orders, listings, calendar, the Coach. Same brand, same calm; a shape built for work, not for a thumb.</p>
+        </div>
+        <figure>
+          <img class="shot-wide" loading="lazy" src="assets/seller-dashboard.webp" alt="The Copia seller dashboard on desktop: a forest-green sidebar, 'Good evening, Mira,' a Growing Coach note, today's pickups, weekly sales, a seven-day weather strip, and a grid of nine listings.">
+          <figcaption class="fig-label">Seller · Desktop dashboard</figcaption>
+        </figure>
+        <div class="shot-pair">
+          <figure><img class="shot-wide" loading="lazy" src="assets/seller-orders.webp" alt="The seller Orders screen on desktop: every order grouped Today, Upcoming, and This week, with confirmed, awaiting, completed, and cancelled states."><figcaption class="fig-label">Seller · Orders</figcaption></figure>
+          <figure><img class="shot-wide" loading="lazy" src="assets/seller-calendar-desktop.webp" alt="The seller Calendar on desktop: a two-week agenda of pickups and plot work with daily weather, market days, and tasks."><figcaption class="fig-label">Seller · Calendar</figcaption></figure>
         </div>
       </div>
     </section>
