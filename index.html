@@ -402,7 +402,7 @@ const PROJECTS=[
     role:"Product Design / Full-stack Concept", year:"2026",
     /* finished, self-contained case-study page — opened full-screen inside an iframe */
     embed:"case-studies/copia/index.html"},
-  {id:"marian", name:"Marian Group", color:"#5b8def", dark:"#2f59b5", sym:"house",
+  {id:"marian", name:"Marian Group", win:"The Marian Group", color:"#5b8def", dark:"#2f59b5", sym:"house",
     one:"In-house design & video for a real-estate group — a library of brand, marketing, and property videos. 28 pieces, made and finished in-house.",
     role:"In-house Design / Video", year:"2021–2024",
     cover:"case-studies/marian/assets/cover.webp",
@@ -506,12 +506,12 @@ function openCase(p){
       /* finished, self-contained case page — title bar + a full-bleed iframe, no OS chrome inside */
       w=makeWin('case embed'); w.id='case-'+p.id;
       w.innerHTML=`
-        <div class="titlebar"><div class="closebox"></div><div class="title">${p.name} — CASE STUDY</div></div>
+        <div class="titlebar"><div class="closebox"></div><div class="title">${p.win || p.name + " — CASE STUDY"}</div></div>
         <iframe class="embedframe" src="${p.embed}" title="${p.name} case study"></iframe>`;
     }else{
       w=makeWin('case'); w.id='case-'+p.id;
       w.innerHTML=`
-        <div class="titlebar"><div class="closebox"></div><div class="title">${p.name} — CASE STUDY</div></div>
+        <div class="titlebar"><div class="closebox"></div><div class="title">${p.win || p.name + " — CASE STUDY"}</div></div>
         <div class="winbody">
           <div class="hero">[ refreshed hero image — Higgsfield ]</div>
           <h2>${p.name}</h2>
