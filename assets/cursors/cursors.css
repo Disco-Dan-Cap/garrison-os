@@ -1,0 +1,18 @@
+/* Garrison OS — redglass cursor scheme (extracted from the redglass .ani set).
+   Hotspots are in the 32x32 image's pixel coords. */
+html, body { cursor: url("arrow.png") 0 0, default; }
+
+a, button, [role="button"], summary, label[for],
+.folder, .closebox, .xbtn, .btn,
+input[type="button"], input[type="submit"] {
+  cursor: url("link.png") 5 0, pointer;
+}
+
+p, h1, h2, h3, h4, h5, li, dd, dt, blockquote, figcaption,
+.prose, .kicker, .lede, .one, .glance dd, .credits dd, td, th,
+input[type="text"], input[type="email"], input[type="search"], textarea,
+[contenteditable="true"] {
+  cursor: url("text.png") 15 15, text;
+}
+
+.titlebar, .titlebar.drag { cursor: url("move.png") 15 16, move; }
