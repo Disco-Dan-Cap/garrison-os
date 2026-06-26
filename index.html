@@ -225,6 +225,57 @@
   }
 </style>
   <link rel="stylesheet" href="assets/cursors/cursors.css">
+<style id="wmp-css">
+  /* ===== Windows Media Player (retro WMP9 homage) ===== */
+  #wmp-icon{position:fixed; right:38px; bottom:34px; z-index:6; width:96px; text-align:center;
+    cursor:pointer; animation:bob 3.4s ease-in-out infinite; user-select:none; -webkit-user-select:none;}
+  #wmp-icon img{width:72px; height:auto; display:block; margin:0 auto 5px; filter:drop-shadow(0 3px 0 rgba(0,0,0,.28));}
+  #wmp-icon .lbl{font-family:"Press Start 2P",monospace; font-size:8px; line-height:1.6; color:#fff; padding:2px 3px; border-radius:2px;
+    text-shadow:1px 1px 0 var(--px-black),-1px 1px 0 var(--px-black),1px -1px 0 var(--px-black),-1px -1px 0 var(--px-black);}
+  #wmp-icon:hover .lbl{background:var(--accent); text-shadow:none;}
+  #wmp-icon:hover img{transform:translateY(-2px);}
+  #wmp-icon:active img{filter:drop-shadow(0 1px 0 rgba(0,0,0,.28)) brightness(.93); transform:translateY(1px);}
+  @media(max-width:640px){ #wmp-icon{ right:auto; left:50%; margin-left:-48px; bottom:11vh; } }
+
+  #wmpwin{position:fixed; display:none; width:430px; max-width:94vw; left:50%; top:64px; margin-left:-215px; z-index:60;
+    background:#ece9d8; border:1px solid #0a246a; border-radius:8px 8px 3px 3px; box-shadow:0 18px 50px rgba(0,0,0,.5);
+    font-family:Tahoma,"Geneva",system-ui,sans-serif; overflow:hidden;}
+  #wmpwin.open{display:block;}
+  .wmp-title{height:30px; display:flex; align-items:center; gap:7px; padding:0 5px 0 8px; cursor:grab; touch-action:none;
+    background:linear-gradient(180deg,#3a8bf0 0%,#2c72e0 9%,#1f5fd6 48%,#1a55c8 90%,#1647ad 100%); color:#fff; border-radius:7px 7px 0 0;}
+  .wmp-title.drag{cursor:grabbing;}
+  .wmp-tico{width:18px;height:18px;display:block;flex:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4));}
+  .wmp-tname{font-weight:700;font-size:12px;text-shadow:1px 1px 2px rgba(0,0,0,.45);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .wmp-wbtns{display:flex;gap:3px;}
+  .wmp-wb{width:21px;height:19px;border:1px solid rgba(255,255,255,.5);border-radius:3px;color:#fff;font:700 10px/1 Tahoma;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;background:linear-gradient(180deg,#5b9bf5,#2b6fd6);}
+  .wmp-wb:hover{filter:brightness(1.13);}
+  .wmp-wb.close{background:linear-gradient(180deg,#e9806f,#d23b22);}
+  .wmp-menu{display:flex;gap:14px;padding:3px 10px;background:#f5f4ec;border-bottom:1px solid #c8c4b4;font-size:11px;color:#1a1a1a;}
+  .wmp-menu span:hover{background:#2b5fb3;color:#fff;}
+  .wmp-stage{position:relative;background:#000;height:262px;overflow:hidden;}
+  .wmp-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .wmp-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;background:#000;}
+  .wmp-vizlabel{position:absolute;left:9px;bottom:7px;font:600 9px/1 "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);pointer-events:none;}
+  .wmp-stage .hint{position:absolute;right:9px;bottom:7px;font:600 9px/1 "JetBrains Mono",monospace;color:rgba(255,255,255,.34);pointer-events:none;}
+  .wmp-status{display:flex;justify-content:space-between;align-items:center;padding:3px 11px;background:linear-gradient(#3b3b3b,#222);color:#cfe9d2;font-size:10.5px;border-top:1px solid #000;}
+  .wmp-status .wmp-time{font-family:"JetBrains Mono",monospace;color:#9fe6ad;}
+  .wmp-bar{padding:9px 12px 12px;background:linear-gradient(180deg,#fbfbf7,#d7d6cc 60%,#c3c2b5);border-top:1px solid #fff;}
+  .wmp-seek{margin:0 0 9px;}
+  .wmp-seek input,.wmp-vol{-webkit-appearance:none;appearance:none;height:5px;border-radius:3px;background:#9aa6b4;outline:none;cursor:pointer;}
+  .wmp-seek input{width:100%;display:block;}
+  .wmp-seek input::-webkit-slider-thumb,.wmp-vol::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#cfe6ff,#2b6fd6);border:1px solid #14457f;cursor:pointer;}
+  .wmp-seek input::-moz-range-thumb,.wmp-vol::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#2b6fd6;border:1px solid #14457f;cursor:pointer;}
+  .wmp-ctrls{display:flex;align-items:center;gap:8px;}
+  .wmp-btn{border:1px solid #8a93a0;border-radius:50%;background:linear-gradient(180deg,#fdfdfd,#c4cdd8);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#1f4e9b;padding:0;}
+  .wmp-btn:hover{filter:brightness(1.05);} .wmp-btn:active{transform:translateY(1px);}
+  .wmp-play{width:38px;height:38px;} .wmp-play svg{width:16px;height:16px;}
+  .wmp-stop,.wmp-prev,.wmp-next,.wmp-mute{width:26px;height:26px;}
+  .wmp-stop svg,.wmp-prev svg,.wmp-next svg,.wmp-mute svg{width:13px;height:13px;}
+  .wmp-vol{width:72px;margin-left:2px;}
+  .wmp-track{margin-left:auto;font-size:10px;color:#33405a;font-style:italic;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  @media(max-width:640px){ #wmpwin{top:52px;} .wmp-stage{height:200px;} .wmp-track{display:none;} }
+</style>
 </head>
 <body>
 <div id="desktop">
@@ -249,6 +300,44 @@
 <div id="ufo" title="click me"></div>
 <div id="bubble">gleep zip zlorp</div>
 <div id="tail"><i></i><i></i></div>
+
+<!-- Windows Media Player -->
+<div id="wmp-icon" title="Windows Media Player">
+  <img src="assets/wmp-icon.png" alt="Windows Media Player">
+  <div class="lbl">Windows Media<br>Player</div>
+</div>
+<div id="wmpwin" role="dialog" aria-label="Windows Media Player">
+  <div class="wmp-title" id="wmpTitle">
+    <img class="wmp-tico" src="assets/wmp-icon.png" alt="">
+    <span class="wmp-tname">Windows Media Player</span>
+    <span class="wmp-wbtns">
+      <button class="wmp-wb min" id="wmpMin" title="Minimize">&#95;</button>
+      <button class="wmp-wb max" title="Maximize">&#9633;</button>
+      <button class="wmp-wb close" id="wmpClose" title="Close">&#10005;</button>
+    </span>
+  </div>
+  <div class="wmp-menu"><span>File</span><span>View</span><span>Play</span><span>Tools</span><span>Help</span></div>
+  <div class="wmp-stage" id="wmpStage">
+    <video id="wmpVideo" class="wmp-video" muted loop playsinline preload="none" poster="assets/media/visuals-poster.jpg"><source src="assets/media/visuals.mp4" type="video/mp4"></video>
+    <canvas id="wmpCanvas"></canvas>
+    <div class="wmp-vizlabel" id="wmpVizLabel">Ambience: Energy</div>
+    <div class="hint">click to change visualization</div>
+  </div>
+  <div class="wmp-status"><span id="wmpStatus">Ready</span><span class="wmp-time" id="wmpTime">00:00 / 00:00</span></div>
+  <div class="wmp-bar">
+    <div class="wmp-seek"><input type="range" id="wmpSeek" min="0" max="1000" value="0" aria-label="Seek"></div>
+    <div class="wmp-ctrls">
+      <button class="wmp-btn wmp-play" id="wmpPlay" title="Play / Pause"></button>
+      <button class="wmp-btn wmp-stop" id="wmpStop" title="Stop"><svg viewBox="0 0 16 16"><rect x="3.5" y="3.5" width="9" height="9" fill="currentColor"/></svg></button>
+      <button class="wmp-btn wmp-prev" id="wmpPrev" title="Previous"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="2" height="10" fill="currentColor"/><path d="M13 3 L6 8 L13 13 Z" fill="currentColor"/></svg></button>
+      <button class="wmp-btn wmp-next" id="wmpNext" title="Next"><svg viewBox="0 0 16 16"><rect x="11" y="3" width="2" height="10" fill="currentColor"/><path d="M3 3 L10 8 L3 13 Z" fill="currentColor"/></svg></button>
+      <button class="wmp-btn wmp-mute" id="wmpMute" title="Mute"><svg viewBox="0 0 16 16"><path d="M3 6 H6 L10 3 V13 L6 10 H3 Z" fill="currentColor"/><path d="M11.5 5.5 C13 7 13 9 11.5 10.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></button>
+      <input type="range" class="wmp-vol" id="wmpVol" min="0" max="100" value="80" aria-label="Volume">
+      <span class="wmp-track" id="wmpTrack">Boards of Canada &mdash; Roygbiv</span>
+    </div>
+  </div>
+  <audio id="wmpAudio" src="assets/media/roygbiv.mp3" preload="metadata" loop></audio>
+</div>
 
 <div id="crt"></div>
 
@@ -590,6 +679,124 @@ function tick(){
     d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
 }
 tick(); setInterval(tick,1000);
+
+/* ================= WINDOWS MEDIA PLAYER ================= */
+(function(){
+  const icon=document.getElementById('wmp-icon'), win=document.getElementById('wmpwin');
+  if(!icon||!win) return;
+  const audio=document.getElementById('wmpAudio'), canvas=document.getElementById('wmpCanvas'), stage=document.getElementById('wmpStage');
+  const video=document.getElementById('wmpVideo');
+  const playBtn=document.getElementById('wmpPlay'), stopBtn=document.getElementById('wmpStop'), muteBtn=document.getElementById('wmpMute');
+  const seek=document.getElementById('wmpSeek'), vol=document.getElementById('wmpVol');
+  const timeEl=document.getElementById('wmpTime'), statusEl=document.getElementById('wmpStatus'), vizLabel=document.getElementById('wmpVizLabel');
+  const PLAY_SVG='<svg viewBox="0 0 16 16"><path d="M3 2 L14 8 L3 14 Z" fill="currentColor"/></svg>';
+  const PAUSE_SVG='<svg viewBox="0 0 16 16"><rect x="3.5" y="2.5" width="3.5" height="11" fill="currentColor"/><rect x="9" y="2.5" width="3.5" height="11" fill="currentColor"/></svg>';
+  playBtn.innerHTML=PLAY_SVG;
+  function fmt(t){ if(!isFinite(t)) return '00:00'; t=Math.max(0,t|0); const m=(t/60)|0,s=t%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
+  function setPlayIcon(){ playBtn.innerHTML=audio.paused?PLAY_SVG:PAUSE_SVG; }
+
+  /* ---- open / hide / drag (reuses bringFront + z from above) ---- */
+  function openWin(){ win.classList.add('open'); bringFront(win); play(); applyMode(); }
+  function hideWin(){ win.classList.remove('open'); stopViz(); video.pause(); }
+  icon.addEventListener('click',openWin);
+  document.getElementById('wmpClose').addEventListener('click',hideWin);
+  document.getElementById('wmpMin').addEventListener('click',hideWin);
+  win.addEventListener('pointerdown',()=>bringFront(win));
+  (function(){ const bar=document.getElementById('wmpTitle');
+    bar.addEventListener('pointerdown',e=>{
+      if(e.target.closest('.wmp-wbtns')) return;
+      bringFront(win); bar.classList.add('drag'); bar.setPointerCapture(e.pointerId);
+      const r=win.getBoundingClientRect(); win.style.marginLeft='0'; win.style.left=r.left+'px'; win.style.top=r.top+'px';
+      const ox=e.clientX-r.left, oy=e.clientY-r.top;
+      function mv(ev){ win.style.left=(ev.clientX-ox)+'px'; win.style.top=Math.max(28,ev.clientY-oy)+'px'; }
+      function up(){ bar.removeEventListener('pointermove',mv); bar.removeEventListener('pointerup',up); bar.classList.remove('drag'); }
+      bar.addEventListener('pointermove',mv); bar.addEventListener('pointerup',up);
+    });
+  })();
+
+  /* ---- audio + analyser ---- */
+  let actx,srcNode,analyser,freq,wave,started=false;
+  function initAudio(){
+    if(started) return;
+    try{
+      actx=new (window.AudioContext||window.webkitAudioContext)();
+      srcNode=actx.createMediaElementSource(audio);
+      analyser=actx.createAnalyser(); analyser.fftSize=512; analyser.smoothingTimeConstant=0.82;
+      freq=new Uint8Array(analyser.frequencyBinCount); wave=new Uint8Array(analyser.fftSize);
+      srcNode.connect(analyser); analyser.connect(actx.destination); started=true;
+    }catch(e){ started=false; }
+  }
+  function play(){ initAudio(); if(actx&&actx.state==='suspended') actx.resume(); audio.play().catch(()=>{}); }
+  playBtn.addEventListener('click',()=>{ audio.paused?play():audio.pause(); });
+  stopBtn.addEventListener('click',()=>{ audio.pause(); audio.currentTime=0; });
+  document.getElementById('wmpPrev').addEventListener('click',()=>{ audio.currentTime=0; });
+  document.getElementById('wmpNext').addEventListener('click',()=>{ audio.currentTime=0; });
+  muteBtn.addEventListener('click',()=>{ audio.muted=!audio.muted; muteBtn.style.opacity=audio.muted?'.5':'1'; });
+  audio.volume=vol.value/100;
+  vol.addEventListener('input',()=>{ audio.volume=vol.value/100; if(audio.muted&&vol.value>0){ audio.muted=false; muteBtn.style.opacity='1'; } });
+  let seeking=false;
+  seek.addEventListener('input',()=>{ seeking=true; });
+  seek.addEventListener('change',()=>{ if(audio.duration) audio.currentTime=(seek.value/1000)*audio.duration; seeking=false; });
+  audio.addEventListener('play',()=>{ setPlayIcon(); statusEl.textContent='Playing: 128 kbps'; if(modes[mode]==='video'){ if(win.classList.contains('open')) video.play().catch(()=>{}); } else startViz(); });
+  audio.addEventListener('pause',()=>{ setPlayIcon(); statusEl.textContent='Paused'; if(modes[mode]==='video') video.pause(); });
+  audio.addEventListener('loadedmetadata',()=>{ timeEl.textContent='00:00 / '+fmt(audio.duration); });
+  audio.addEventListener('timeupdate',()=>{ timeEl.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration); if(!seeking&&audio.duration) seek.value=(audio.currentTime/audio.duration)*1000; });
+  audio.addEventListener('error',()=>{ statusEl.textContent='No media file found'; });
+
+  /* ---- visualizations ---- */
+  const dpr=Math.min(window.devicePixelRatio||1,2), ctx=canvas.getContext('2d');
+  function resize(){ const r=stage.getBoundingClientRect(); canvas.width=Math.max(2,(r.width*dpr)|0); canvas.height=Math.max(2,(r.height*dpr)|0); }
+  const modes=['video','plasma','bars','wave'], modeNames={video:'Visuals',plasma:'Ambience: Energy',bars:'Bars and Waves',wave:'Oscilloscope'}; let mode=0;
+  stage.addEventListener('click',e=>{ if(e.target.closest('input,button')) return; mode=(mode+1)%modes.length; applyMode(); });
+  let raf=null,t=0;
+  function startViz(){ if(raf) return; resize(); loop(); }
+  function stopViz(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+  function applyMode(){
+    const m=modes[mode]; vizLabel.textContent=modeNames[m];
+    if(m==='video'){ canvas.style.display='none'; stopViz(); video.style.display='block'; if(win.classList.contains('open')) video.play().catch(()=>{}); }
+    else{ video.style.display='none'; video.pause(); canvas.style.display='block'; if(win.classList.contains('open')) startViz(); }
+  }
+  addEventListener('resize',()=>{ if(raf) resize(); });
+  function avgLevel(){ if(!analyser) return 0.12; let s=0; for(let i=0;i<freq.length;i++) s+=freq[i]; return (s/freq.length)/255; }
+  function loop(){ raf=requestAnimationFrame(loop); t++; const w=canvas.width,h=canvas.height; const m=modes[mode];
+    if(analyser){ analyser.getByteFrequencyData(freq); analyser.getByteTimeDomainData(wave); }
+    if(m==='bars') drawBars(w,h); else if(m==='wave') drawWave(w,h); else drawPlasma(w,h); }
+
+  function drawPlasma(w,h){
+    ctx.globalCompositeOperation='source-over'; ctx.fillStyle='rgba(0,6,1,0.30)'; ctx.fillRect(0,0,w,h);
+    const lv=analyser?avgLevel():0.13, cx=w/2, cy=h/2, R=Math.min(w,h);
+    const gr=ctx.createRadialGradient(cx,cy,0,cx,cy,R*(0.16+lv*0.55));
+    gr.addColorStop(0,'rgba(190,255,200,'+(0.45+lv*0.45)+')'); gr.addColorStop(0.42,'rgba(40,225,95,'+(0.22+lv*0.3)+')'); gr.addColorStop(1,'rgba(0,40,0,0)');
+    ctx.fillStyle=gr; ctx.fillRect(0,0,w,h);
+    ctx.globalCompositeOperation='lighter';
+    const bolts=18;
+    for(let i=0;i<bolts;i++){
+      const bin=analyser?freq[(i*3)%freq.length]/255:0.3+0.2*Math.sin(t*0.05+i);
+      const ang=(i/bolts)*Math.PI*2 + t*0.0022 + Math.sin(t*0.01+i)*0.04;
+      const len=R*(0.16+lv*0.62+bin*0.5), steps=7; let x=cx,y=cy;
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      for(let s=1;s<=steps;s++){ const rr=len*s/steps, jit=(len/steps)*0.55;
+        x=cx+Math.cos(ang)*rr+(Math.random()-0.5)*jit; y=cy+Math.sin(ang)*rr+(Math.random()-0.5)*jit; ctx.lineTo(x,y); }
+      ctx.strokeStyle='rgba(120,255,150,'+(0.16+bin*0.6)+')'; ctx.lineWidth=Math.max(1,dpr*(0.6+bin*1.7));
+      ctx.shadowColor='rgba(60,255,110,0.9)'; ctx.shadowBlur=dpr*8; ctx.stroke();
+    }
+    ctx.shadowBlur=0; ctx.globalCompositeOperation='source-over';
+  }
+  function drawBars(w,h){
+    ctx.fillStyle='#001a06'; ctx.fillRect(0,0,w,h);
+    const n=48, bw=w/n;
+    for(let i=0;i<n;i++){ const v=analyser?freq[(i/n*freq.length)|0]/255:(0.18+0.14*Math.sin(t*0.06+i*0.4)); const bh=v*h*0.92;
+      const g=ctx.createLinearGradient(0,h,0,h-bh); g.addColorStop(0,'#0a6'); g.addColorStop(0.6,'#3e8'); g.addColorStop(1,'#cffcd6');
+      ctx.fillStyle=g; ctx.fillRect(i*bw+dpr,h-bh,bw-2*dpr,bh); }
+    if(analyser){ ctx.beginPath(); for(let i=0;i<wave.length;i++){ const x=i/wave.length*w,y=h/2+(wave[i]-128)/128*h*0.22; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.strokeStyle='rgba(180,255,200,0.55)'; ctx.lineWidth=dpr; ctx.stroke(); }
+  }
+  function drawWave(w,h){
+    ctx.fillStyle='#00120a'; ctx.fillRect(0,0,w,h); ctx.beginPath();
+    const N=analyser?wave.length:256;
+    for(let i=0;i<N;i++){ const v=analyser?(wave[i]-128)/128:Math.sin(i*0.08+t*0.1)*0.3; const x=i/N*w,y=h/2+v*h*0.4; i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+    ctx.strokeStyle='#5fffa0'; ctx.lineWidth=dpr*1.6; ctx.shadowColor='#3f9'; ctx.shadowBlur=dpr*6; ctx.stroke(); ctx.shadowBlur=0;
+  }
+})();
 </script>
 </body>
 </html>
