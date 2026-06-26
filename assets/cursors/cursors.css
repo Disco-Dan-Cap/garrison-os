@@ -16,3 +16,7 @@ input[type="text"], input[type="email"], input[type="search"], textarea,
 }
 
 .titlebar, .titlebar.drag { cursor: url("move.png") 15 16, move; }
+
+/* Lock horizontal scroll/pan everywhere (fixes iOS side-pull inside case-study
+   pages that reveals the page background). Vertical scrolling is unaffected. */
+html, body { overflow-x: hidden; max-width: 100%; }
