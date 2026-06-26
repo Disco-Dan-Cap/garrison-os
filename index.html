@@ -203,25 +203,29 @@
 
   /* ---------- MOBILE ---------- */
   @media (max-width:640px){
-    #icons{top:44px;left:12px;right:12px;width:auto;
-      grid-template-columns:repeat(3,1fr);gap:16px 6px;}
-    #icons-center{top:47vh;left:42%;gap:18px;}
-    /* drop the right-side stack below the full-width grid so it never overlaps on phones */
-    #icons-right{right:6px;gap:10px;top:43vh;transform:none;}
-    .folder{width:auto;}
-    .folder svg{width:75px;}
-    .folder .lbl{font-size:7px;}
-    #menubar{gap:10px;height:24px;}
-    #menubar .mi{display:none;}
-    #ufo{top:62vh;bottom:auto;right:auto;left:50%;margin-left:-42px;}
-    #ufo svg{width:84px;}
-    #garrison{left:5vw;bottom:6vh;height:24vh;}
-    #garrison-shadow{left:calc(5vw + 2.5vh);bottom:5.5vh;width:12vh;height:2.2vh;}
-    .preview{width:min(300px,88vw);}
-    .case{width:94vw;max-height:80vh;}
-    .case .hero{height:120px;}
-    .case.embed{width:98vw;height:94vh;max-height:94vh;}
-    .hint{display:none;}
+    /* one scrolling icon grid: folders + media player + UFO all flow together */
+    #desktop{ overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+    #desktop .bg{ position:fixed; }
+    #icons{ position:relative; margin:0; padding:38px 12px 34vh; width:auto;
+      display:grid; grid-template-columns:repeat(3,1fr); gap:20px 6px; align-items:start; justify-items:center; }
+    #icons-center, #icons-right{ display:none; }
+    .folder{ width:auto; max-width:100%; }
+    .folder svg{ width:74px; }
+    .folder .lbl{ font-size:7px; }
+    /* UFO + media player become grid cells so they can't overlap each other */
+    #ufo, #wmp-icon{ position:static; left:auto; right:auto; top:auto; bottom:auto; margin:0; width:auto;
+      display:flex; flex-direction:column; align-items:center; justify-content:flex-end; }
+    #ufo svg{ width:74px; margin:0 auto; }
+    #wmp-icon img{ width:64px; }
+    #menubar{ gap:10px; height:24px; }
+    #menubar .mi{ display:none; }
+    #garrison{ left:1vw; bottom:1.5vh; height:18vh; pointer-events:none; }
+    #garrison-shadow{ display:none; }
+    .preview{ width:min(300px,88vw); }
+    .case{ width:94vw; max-height:80vh; }
+    .case .hero{ height:120px; }
+    .case.embed{ width:98vw; height:94vh; max-height:94vh; }
+    .hint{ display:none; }
   }
 </style>
   <link rel="stylesheet" href="assets/cursors/cursors.css">
@@ -551,7 +555,7 @@ const iconsCenter=document.getElementById('icons-center');
 const iconsRight=document.getElementById('icons-right');
 PROJECTS.forEach(p=>{
   const el=document.createElement('div');
-  el.className='folder';
+  el.className='folder'; el.dataset.id=p.id;
   el.innerHTML=folderSVG(p.color,p.dark,p.sym)+`<div class="lbl">${p.name}</div>`;
   el.addEventListener('click',()=>openPreview(p,el));
   (p.rightStack?iconsRight:(p.center?iconsCenter:icons)).appendChild(el);
@@ -796,6 +800,31 @@ tick(); setInterval(tick,1000);
     for(let i=0;i<N;i++){ const v=analyser?(wave[i]-128)/128:Math.sin(i*0.08+t*0.1)*0.3; const x=i/N*w,y=h/2+v*h*0.4; i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
     ctx.strokeStyle='#5fffa0'; ctx.lineWidth=dpr*1.6; ctx.shadowColor='#3f9'; ctx.shadowBlur=dpr*6; ctx.stroke(); ctx.shadowBlur=0;
   }
+})();
+
+/* ================= MOBILE ICON GRID (reflow + UFO/player as cells) ================= */
+(function(){
+  const MQ=matchMedia('(max-width:640px)');
+  const order=['marian','cbh','viking','freelance','shift','verve','unum','disco','copia','korbel','herradura','alani','dirtyshirley'];
+  const wmp=document.getElementById('wmp-icon'), ufoEl=document.getElementById('ufo');
+  let applied=false;
+  function toMobile(){
+    if(applied) return; applied=true;
+    order.forEach(id=>{ const el=document.querySelector('.folder[data-id="'+id+'"]'); if(el) icons.appendChild(el); });
+    if(wmp) icons.appendChild(wmp);
+    if(ufoEl) icons.appendChild(ufoEl);
+    document.body.classList.add('mgrid');
+  }
+  function toDesktop(){
+    if(!applied) return; applied=false;
+    document.body.classList.remove('mgrid');
+    PROJECTS.forEach(p=>{ const el=document.querySelector('.folder[data-id="'+p.id+'"]'); if(el)(p.rightStack?iconsRight:(p.center?iconsCenter:icons)).appendChild(el); });
+    if(wmp) document.body.appendChild(wmp);
+    if(ufoEl) document.body.appendChild(ufoEl);
+  }
+  function apply(){ MQ.matches?toMobile():toDesktop(); }
+  apply();
+  if(MQ.addEventListener) MQ.addEventListener('change',apply); else if(MQ.addListener) MQ.addListener(apply);
 })();
 </script>
 </body>
