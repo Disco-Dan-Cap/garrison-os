@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Preload hero artwork (wallpaper + figure) so first paint is instant -->
+<link rel="preload" as="image" href="assets/bliss-desktop.webp" type="image/webp" media="(min-width:641px)">
+<link rel="preload" as="image" href="assets/bliss-mobile.webp" type="image/webp" media="(max-width:640px) and (orientation:portrait)">
+<link rel="preload" as="image" href="assets/garrison-standing.webp" type="image/webp">
+
 <!-- Open Graph / Link Preview -->
 <meta property="og:title" content="Garrison's Portfolio">
 <meta property="og:description" content="Creative portfolio of Garrison Bullock — Brand Strategy & Design">
@@ -298,7 +303,7 @@
 
 <!-- bottom-left: Garrison (fisheye) standing on the planet curve (album-cover style) -->
 <div id="garrison-shadow"></div>
-<img id="garrison" src="assets/garrison-standing.png" alt="Garrison Bullock standing on a tiny grass planet, throwing a peace sign" draggable="false">
+<img id="garrison" src="assets/garrison-standing.webp" alt="Garrison Bullock standing on a tiny grass planet, throwing a peace sign" draggable="false">
 
 <!-- UFO + pixel speech bubble -->
 <div id="ufo" title="click me"></div>
@@ -350,7 +355,7 @@
 (function(){
   const img=document.getElementById('bgimg');
   const src=matchMedia('(max-width:640px) and (orientation:portrait)').matches
-    ? 'assets/bliss-mobile.jpg' : 'assets/bliss-desktop.jpg';
+    ? 'assets/bliss-mobile.webp' : 'assets/bliss-desktop.webp';
   img.onerror=()=>img.remove();           // fall back to CSS gradient
   img.src=src;
 })();
