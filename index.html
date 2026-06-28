@@ -660,6 +660,30 @@ function wireWindow(w){
   w.addEventListener('pointerdown',()=>bringFront(w));
 }
 
+/* ============ IDLE PRE-WARM — make project previews + pages feel instant ============
+   Runs ONLY after the desktop is up, during browser idle time, so it never slows the
+   initial paint. Quietly caches: (1) every preview cover (~1MB total) so clicking a
+   folder pops its preview instantly, and (2) each case-study page shell so opening a
+   project is ready. Backs off on slow / data-saver connections. */
+(function(){
+  const conn = navigator.connection || navigator.webkitConnection || {};
+  if(conn.saveData) return;                            // respect Data Saver
+  if(conn.effectiveType && /2g/.test(conn.effectiveType)) return; // skip slow links
+  let done=false;
+  function warm(){
+    if(done) return; done=true;
+    PROJECTS.forEach(p=>{ if(p.cover){ const im=new Image(); im.src=p.cover; } }); // covers -> instant popup
+    PROJECTS.forEach(p=>{                                                          // page shells -> instant open
+      if(!p.embed) return;
+      const l=document.createElement('link');
+      l.rel='prefetch'; l.as='document'; l.href=p.embed;
+      document.head.appendChild(l);
+    });
+  }
+  function schedule(){ ('requestIdleCallback' in window) ? requestIdleCallback(warm,{timeout:4000}) : setTimeout(warm,1800); }
+  (document.readyState==='complete') ? schedule() : addEventListener('load',schedule);
+})();
+
 /* ================= UFO SPEECH BUBBLE ================= */
 const LINES=["gleep zip zlorp","Zib Zab... Hire Garrison","take me to your project manager","I come in pixels"];
 const ufo=document.getElementById('ufo'), bubble=document.getElementById('bubble'), tail=document.getElementById('tail');
