@@ -673,6 +673,8 @@ function wireWindow(w){
   function warm(){
     if(done) return; done=true;
     PROJECTS.forEach(p=>{ if(p.cover){ const im=new Image(); im.src=p.cover; } }); // covers -> instant popup
+    const wv=document.getElementById('wmpVideo'); if(wv){ wv.preload='auto'; try{ wv.load(); }catch(e){} } // WMP visuals -> opens smooth
+    const wa=document.getElementById('wmpAudio'); if(wa){ wa.preload='auto'; try{ wa.load(); }catch(e){} } // WMP track -> fully buffered
     PROJECTS.forEach(p=>{                                                          // page shells -> instant open
       if(!p.embed) return;
       const l=document.createElement('link');
@@ -680,6 +682,7 @@ function wireWindow(w){
       document.head.appendChild(l);
     });
   }
+  const wIcon=document.getElementById('wmp-icon'); if(wIcon) wIcon.addEventListener('pointerenter',warm,{once:true}); // warm early if they head for the player
   function schedule(){ ('requestIdleCallback' in window) ? requestIdleCallback(warm,{timeout:4000}) : setTimeout(warm,1800); }
   (document.readyState==='complete') ? schedule() : addEventListener('load',schedule);
 })();
