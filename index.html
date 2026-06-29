@@ -669,6 +669,26 @@ function wireWindow(w){
   const conn = navigator.connection || navigator.webkitConnection || {};
   if(conn.saveData) return;                            // respect Data Saver
   if(conn.effectiveType && /2g/.test(conn.effectiveType)) return; // skip slow links
+  const fast = !conn.effectiveType || /4g/.test(conn.effectiveType);   // only heavy-warm on good links
+  /* Pull a case study's in-page images/videos (and one level of nested same-origin
+     iframes, e.g. Disco's design-system) into cache so it opens fully loaded and
+     scrolls with no fetching. */
+  function warmAssets(href, depth){
+    fetch(href).then(r=>r.text()).then(html=>{
+      const base=new URL(href, location.href);
+      const doc=new DOMParser().parseFromString(html,'text/html');
+      doc.querySelectorAll('img[src],source[src],video[poster]').forEach(el=>{
+        const raw=el.getAttribute('src')||el.getAttribute('poster'); if(!raw) return;
+        if(/^data:|^https?:\/\//i.test(raw)) return;                 // skip data/external
+        const u=new URL(raw, base).href;
+        if(/\.(mp4|webm)(\?|$)/i.test(u)){ const l=document.createElement('link'); l.rel='prefetch'; l.href=u; document.head.appendChild(l); }
+        else { const im=new Image(); im.src=u; }
+      });
+      if(depth>0) doc.querySelectorAll('iframe[src]').forEach(f=>{
+        const raw=f.getAttribute('src'); if(raw && !/^https?:\/\//i.test(raw)) warmAssets(new URL(raw, base).href, depth-1);
+      });
+    }).catch(()=>{});
+  }
   let done=false;
   function warm(){
     if(done) return; done=true;
@@ -681,6 +701,8 @@ function wireWindow(w){
       l.rel='prefetch'; l.as='document'; l.href=p.embed;
       document.head.appendChild(l);
     });
+    // Priority projects: fully pre-load Disco + Copia so they open ready and scroll without loading.
+    if(fast) PROJECTS.forEach(p=>{ if((p.id==='disco'||p.id==='copia') && p.embed) warmAssets(p.embed,1); });
   }
   const wIcon=document.getElementById('wmp-icon'); if(wIcon) wIcon.addEventListener('pointerenter',warm,{once:true}); // warm early if they head for the player
   function schedule(){ ('requestIdleCallback' in window) ? requestIdleCallback(warm,{timeout:4000}) : setTimeout(warm,1800); }
