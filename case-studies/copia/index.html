@@ -541,5 +541,36 @@
     </footer>
 
   </div>
+
+<script>
+/* ===== Tilted Card — 3D mouse-follow tilt on the phone mockups =====
+   Ported from reactbits.dev "Tilted Card" (rotateAmplitude 9, scaleOnHover 1.1,
+   no overlay/tooltip). Desktop mouse only; skipped for touch and reduced-motion. */
+(function(){
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;   // mouse pointers only
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;    // respect reduced-motion
+  var AMP=9, SCALE=1.1;
+  document.querySelectorAll('.phone').forEach(function(el){
+    el.style.willChange='transform';
+    el.style.position=el.style.position||'relative';
+    el.addEventListener('pointerenter',function(){
+      el.style.transition='transform .12s ease-out';
+      el.style.zIndex='5';
+      el.style.transform='perspective(800px) scale('+SCALE+')';   // pop first, tilt follows the cursor
+    });
+    el.addEventListener('pointermove',function(e){
+      var r=el.getBoundingClientRect();
+      var rx=(-(e.clientY-r.top-r.height/2)/(r.height/2))*AMP;
+      var ry=( (e.clientX-r.left-r.width/2)/(r.width/2))*AMP;
+      el.style.transform='perspective(800px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg) scale('+SCALE+')';
+    });
+    el.addEventListener('pointerleave',function(){
+      el.style.transition='transform .5s cubic-bezier(.2,.8,.2,1)';   // gentle settle back
+      el.style.transform='';
+      el.style.zIndex='';
+    });
+  });
+})();
+</script>
 </body>
 </html>
