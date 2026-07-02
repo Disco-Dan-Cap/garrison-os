@@ -10,8 +10,8 @@
 <link rel="preload" as="image" href="assets/garrison-standing.webp" type="image/webp">
 
 <!-- Open Graph / Link Preview -->
-<meta property="og:title" content="Garrison's Portfolio">
-<meta property="og:description" content="Creative portfolio of Garrison Bullock — Brand Strategy & Design">
+<meta property="og:title" content="Garrison Bullock — Product Designer">
+<meta property="og:description" content="Product designer working AI-first: Disco Capital, a venture-investing fintech app, and Copia, a local-food marketplace, designed and shipped end to end.">
 <meta property="og:image" content="https://garrisonbullock.com/assets/og-preview.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,11 +20,12 @@
 
 <!-- Twitter Card (uses same image) -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Garrison's Portfolio">
-<meta name="twitter:description" content="Creative portfolio of Garrison Bullock — Brand Strategy & Design">
+<meta name="twitter:title" content="Garrison Bullock — Product Designer">
+<meta name="twitter:description" content="Product designer working AI-first: Disco Capital, a venture-investing fintech app, and Copia, a local-food marketplace, designed and shipped end to end.">
 <meta name="twitter:image" content="https://garrisonbullock.com/assets/og-preview.jpg">
 
-<title>Garrison OS — Portfolio v0.2</title>
+<title>Garrison Bullock — Product Designer</title>
+<meta name="description" content="Product designer working AI-first: Disco Capital, a venture-investing fintech app, and Copia, a local-food marketplace, designed and shipped end to end.">
 <!--
   GARRISON OS — desktop portfolio v0.2 "skinned"
   Changes from v0.1:
@@ -40,7 +41,7 @@
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
   :root{
     --mac-face:#d9d9d9; --mac-line:#888; --mac-dark:#555;
@@ -879,6 +880,124 @@ tick(); setInterval(tick,1000);
   function apply(){ MQ.matches?toMobile():toDesktop(); }
   apply();
   if(MQ.addEventListener) MQ.addEventListener('change',apply); else if(MQ.addListener) MQ.addListener(apply);
+})();
+</script>
+
+<script>
+/* Hand-drawn desktop annotations: oval + labels anchored to live folder positions.
+   Draw-in animation runs once per visitor (replay with ?annot=replay). Hidden <=640px. */
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const REPLAY=location.search.indexOf('annot=replay')>-1;
+  const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let svg=null, animated=false;
+
+  function mk(n,attrs){const e=document.createElementNS(NS,n);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+  function rect(sel){const n=document.querySelector(sel);if(!n)return null;const r=n.getBoundingClientRect();return (r.width<2||r.height<2)?null:r;}
+
+  function ovalPath(cx,cy,rx,ry){
+    let d='';const steps=72, loops=1.72, t0=-1.1;
+    for(let i=0;i<=steps;i++){
+      const t=t0+(i/steps)*Math.PI*2*loops;
+      const w=1+0.03*Math.sin(i*1.63)+0.045*(i/steps);
+      const x=cx+Math.cos(t)*rx*w, y=cy+Math.sin(t)*ry*(w-0.01*Math.cos(i*0.7));
+      d+=(i?' L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+    }
+    return d;
+  }
+  function sketchRect(r,pad){
+    const x1=r.left-pad, y1=r.top-pad, x2=r.right+pad, y2=r.bottom+pad, o=7;
+    function edge(ax,ay,bx,by){
+      const mx=(ax+bx)/2+(by-ay)*0.018, my=(ay+by)/2+(bx-ax)*0.018;
+      return 'M'+ax+' '+ay+' Q'+mx.toFixed(1)+' '+my.toFixed(1)+' '+bx+' '+by;
+    }
+    return edge(x1-o,y1,x2+o,y1)+' '+edge(x2,y1-o,x2,y2+o)+' '+edge(x2+o,y2,x1-o,y2)+' '+edge(x1,y2+o,x1,y1-o);
+  }
+  function arrowHead(x,y,ang){
+    const a1=ang+2.55, a2=ang-2.55, L=13;
+    return 'M'+(x+Math.cos(a1)*L).toFixed(1)+' '+(y+Math.sin(a1)*L).toFixed(1)+' L'+x+' '+y+
+           ' L'+(x+Math.cos(a2)*L).toFixed(1)+' '+(y+Math.sin(a2)*L).toFixed(1);
+  }
+  function stroke(g,d,w){g.appendChild(mk('path',{d:d,fill:'none',stroke:'#fff','stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round','class':'annot-stroke'}));}
+  function label(g,x,y,size,anchor,rot,lines){
+    lines.forEach(function(t,i){
+      const e=mk('text',{x:x,y:y+i*size*1.28,'text-anchor':anchor,fill:'#fff',
+        'font-family':"'Permanent Marker',cursive",'font-size':size,
+        transform:'rotate('+rot+' '+x+' '+y+')','class':'annot-text'});
+      e.textContent=t; g.appendChild(e);
+    });
+  }
+
+  function draw(){
+    if(svg){svg.remove();svg=null;}
+    if(innerWidth<=640) return;
+    const c=rect('#icons-center'), rt=rect('#icons-right'), w=rect('#wmp-icon');
+    if(!c&&!rt&&!w) return;
+    svg=mk('svg',{'aria-hidden':'true',width:innerWidth,height:innerHeight});
+    Object.assign(svg.style,{position:'fixed',left:0,top:0,width:'100%',height:'100%',zIndex:25,pointerEvents:'none'});
+    const g=mk('g',{filter:'drop-shadow(0 1px 3px rgba(0,0,0,.55))'});
+    svg.appendChild(g);
+    const S=Math.max(20,Math.min(34,innerWidth*0.0165));
+
+    if(c){
+      const cx=c.left+c.width/2, cy=c.top+c.height/2;
+      const rx=c.width/2+58, ry=c.height/2+46;
+      stroke(g,ovalPath(cx,cy,rx,ry),5);
+      const tx=Math.min(cx+rx+40,innerWidth-320), ty=cy-ry-72;
+      label(g,tx,ty,S*1.05,'start',-2,['UI/UX','Product Design']);
+      const ex=cx+rx*0.62, ey=cy-ry*0.94;
+      const sx=tx-14, sy=ty+6;
+      const loop='M'+sx+' '+sy+' C '+(sx-72)+' '+(sy-14)+', '+(sx-104)+' '+(sy+26)+', '+(sx-58)+' '+(sy+30)+
+                 ' C '+(sx-22)+' '+(sy+33)+', '+(sx-30)+' '+(sy-4)+', '+(sx-66)+' '+(sy+4)+
+                 ' Q '+((sx+ex)/2-40)+' '+(sy+30)+', '+ex+' '+(ey-8);
+      stroke(g,loop,4);
+      stroke(g,arrowHead(ex,ey-8,2.15),4);
+    }
+    if(rt){
+      stroke(g,sketchRect(rt,16),4.5);
+      const lx=rt.left-24, ly=rt.top-4;
+      label(g,lx,ly,S*0.72,'end',-3,['-Marketing','-Branding','-Art Direction']);
+    }
+    if(w){
+      const tx=w.left-30, ty=w.top+6;
+      label(g,tx,ty,S*0.9,'end',-4,['Vibes']);
+      const ax=w.left-8, ay=w.top+w.height*0.32;
+      stroke(g,'M'+(tx-58)+' '+(ty+14)+' Q '+(tx-10)+' '+(ty+30)+', '+ax+' '+ay,4);
+      stroke(g,arrowHead(ax,ay,2.9),4);
+    }
+    document.body.appendChild(svg);
+
+    const seen=localStorage.getItem('gb-annot-drawn');
+    if(!animated && !REDUCE && (!seen || REPLAY)){
+      animated=true;
+      const strokes=svg.querySelectorAll('.annot-stroke'), texts=svg.querySelectorAll('.annot-text');
+      let delay=200;
+      strokes.forEach(function(p){
+        const L=p.getTotalLength();
+        p.style.strokeDasharray=L; p.style.strokeDashoffset=L;
+        const dur=Math.max(280,Math.min(1100,L*0.9));
+        p.style.transition='stroke-dashoffset '+dur+'ms ease-in-out '+delay+'ms';
+        delay+=dur*0.72;
+      });
+      texts.forEach(function(t,i){
+        t.style.opacity=0;
+        t.style.transition='opacity 420ms ease '+(560+i*170)+'ms';
+      });
+      requestAnimationFrame(function(){requestAnimationFrame(function(){
+        strokes.forEach(function(p){p.style.strokeDashoffset=0;});
+        texts.forEach(function(t){t.style.opacity=1;});
+      });});
+      try{localStorage.setItem('gb-annot-drawn','1');}catch(e){}
+    }
+  }
+
+  let rT;
+  addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(draw,150);});
+  function init(){
+    setTimeout(draw,900);
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){setTimeout(function(){if(svg)draw();},80);});
+  }
+  if(document.readyState==='complete')init(); else addEventListener('load',init);
 })();
 </script>
 </body>
