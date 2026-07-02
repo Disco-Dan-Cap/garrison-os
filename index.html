@@ -884,41 +884,62 @@ tick(); setInterval(tick,1000);
 </script>
 
 <script>
-/* Hand-drawn desktop annotations: oval + labels anchored to live folder positions.
-   Draw-in animation runs once per visitor (replay with ?annot=replay). Hidden <=640px. */
+/* Hand-drawn desktop annotations v2: variable-width marker ribbons with rough edges,
+   anchored to live folder positions. Draw-in once per visitor (?annot=replay to repeat). */
 (function(){
   const NS='http://www.w3.org/2000/svg';
   const REPLAY=location.search.indexOf('annot=replay')>-1;
   const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let svg=null, animated=false;
+  let svg=null, animated=false, maskN=0;
 
   function mk(n,attrs){const e=document.createElementNS(NS,n);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
-  function rect(sel){const n=document.querySelector(sel);if(!n)return null;const r=n.getBoundingClientRect();return (r.width<2||r.height<2)?null:r;}
+  function rectOf(sel){const n=document.querySelector(sel);if(!n)return null;const r=n.getBoundingClientRect();return (r.width<2||r.height<2)?null:r;}
 
-  function ovalPath(cx,cy,rx,ry){
-    let d='';const steps=72, loops=1.72, t0=-1.1;
-    for(let i=0;i<=steps;i++){
-      const t=t0+(i/steps)*Math.PI*2*loops;
-      const w=1+0.03*Math.sin(i*1.63)+0.045*(i/steps);
-      const x=cx+Math.cos(t)*rx*w, y=cy+Math.sin(t)*ry*(w-0.01*Math.cos(i*0.7));
-      d+=(i?' L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+  function samplePath(d,n){
+    const t=mk('path',{d:d,fill:'none'}); svg.appendChild(t);
+    const L=t.getTotalLength(), pts=[];
+    for(let i=0;i<=n;i++){const p=t.getPointAtLength(L*i/n); pts.push([p.x,p.y]);}
+    t.remove(); return pts;
+  }
+  function ovalPts(cx,cy,rx,ry,rot,t0,frac,n){
+    const pts=[],cr=Math.cos(rot),sr=Math.sin(rot);
+    for(let i=0;i<=n;i++){
+      const t=t0+(i/n)*Math.PI*2*frac;
+      const wob=1+0.022*Math.sin(i*0.9+rx)+0.012*Math.sin(i*2.3);
+      const x=Math.cos(t)*rx*wob, y=Math.sin(t)*ry*wob;
+      pts.push([cx+x*cr-y*sr, cy+x*sr+y*cr]);
     }
-    return d;
+    return pts;
   }
-  function sketchRect(r,pad){
-    const x1=r.left-pad, y1=r.top-pad, x2=r.right+pad, y2=r.bottom+pad, o=7;
-    function edge(ax,ay,bx,by){
-      const mx=(ax+bx)/2+(by-ay)*0.018, my=(ay+by)/2+(bx-ax)*0.018;
-      return 'M'+ax+' '+ay+' Q'+mx.toFixed(1)+' '+my.toFixed(1)+' '+bx+' '+by;
+  function taper(u){const e=0.085;return Math.pow(Math.min(1,u/e,(1-u)/e),0.65);}
+  function ribbonD(pts,W,seed){
+    const n=pts.length-1, up=[], dn=[];
+    for(let i=0;i<=n;i++){
+      const a=pts[Math.max(0,i-1)], b=pts[Math.min(n,i+1)];
+      let dx=b[0]-a[0], dy=b[1]-a[1]; const L=Math.hypot(dx,dy)||1; dx/=L; dy/=L;
+      const u=i/n, w=Math.max(0.7,W*(0.74+0.26*Math.sin(u*9.5+seed))*taper(u))/2;
+      up.push([pts[i][0]-dy*w, pts[i][1]+dx*w]);
+      dn.push([pts[i][0]+dy*w, pts[i][1]-dx*w]);
     }
-    return edge(x1-o,y1,x2+o,y1)+' '+edge(x2,y1-o,x2,y2+o)+' '+edge(x2+o,y2,x1-o,y2)+' '+edge(x1,y2+o,x1,y1-o);
+    let d='M'+up[0][0].toFixed(1)+' '+up[0][1].toFixed(1);
+    for(let i=1;i<up.length;i++)d+='L'+up[i][0].toFixed(1)+' '+up[i][1].toFixed(1);
+    for(let i=dn.length-1;i>=0;i--)d+='L'+dn[i][0].toFixed(1)+' '+dn[i][1].toFixed(1);
+    return d+'Z';
   }
-  function arrowHead(x,y,ang){
-    const a1=ang+2.55, a2=ang-2.55, L=13;
-    return 'M'+(x+Math.cos(a1)*L).toFixed(1)+' '+(y+Math.sin(a1)*L).toFixed(1)+' L'+x+' '+y+
-           ' L'+(x+Math.cos(a2)*L).toFixed(1)+' '+(y+Math.sin(a2)*L).toFixed(1);
+  function ink(g,defs,pts,W,seed){
+    const id='gbm'+(maskN++);
+    let cd='M'+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);
+    for(let i=1;i<pts.length;i++)cd+='L'+pts[i][0].toFixed(1)+' '+pts[i][1].toFixed(1);
+    const m=mk('mask',{id:id,maskUnits:'userSpaceOnUse',x:0,y:0,width:innerWidth,height:innerHeight});
+    m.appendChild(mk('path',{d:cd,fill:'none',stroke:'#fff','stroke-width':W+16,'stroke-linecap':'round','stroke-linejoin':'round','class':'annot-stroke'}));
+    defs.appendChild(m);
+    g.appendChild(mk('path',{d:ribbonD(pts,W,seed),fill:'#fff','fill-opacity':'0.97',filter:'url(#gbRough)',mask:'url(#'+id+')'}));
   }
-  function stroke(g,d,w){g.appendChild(mk('path',{d:d,fill:'none',stroke:'#fff','stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round','class':'annot-stroke'}));}
+  function head(g,defs,x,y,ang,W){
+    const L=15, a1=ang+2.5, a2=ang-2.5;
+    ink(g,defs,[[x+Math.cos(a1)*L,y+Math.sin(a1)*L],[x+Math.cos(a1)*2,y+Math.sin(a1)*2],[x,y]],W,1);
+    ink(g,defs,[[x+Math.cos(a2)*L,y+Math.sin(a2)*L],[x+Math.cos(a2)*2,y+Math.sin(a2)*2],[x,y]],W,2);
+  }
   function label(g,x,y,size,anchor,rot,lines){
     lines.forEach(function(t,i){
       const e=mk('text',{x:x,y:y+i*size*1.28,'text-anchor':anchor,fill:'#fff',
@@ -929,43 +950,63 @@ tick(); setInterval(tick,1000);
   }
 
   function draw(){
-    if(svg){svg.remove();svg=null;}
+    if(svg){svg.remove();svg=null;} maskN=0;
     if(innerWidth<=640) return;
-    const c=rect('#icons-center'), rt=rect('#icons-right'), w=rect('#wmp-icon');
+    const c=rectOf('#icons-center'), rt=rectOf('#icons-right'), w=rectOf('#wmp-icon');
     if(!c&&!rt&&!w) return;
     svg=mk('svg',{'aria-hidden':'true',width:innerWidth,height:innerHeight});
     Object.assign(svg.style,{position:'fixed',left:0,top:0,width:'100%',height:'100%',zIndex:25,pointerEvents:'none'});
-    const g=mk('g',{filter:'drop-shadow(0 1px 3px rgba(0,0,0,.55))'});
+    document.body.appendChild(svg);
+    const defs=mk('defs',{});
+    const f=mk('filter',{id:'gbRough',x:'-12%',y:'-12%',width:'124%',height:'124%'});
+    f.appendChild(mk('feTurbulence',{type:'fractalNoise',baseFrequency:'0.04',numOctaves:'2',seed:'7'}));
+    f.appendChild(mk('feDisplacementMap',{'in':'SourceGraphic',scale:'4.5'}));
+    defs.appendChild(f);
+    svg.appendChild(defs);
+    const g=mk('g',{filter:'drop-shadow(0 1px 2px rgba(0,0,0,.45))'});
     svg.appendChild(g);
     const S=Math.max(20,Math.min(34,innerWidth*0.0165));
 
     if(c){
       const cx=c.left+c.width/2, cy=c.top+c.height/2;
-      const rx=c.width/2+58, ry=c.height/2+46;
-      stroke(g,ovalPath(cx,cy,rx,ry),5);
-      const tx=Math.min(cx+rx+40,innerWidth-320), ty=cy-ry-72;
+      const rx=c.width/2+76, ry=c.height/2+60;
+      ink(g,defs,ovalPts(cx,cy,rx,ry,-0.05,-1.25,1.01,110),6.5,3);
+      ink(g,defs,ovalPts(cx,cy,rx*0.94,ry*0.88,-0.11,-0.65,1.0,110),5,8);
+      const tx=Math.min(cx+rx+34,innerWidth-330), ty=cy-ry-78;
       label(g,tx,ty,S*1.05,'start',-2,['UI/UX','Product Design']);
-      const ex=cx+rx*0.62, ey=cy-ry*0.94;
-      const sx=tx-14, sy=ty+6;
-      const loop='M'+sx+' '+sy+' C '+(sx-72)+' '+(sy-14)+', '+(sx-104)+' '+(sy+26)+', '+(sx-58)+' '+(sy+30)+
-                 ' C '+(sx-22)+' '+(sy+33)+', '+(sx-30)+' '+(sy-4)+', '+(sx-66)+' '+(sy+4)+
-                 ' Q '+((sx+ex)/2-40)+' '+(sy+30)+', '+ex+' '+(ey-8);
-      stroke(g,loop,4);
-      stroke(g,arrowHead(ex,ey-8,2.15),4);
+      const ex=cx+rx*Math.cos(-1.95), ey=cy+ry*Math.sin(-1.95)-12;
+      const sx=tx-16, sy=ty-8;
+      const loopD='M'+sx+' '+sy+
+        ' C '+(sx-10)+' '+(sy-24)+', '+(sx-52)+' '+(sy-30)+', '+(sx-58)+' '+(sy-6)+
+        ' C '+(sx-62)+' '+(sy+14)+', '+(sx-30)+' '+(sy+16)+', '+(sx-26)+' '+(sy-6)+
+        ' C '+(sx-24)+' '+(sy-20)+', '+(sx-52)+' '+(sy-26)+', '+((sx+ex)/2-30)+' '+((sy+ey)/2-10)+
+        ' Q '+(ex-34)+' '+(ey-26)+', '+ex+' '+(ey-4);
+      const lp=samplePath(loopD,90);
+      ink(g,defs,lp,4.6,5);
+      const la=lp[lp.length-1], lb=lp[lp.length-4];
+      head(g,defs,la[0],la[1],Math.atan2(la[1]-lb[1],la[0]-lb[0]),4);
     }
     if(rt){
-      stroke(g,sketchRect(rt,16),4.5);
-      const lx=rt.left-24, ly=rt.top-4;
-      label(g,lx,ly,S*0.72,'end',-3,['-Marketing','-Branding','-Art Direction']);
+      const pad=14, o=9;
+      const x1=rt.left-pad, y1=rt.top-pad, x2=Math.min(rt.right+pad,innerWidth-8), y2=rt.bottom+pad;
+      [['M'+(x1-o)+' '+y1+' Q '+((x1+x2)/2)+' '+(y1-5)+', '+(x2+o)+' '+y1],
+       ['M'+x2+' '+(y1-o)+' Q '+(x2+5)+' '+((y1+y2)/2)+', '+x2+' '+(y2+o)],
+       ['M'+(x2+o)+' '+y2+' Q '+((x1+x2)/2)+' '+(y2+5)+', '+(x1-o)+' '+y2],
+       ['M'+x1+' '+(y2+o)+' Q '+(x1-5)+' '+((y1+y2)/2)+', '+x1+' '+(y1-o)]
+      ].forEach(function(dd,i){ ink(g,defs,samplePath(dd[0],46),5,i*2.3); });
+      const lh=S*0.72*1.28;
+      label(g,x1-10,y1-2*lh-20,S*0.72,'end',-3,['-Marketing','-Branding','-Art Direction']);
     }
     if(w){
-      const tx=w.left-30, ty=w.top+6;
+      const tx=w.left-34, ty=w.top+10;
       label(g,tx,ty,S*0.9,'end',-4,['Vibes']);
-      const ax=w.left-8, ay=w.top+w.height*0.32;
-      stroke(g,'M'+(tx-58)+' '+(ty+14)+' Q '+(tx-10)+' '+(ty+30)+', '+ax+' '+ay,4);
-      stroke(g,arrowHead(ax,ay,2.9),4);
+      const ax=w.left+w.width*0.16, ay=w.top-4;
+      const vd='M'+(tx+6)+' '+(ty-S*0.72)+' C '+(tx+22)+' '+(ty-S*0.72-16)+', '+(ax-20)+' '+(ay-24)+', '+ax+' '+ay;
+      const vp=samplePath(vd,50);
+      ink(g,defs,vp,4.2,11);
+      const va=vp[vp.length-1], vb=vp[vp.length-4];
+      head(g,defs,va[0],va[1],Math.atan2(va[1]-vb[1],va[0]-vb[0]),3.8);
     }
-    document.body.appendChild(svg);
 
     const seen=localStorage.getItem('gb-annot-drawn');
     if(!animated && !REDUCE && (!seen || REPLAY)){
@@ -975,13 +1016,13 @@ tick(); setInterval(tick,1000);
       strokes.forEach(function(p){
         const L=p.getTotalLength();
         p.style.strokeDasharray=L; p.style.strokeDashoffset=L;
-        const dur=Math.max(280,Math.min(1100,L*0.9));
+        const dur=Math.max(240,Math.min(1000,L*0.85));
         p.style.transition='stroke-dashoffset '+dur+'ms ease-in-out '+delay+'ms';
-        delay+=dur*0.72;
+        delay+=dur*0.5;
       });
       texts.forEach(function(t,i){
         t.style.opacity=0;
-        t.style.transition='opacity 420ms ease '+(560+i*170)+'ms';
+        t.style.transition='opacity 420ms ease '+(620+i*170)+'ms';
       });
       requestAnimationFrame(function(){requestAnimationFrame(function(){
         strokes.forEach(function(p){p.style.strokeDashoffset=0;});
