@@ -196,6 +196,16 @@
   .win.about .winbody.arm>*{opacity:0;}
   .win.about .type-cursor{display:inline-block;margin-left:1px;color:var(--accent);font-weight:400;animation:typeBlink .6s steps(1) infinite;}
   @keyframes typeBlink{0%,50%{opacity:1;}50.01%,100%{opacity:0;}}
+  .win.about .logoloop{overflow:hidden;position:relative;margin-top:16px;padding:11px 0 3px;border-top:1px solid #e6e6e6;
+    -webkit-mask:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);}
+  .win.about .logoloop__track{display:flex;width:max-content;animation:logoloopScroll 26s linear infinite;}
+  .win.about .logoloop:hover .logoloop__track{animation-play-state:paused;}
+  .win.about .logoloop__list{display:flex;align-items:center;gap:26px;padding-right:26px;margin:0;list-style:none;}
+  .win.about .logoloop__item{display:flex;align-items:center;}
+  .win.about .logoloop img{height:23px;width:auto;display:block;}
+  .win.about .ll-mono{display:inline-flex;align-items:center;justify-content:center;height:23px;min-width:23px;padding:0 6px;border:1px solid #d3d3d3;border-radius:5px;font:600 10px/1 "JetBrains Mono",monospace;color:#6a6a6a;letter-spacing:.04em;}
+  @keyframes logoloopScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media(prefers-reduced-motion:reduce){.win.about .logoloop__track{animation:none;}}
   #garrison-shadow{position:fixed;left:calc(4vw + 4vh);bottom:8.6vh;z-index:4;
     width:18vh;height:3.4vh;border-radius:50%;pointer-events:none;
     background:radial-gradient(closest-side, rgba(10,30,5,.42), rgba(10,30,5,0) 70%);}
@@ -704,12 +714,14 @@ function openAbout(){
         <p class="edu"><b>B.S. Industrial Design</b><br>Auburn University · 2019</p>
         <h3>SKILLS &amp; TOOLS</h3>
         <p class="sk"><b>Design</b><br>UI/UX · Design systems · Interaction design · Prototyping &amp; wireframing · Visual &amp; brand design · Icon design &amp; illustration · Data viz · User research &amp; usability testing · A/B testing · Accessibility</p>
-        <p class="sk"><b>Tools</b><br>Figma · Illustrator · Photoshop · Procreate · DaVinci Resolve · SolidWorks &amp; Fusion 360</p>
+        <p class="sk"><b>Tools</b><br>Figma · Illustrator · Photoshop · Procreate · DaVinci Resolve · Fusion 360</p>
         <p class="sk"><b>AI-native workflow</b><br>Claude / Claude Code · Generative AI (image &amp; video) · Midjourney · ComfyUI · Higgsfield · n8n · Supabase · GitHub · Vercel</p>
         <h3>CERTIFICATION</h3>
         <p class="edu"><b>FAA Part 107</b><br>Remote Pilot — small UAS (drone) license</p>
+        <div class="logoloop" id="aboutLogos" aria-label="Tools I use"></div>
       </div>`;
     wireWindow(w);
+    buildLogoLoop(w.querySelector('#aboutLogos'));
   }
   w.classList.add('open'); bringFront(w); centerCase(w);
   if(!aboutTyped){ aboutTyped=true; typeAboutPanel(w); }   // typewriter reveal, first open only
@@ -737,6 +749,46 @@ function typeAboutPanel(w){
     await type(meta,mt,26);
     for(const el of rest){ await wait(85); el.style.opacity='1'; el.style.transform='none'; }
   })();
+}
+/* ===== Logo loop (tools marquee) at the bottom of the About panel =====
+   Available marks load from the Simple Icons CDN; the newer tools point at local
+   files (assets/logos/*.svg) you drop in; anything that fails shows a lettered tile. */
+const ABOUT_LOGOS=[
+  {n:'Claude', s:'https://cdn.simpleicons.org/claude'},
+  {n:'Claude Code', s:'assets/logos/claude-code.svg'},
+  {n:'Midjourney', s:'https://cdn.simpleicons.org/midjourney'},
+  {n:'ComfyUI', s:'assets/logos/comfyui.svg'},
+  {n:'Higgsfield', s:'assets/logos/higgsfield.svg'},
+  {n:'n8n', s:'https://cdn.simpleicons.org/n8n'},
+  {n:'Supabase', s:'https://cdn.simpleicons.org/supabase'},
+  {n:'GitHub', s:'https://cdn.simpleicons.org/github'},
+  {n:'Vercel', s:'https://cdn.simpleicons.org/vercel'},
+  {n:'Figma', s:'https://cdn.simpleicons.org/figma'},
+  {n:'Illustrator', s:'https://cdn.simpleicons.org/adobeillustrator'},
+  {n:'Photoshop', s:'https://cdn.simpleicons.org/adobephotoshop'},
+  {n:'Procreate', s:'https://cdn.simpleicons.org/procreate'},
+  {n:'DaVinci Resolve', s:'https://cdn.simpleicons.org/davinciresolve'},
+  {n:'Fusion 360', s:'assets/logos/fusion360.svg'}
+];
+function llInitials(name){
+  const w=name.replace(/[^A-Za-z0-9 ]/g,' ').trim().split(/\s+/);
+  return (w.length>1 ? (w[0][0]+(w[1][0]||'')) : w[0].slice(0,2)).toUpperCase();
+}
+function llMono(name){ const s=document.createElement('span'); s.className='ll-mono'; s.textContent=llInitials(name); s.title=name; return s; }
+function buildLogoLoop(box){
+  if(!box) return;
+  const track=document.createElement('div'); track.className='logoloop__track';
+  for(let copy=0;copy<2;copy++){
+    const ul=document.createElement('ul'); ul.className='logoloop__list'; if(copy) ul.setAttribute('aria-hidden','true');
+    ABOUT_LOGOS.forEach(L=>{
+      const li=document.createElement('li'); li.className='logoloop__item';
+      const img=document.createElement('img'); img.src=L.s; img.alt=L.n; img.title=L.n; img.loading='lazy'; img.decoding='async'; img.draggable=false;
+      img.addEventListener('error',function(){ this.replaceWith(llMono(L.n)); },{once:true});
+      li.appendChild(img); ul.appendChild(li);
+    });
+    track.appendChild(ul);
+  }
+  box.appendChild(track);
 }
 (function(){
   const g=document.getElementById('garrison-wrap'); if(!g) return;
