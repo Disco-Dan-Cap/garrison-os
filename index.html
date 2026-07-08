@@ -168,10 +168,30 @@
   /* ---------- BOTTOM-LEFT: GARRISON (fisheye) STANDING ON THE PLANET CURVE ---------- */
   /* z-index sits in the background layer with the UFO: above wallpaper, below the
      desktop icons (z20) and every window (z40+), so windows always cover it. */
-  #garrison{position:fixed;left:4vw;bottom:9.5vh;z-index:5;height:38vh;width:auto;
-    pointer-events:none;user-select:none;-webkit-user-drag:none;
-    transform:rotate(-20deg);transform-origin:50% 96%;
-    filter:drop-shadow(0 6px 8px rgba(10,30,5,.35));}
+  #garrison-wrap{position:fixed;left:4vw;bottom:9.5vh;z-index:5;height:38vh;width:auto;
+    transform:rotate(-20deg);transform-origin:50% 96%;cursor:pointer;line-height:0;
+    filter:drop-shadow(0 6px 8px rgba(10,30,5,.35));transition:filter .2s ease;}
+  #garrison-wrap:hover{filter:drop-shadow(0 6px 8px rgba(10,30,5,.35)) drop-shadow(0 0 11px rgba(120,232,150,.5));}
+  #garrison{position:static;display:block;height:100%;width:auto;
+    pointer-events:none;user-select:none;-webkit-user-drag:none;}
+  /* periodic glare, masked to the figure's silhouette (webp alpha) — sweeps every 4s */
+  #garrison-glare{position:absolute;inset:0;pointer-events:none;overflow:hidden;mix-blend-mode:screen;
+    -webkit-mask:url(assets/garrison-standing.webp) center/100% 100% no-repeat;
+            mask:url(assets/garrison-standing.webp) center/100% 100% no-repeat;}
+  #garrison-glare::before{content:"";position:absolute;top:-30%;height:160%;width:40%;left:-55%;
+    background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.92),rgba(255,255,255,0));
+    transform:skewX(-16deg);filter:blur(3px);animation:garrisonGlare 4s ease-in-out infinite;}
+  @keyframes garrisonGlare{0%{left:-55%;opacity:0;}6%{opacity:1;}20%{left:112%;opacity:1;}24%{left:112%;opacity:0;}100%{left:112%;opacity:0;}}
+  @media(prefers-reduced-motion:reduce){#garrison-glare::before{animation:none;}}
+  /* About panel (opens when the figure is clicked) */
+  .win.about{width:min(430px,92vw);max-height:82vh;}
+  .win.about .winbody h2{margin:.1em 0 .1em;font-family:"Press Start 2P",monospace;font-size:13px;line-height:1.3;}
+  .win.about .winbody .meta{color:#5c6b60;font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-family:"JetBrains Mono",monospace;margin-bottom:6px;}
+  .win.about .winbody h3{font-family:"Press Start 2P",monospace;font-size:8px;color:var(--accent);margin:16px 0 6px;}
+  .win.about .winbody p{font-size:13px;line-height:1.5;margin:0 0 8px;}
+  .win.about .winbody .edu b,.win.about .winbody .sk b{color:#1a1517;}
+  .win.about .winbody .sk{font-size:12px;color:#3a3a3a;}
+  .win.about .winbody .dim{color:#8a978c;}
   #garrison-shadow{position:fixed;left:calc(4vw + 4vh);bottom:8.6vh;z-index:4;
     width:18vh;height:3.4vh;border-radius:50%;pointer-events:none;
     background:radial-gradient(closest-side, rgba(10,30,5,.42), rgba(10,30,5,0) 70%);}
@@ -225,7 +245,7 @@
     #ufo svg{ width:56px; margin:0; }
     #menubar{ gap:10px; height:24px; }
     #menubar .mi{ display:none; }
-    #garrison{ left:0; bottom:0; height:13vh; pointer-events:none; }
+    #garrison-wrap{ left:0; bottom:0; height:13vh; pointer-events:none; }
     #garrison-shadow{ display:none; }
     .preview{ width:min(300px,88vw); }
     .case{ width:94vw; max-height:80vh; }
@@ -304,7 +324,10 @@
 
 <!-- bottom-left: Garrison (fisheye) standing on the planet curve (album-cover style) -->
 <div id="garrison-shadow"></div>
-<img id="garrison" src="assets/garrison-standing.webp" alt="Garrison Bullock standing on a tiny grass planet, throwing a peace sign" draggable="false">
+<div id="garrison-wrap" title="About Garrison" role="button" tabindex="0" aria-label="About Garrison Bullock — education, skills, certification">
+  <img id="garrison" src="assets/garrison-standing.webp" alt="Garrison Bullock standing on a tiny grass planet, throwing a peace sign" draggable="false">
+  <span id="garrison-glare" aria-hidden="true"></span>
+</div>
 
 <!-- UFO + pixel speech bubble -->
 <div id="ufo" title="click me"></div>
@@ -660,6 +683,37 @@ function wireWindow(w){
   });
   w.addEventListener('pointerdown',()=>bringFront(w));
 }
+
+/* ============ ABOUT GARRISON — click the bottom-left figure to open the bio panel ============ */
+function openAbout(){
+  let w=document.getElementById('win-about');
+  if(!w){
+    w=makeWin('about'); w.id='win-about';
+    w.innerHTML=`
+      <div class="titlebar"><div class="closebox"></div><div class="title">About — Garrison Bullock</div></div>
+      <div class="winbody">
+        <h2>Garrison Bullock</h2>
+        <div class="meta">Product Designer · Founder</div>
+        <h3>EDUCATION</h3>
+        <p class="edu"><b>MBA, Innovation</b><br>University of Louisville · 2021</p>
+        <p class="edu"><b>B.S. Industrial Design</b><br>Auburn University · 2019</p>
+        <h3>SKILLS &amp; TOOLS</h3>
+        <p class="sk"><b>Design</b><br>UI/UX · Design systems · Interaction design · Prototyping &amp; wireframing · Visual &amp; brand design · Icon design &amp; illustration · Data viz · User research &amp; usability testing · A/B testing · Accessibility</p>
+        <p class="sk"><b>Tools</b><br>Figma · Illustrator · Photoshop · Procreate · DaVinci Resolve · SolidWorks &amp; Fusion 360</p>
+        <p class="sk"><b>AI-native workflow</b><br>Claude / Claude Code · Generative AI (image &amp; video) · Midjourney · ComfyUI · Higgsfield · n8n · prompt engineering</p>
+        <p class="sk"><b>Build</b> <span class="dim">(working knowledge)</span><br>Next.js · TypeScript · React Native · Supabase · Mapbox · GitHub · Vercel · HTML/CSS</p>
+        <h3>CERTIFICATION</h3>
+        <p class="edu"><b>FAA Part 107</b><br>Remote Pilot — small UAS (drone) license</p>
+      </div>`;
+    wireWindow(w);
+  }
+  w.classList.add('open'); bringFront(w); centerCase(w);
+}
+(function(){
+  const g=document.getElementById('garrison-wrap'); if(!g) return;
+  g.addEventListener('click',openAbout);
+  g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openAbout(); }});
+})();
 
 /* ============ IDLE PRE-WARM — make project previews + pages feel instant ============
    Runs ONLY after the desktop is up, during browser idle time, so it never slows the
