@@ -192,6 +192,8 @@
   .win.about .winbody .edu b,.win.about .winbody .sk b{color:#1a1517;}
   .win.about .winbody .sk{font-size:12px;color:#3a3a3a;}
   .win.about .winbody .dim{color:#8a978c;}
+  .win.about .type-cursor{display:inline-block;margin-left:1px;color:var(--accent);font-weight:400;animation:typeBlink .6s steps(1) infinite;}
+  @keyframes typeBlink{0%,50%{opacity:1;}50.01%,100%{opacity:0;}}
   #garrison-shadow{position:fixed;left:calc(4vw + 4vh);bottom:8.6vh;z-index:4;
     width:18vh;height:3.4vh;border-radius:50%;pointer-events:none;
     background:radial-gradient(closest-side, rgba(10,30,5,.42), rgba(10,30,5,0) 70%);}
@@ -685,6 +687,7 @@ function wireWindow(w){
 }
 
 /* ============ ABOUT GARRISON — click the bottom-left figure to open the bio panel ============ */
+let aboutTyped=false;
 function openAbout(){
   let w=document.getElementById('win-about');
   if(!w){
@@ -708,6 +711,28 @@ function openAbout(){
     wireWindow(w);
   }
   w.classList.add('open'); bringFront(w); centerCase(w);
+  if(!aboutTyped){ aboutTyped=true; typeAboutPanel(w); }   // typewriter reveal, first open only
+}
+/* Typewriter reveal: type the name + headline with a cursor, then print the
+   sections in sequence. Reveals (not char-types) the bold/multi-line body so markup stays intact. */
+function typeAboutPanel(w){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const kids=Array.from(w.querySelector('.winbody').children);
+  const h2=kids[0], meta=kids[1], rest=kids.slice(2);
+  const h2t=h2.textContent, mt=meta.textContent;
+  h2.style.minHeight=h2.offsetHeight+'px'; meta.style.minHeight=meta.offsetHeight+'px';   // reserve height so nothing jogs as text re-wraps
+  rest.forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(5px)'; el.style.transition='opacity .3s ease, transform .3s ease'; });
+  const type=(el,txt,sp)=>new Promise(res=>{
+    el.textContent='';
+    const c=document.createElement('span'); c.className='type-cursor'; c.textContent='|'; el.appendChild(c);
+    let i=0; (function s(){ if(i<txt.length){ c.insertAdjacentText('beforebegin',txt[i++]); setTimeout(s,sp); } else { c.remove(); res(); } })();
+  });
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  (async()=>{
+    await type(h2,h2t,55);
+    await type(meta,mt,26);
+    for(const el of rest){ await wait(85); el.style.opacity='1'; el.style.transform='none'; }
+  })();
 }
 (function(){
   const g=document.getElementById('garrison-wrap'); if(!g) return;
