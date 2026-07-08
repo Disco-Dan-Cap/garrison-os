@@ -754,21 +754,21 @@ function typeAboutPanel(w){
    Available marks load from the Simple Icons CDN; the newer tools point at local
    files (assets/logos/*.svg) you drop in; anything that fails shows a lettered tile. */
 const ABOUT_LOGOS=[
-  {n:'Claude', s:'https://cdn.simpleicons.org/claude'},
-  {n:'Claude Code', s:'assets/logos/claude-code.svg'},
+  {n:'Claude', s:'assets/logos/claude.png'},
+  {n:'Claude Code', s:'assets/logos/claude-code.png'},
   {n:'Midjourney', s:'https://cdn.simpleicons.org/midjourney'},
-  {n:'ComfyUI', s:'assets/logos/comfyui.svg'},
-  {n:'Higgsfield', s:'assets/logos/higgsfield.svg'},
-  {n:'n8n', s:'https://cdn.simpleicons.org/n8n'},
+  {n:'ComfyUI', s:'assets/logos/comfyui.png'},
+  {n:'Higgsfield', s:'assets/logos/higgsfield.png'},
+  {n:'n8n', s:'assets/logos/n8n.png'},
   {n:'Supabase', s:'https://cdn.simpleicons.org/supabase'},
-  {n:'GitHub', s:'https://cdn.simpleicons.org/github'},
-  {n:'Vercel', s:'https://cdn.simpleicons.org/vercel'},
-  {n:'Figma', s:'https://cdn.simpleicons.org/figma'},
-  {n:'Illustrator', s:'https://cdn.simpleicons.org/adobeillustrator'},
-  {n:'Photoshop', s:'https://cdn.simpleicons.org/adobephotoshop'},
+  {n:'GitHub', s:'assets/logos/github.png'},
+  {n:'Vercel', s:'assets/logos/vercel.png'},
+  {n:'Figma', s:'assets/logos/figma.png'},
+  {n:'Illustrator', s:'assets/logos/illustrator.png'},
+  {n:'Photoshop', s:'assets/logos/photoshop.png'},
   {n:'Procreate', s:'https://cdn.simpleicons.org/procreate'},
-  {n:'DaVinci Resolve', s:'https://cdn.simpleicons.org/davinciresolve'},
-  {n:'Fusion 360', s:'assets/logos/fusion360.svg'}
+  {n:'DaVinci Resolve', s:'assets/logos/davinci-resolve.png'},
+  {n:'Fusion 360', s:'assets/logos/fusion360.png'}
 ];
 function llInitials(name){
   const w=name.replace(/[^A-Za-z0-9 ]/g,' ').trim().split(/\s+/);
