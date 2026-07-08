@@ -721,6 +721,7 @@ function typeAboutPanel(w){
   const h2=kids[0], meta=kids[1], rest=kids.slice(2);
   const h2t=h2.textContent, mt=meta.textContent;
   h2.style.minHeight=h2.offsetHeight+'px'; meta.style.minHeight=meta.offsetHeight+'px';   // reserve height so nothing jogs as text re-wraps
+  h2.textContent=''; meta.textContent='';   // clear up front so the panel opens blank (no flash of full text), then types in
   rest.forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(5px)'; el.style.transition='opacity .3s ease, transform .3s ease'; });
   const type=(el,txt,sp)=>new Promise(res=>{
     el.textContent='';
