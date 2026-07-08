@@ -192,6 +192,8 @@
   .win.about .winbody .edu b,.win.about .winbody .sk b{color:#1a1517;}
   .win.about .winbody .sk{font-size:12px;color:#3a3a3a;}
   .win.about .winbody .dim{color:#8a978c;}
+  /* armed = everything hidden from first paint; the typewriter script reveals each row */
+  .win.about .winbody.arm>*{opacity:0;}
   .win.about .type-cursor{display:inline-block;margin-left:1px;color:var(--accent);font-weight:400;animation:typeBlink .6s steps(1) infinite;}
   @keyframes typeBlink{0%,50%{opacity:1;}50.01%,100%{opacity:0;}}
   #garrison-shadow{position:fixed;left:calc(4vw + 4vh);bottom:8.6vh;z-index:4;
@@ -694,7 +696,7 @@ function openAbout(){
     w=makeWin('about'); w.id='win-about';
     w.innerHTML=`
       <div class="titlebar"><div class="closebox"></div><div class="title">About — Garrison Bullock</div></div>
-      <div class="winbody">
+      <div class="winbody arm">
         <h2>Garrison Bullock</h2>
         <div class="meta">Product Designer (UI/UX) + Brand Marketer + Content &amp; Video</div>
         <h3>EDUCATION</h3>
@@ -716,13 +718,15 @@ function openAbout(){
 /* Typewriter reveal: type the name + headline with a cursor, then print the
    sections in sequence. Reveals (not char-types) the bold/multi-line body so markup stays intact. */
 function typeAboutPanel(w){
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const kids=Array.from(w.querySelector('.winbody').children);
+  const body=w.querySelector('.winbody');
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ body.classList.remove('arm'); return; }  // reveal all, no animation
+  const kids=Array.from(body.children);
   const h2=kids[0], meta=kids[1], rest=kids.slice(2);
   const h2t=h2.textContent, mt=meta.textContent;
   h2.style.minHeight=h2.offsetHeight+'px'; meta.style.minHeight=meta.offsetHeight+'px';   // reserve height so nothing jogs as text re-wraps
-  h2.textContent=''; meta.textContent='';   // clear up front so the panel opens blank (no flash of full text), then types in
-  rest.forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(5px)'; el.style.transition='opacity .3s ease, transform .3s ease'; });
+  h2.textContent=''; meta.textContent='';
+  h2.style.opacity='1'; meta.style.opacity='1';   // header on (but empty) so the cursor shows; body rows stay hidden via .arm
+  rest.forEach(el=>{ el.style.transform='translateY(5px)'; el.style.transition='opacity .3s ease, transform .3s ease'; });
   const type=(el,txt,sp)=>new Promise(res=>{
     el.textContent='';
     const c=document.createElement('span'); c.className='type-cursor'; c.textContent='|'; el.appendChild(c);
