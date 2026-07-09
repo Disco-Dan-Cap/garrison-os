@@ -185,7 +185,7 @@
   @media(prefers-reduced-motion:reduce){#garrison-glare::before{animation:none;}}
   /* About panel (opens when the figure is clicked) */
   .win.about{width:min(430px,92vw);max-height:82vh;}
-  .win.about .winbody h2{margin:.1em 0 .1em;font-family:"Press Start 2P",monospace;font-size:13px;line-height:1.3;}
+  .win.about .winbody h2{margin:.1em 0 .18em;font-family:"Press Start 2P",monospace;font-size:23px;line-height:1.25;}
   .win.about .winbody .meta{color:#5c6b60;font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-family:"JetBrains Mono",monospace;margin-bottom:6px;}
   .win.about .winbody h3{font-family:"Press Start 2P",monospace;font-size:8px;color:var(--accent);margin:16px 0 6px;}
   .win.about .winbody p{font-size:13px;line-height:1.5;margin:0 0 8px;}
@@ -708,12 +708,11 @@ function openAbout(){
       <div class="titlebar"><div class="closebox"></div><div class="title">About — Garrison Bullock</div></div>
       <div class="winbody arm">
         <h2>Garrison Bullock</h2>
-        <div class="meta">Product Design (UI/UX) + Branding + Marketing + Video Editing + Art Direction</div>
         <h3>EDUCATION</h3>
         <p class="edu"><b>MBA, Innovation</b><br>University of Louisville · 2021</p>
         <p class="edu"><b>B.S. Industrial Design</b><br>Auburn University · 2019</p>
         <h3>SKILLS &amp; TOOLS</h3>
-        <p class="sk"><b>Design</b><br>UI/UX · Design systems · Interaction design · Prototyping &amp; wireframing · Visual &amp; brand design · Icon design &amp; illustration · Data viz · User research &amp; usability testing · A/B testing · Accessibility</p>
+        <p class="sk"><b>Design</b><br>Product Design (UI/UX) · Branding · Marketing · Video editing · Art direction · Design systems · Interaction design · Prototyping &amp; wireframing · Icon design &amp; illustration · Data viz · User research &amp; usability testing · A/B testing · Accessibility</p>
         <p class="sk"><b>Tools</b><br>Figma · Illustrator · Photoshop · Procreate · DaVinci Resolve · Fusion 360</p>
         <p class="sk"><b>AI-native workflow</b><br>Claude / Claude Code · Generative AI (image &amp; video) · Midjourney · ComfyUI · Higgsfield · n8n · Supabase · GitHub · Vercel</p>
         <h3>CERTIFICATION</h3>
@@ -732,11 +731,11 @@ function typeAboutPanel(w){
   const body=w.querySelector('.winbody');
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){ body.classList.remove('arm'); return; }  // reveal all, no animation
   const kids=Array.from(body.children);
-  const h2=kids[0], meta=kids[1], rest=kids.slice(2);
-  const h2t=h2.textContent, mt=meta.textContent;
-  h2.style.minHeight=h2.offsetHeight+'px'; meta.style.minHeight=meta.offsetHeight+'px';   // reserve height so nothing jogs as text re-wraps
-  h2.textContent=''; meta.textContent='';
-  h2.style.opacity='1'; meta.style.opacity='1';   // header on (but empty) so the cursor shows; body rows stay hidden via .arm
+  const h2=kids[0], rest=kids.slice(1);
+  const h2t=h2.textContent;
+  h2.style.minHeight=h2.offsetHeight+'px';   // reserve height so nothing jogs
+  h2.textContent='';
+  h2.style.opacity='1';   // name on (but empty) so the cursor shows; body rows stay hidden via .arm
   rest.forEach(el=>{ el.style.transform='translateY(5px)'; el.style.transition='opacity .3s ease, transform .3s ease'; });
   const type=(el,txt,sp)=>new Promise(res=>{
     el.textContent='';
@@ -745,8 +744,7 @@ function typeAboutPanel(w){
   });
   const wait=ms=>new Promise(r=>setTimeout(r,ms));
   (async()=>{
-    await type(h2,h2t,55);
-    await type(meta,mt,26);
+    await type(h2,h2t,60);
     for(const el of rest){ await wait(85); el.style.opacity='1'; el.style.transform='none'; }
   })();
 }
