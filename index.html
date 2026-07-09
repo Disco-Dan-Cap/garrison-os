@@ -730,9 +730,15 @@ function openAbout(){
    sections in sequence. Reveals (not char-types) the bold/multi-line body so markup stays intact. */
 function typeAboutPanel(w){
   const body=w.querySelector('.winbody');
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ body.classList.remove('arm'); return; }  // reveal all, no animation
   const kids=Array.from(body.children);
   const h2=kids[0], rest=kids.slice(1);
+  // size the name so it spans the panel edge-to-edge on one line
+  h2.style.whiteSpace='nowrap'; h2.style.fontSize=''; h2.style.display='inline-block';
+  const _cs=getComputedStyle(body), _avail=body.clientWidth-parseFloat(_cs.paddingLeft)-parseFloat(_cs.paddingRight);
+  const _cur=parseFloat(getComputedStyle(h2).fontSize), _nw=h2.getBoundingClientRect().width;
+  h2.style.display='';
+  if(_nw>0&&_avail>0) h2.style.fontSize=(_cur*_avail*0.99/_nw).toFixed(2)+'px';
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ body.classList.remove('arm'); return; }  // reveal all, no animation
   const h2t=h2.textContent;
   h2.style.minHeight=h2.offsetHeight+'px';   // reserve height so nothing jogs
   h2.textContent='';
