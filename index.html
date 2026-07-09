@@ -217,8 +217,8 @@
   #lanyard-backdrop{position:absolute;inset:0;background:rgba(6,10,8,.42);opacity:0;transition:opacity .35s ease;}
   #lanyard-overlay.open #lanyard-backdrop{opacity:1;}
   #lanyard-stage{position:absolute;inset:0;perspective:1300px;overflow:hidden;}
-  #lanyard-arm{position:absolute;left:50%;top:0;transform-origin:top center;will-change:transform;}
-  #lanyard-strap{width:48px;height:158px;margin:0 auto;
+  #lanyard-arm{position:absolute;left:50%;top:-170px;transform-origin:top center;will-change:transform;}
+  #lanyard-strap{width:48px;height:320px;margin:0 auto;
     background:#edecef url(assets/lanyard/globe-strap.png) center top/48px repeat-y;
     box-shadow:inset 1px 0 0 rgba(0,0,0,.16),inset -1px 0 0 rgba(0,0,0,.16),0 2px 7px rgba(0,0,0,.28);}
   #lanyard-clip{width:30px;height:20px;margin:-3px auto 0;border-radius:4px;background:linear-gradient(#e7e9ee,#8f96a2);box-shadow:0 2px 4px rgba(0,0,0,.45);}
@@ -1121,7 +1121,7 @@ tick(); setInterval(tick,1000);
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let theta=0, omega=0, dy=0, dvel=0, dragging=false, raf=null, last=0, opened=false, pivotX=0, pivotY=0, lastT=0;
   const GOL=20, DAMP=1.0;                 // pendulum: gravity/length, damping
-  function setPivot(){ const r=stage.getBoundingClientRect(); pivotX=r.left+r.width/2; pivotY=r.top+2; }
+  function setPivot(){ const r=stage.getBoundingClientRect(); pivotX=r.left+r.width/2; pivotY=r.top-170; }
   function render(){
     arm.style.transform='translateX(-50%) translateY('+dy.toFixed(1)+'px) rotate('+theta.toFixed(4)+'rad)';
     const tilt=Math.max(-20,Math.min(20,-omega*9));
@@ -1153,7 +1153,7 @@ tick(); setInterval(tick,1000);
   window.addEventListener('pointermove', e=>{
     if(!dragging) return;
     const nx=e.clientX-pivotX, ny=Math.max(6,e.clientY-pivotY);
-    const nt=Math.atan2(nx,ny), now=performance.now(), ddt=Math.max(0.001,(now-lastT)/1000);
+    const nt=-Math.atan2(nx,ny), now=performance.now(), ddt=Math.max(0.001,(now-lastT)/1000);
     omega=(nt-theta)/ddt; theta=nt; lastT=now;
   });
   window.addEventListener('pointerup', ()=>{ if(dragging){ dragging=false; card.classList.remove('grab'); } });
