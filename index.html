@@ -207,6 +207,27 @@
   .win.about .ll-mono{display:inline-flex;align-items:center;justify-content:center;height:23px;min-width:23px;padding:0 6px;border:1px solid #d3d3d3;border-radius:5px;font:600 10px/1 "JetBrains Mono",monospace;color:#6a6a6a;letter-spacing:.04em;}
   @keyframes logoloopScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
   @media(prefers-reduced-motion:reduce){.win.about .logoloop__track{animation:none;}}
+  /* ===== name becomes a button after it types ===== */
+  .win.about .winbody h2.name-btn{cursor:pointer;border:2px solid var(--px-black);border-radius:8px;padding:5px 10px;box-shadow:3px 3px 0 rgba(0,0,0,.2);transition:background .14s,box-shadow .09s,transform .06s;}
+  .win.about .winbody h2.name-btn:hover{background:#eaf0ff;}
+  .win.about .winbody h2.name-btn:active{box-shadow:1px 1px 0 rgba(0,0,0,.2);transform:translate(2px,2px);}
+  /* ===== lanyard overlay ===== */
+  #lanyard-overlay{position:fixed;inset:0;z-index:9998;display:none;}
+  #lanyard-overlay.open{display:block;}
+  #lanyard-backdrop{position:absolute;inset:0;background:rgba(6,10,8,.42);opacity:0;transition:opacity .35s ease;}
+  #lanyard-overlay.open #lanyard-backdrop{opacity:1;}
+  #lanyard-stage{position:absolute;inset:0;perspective:1300px;overflow:hidden;}
+  #lanyard-arm{position:absolute;left:50%;top:0;transform-origin:top center;will-change:transform;}
+  #lanyard-strap{width:48px;height:158px;margin:0 auto;
+    background:#edecef url(assets/lanyard/globe-strap.png) center top/48px repeat-y;
+    box-shadow:inset 1px 0 0 rgba(0,0,0,.16),inset -1px 0 0 rgba(0,0,0,.16),0 2px 7px rgba(0,0,0,.28);}
+  #lanyard-clip{width:30px;height:20px;margin:-3px auto 0;border-radius:4px;background:linear-gradient(#e7e9ee,#8f96a2);box-shadow:0 2px 4px rgba(0,0,0,.45);}
+  #lanyard-card{width:238px;margin:2px auto 0;transform-origin:top center;cursor:grab;filter:drop-shadow(0 22px 30px rgba(0,0,0,.5));}
+  #lanyard-card.grab{cursor:grabbing;}
+  #lanyard-card img{width:100%;display:block;pointer-events:none;-webkit-user-drag:none;}
+  #lanyard-close{position:absolute;top:18px;right:22px;z-index:3;width:42px;height:42px;border-radius:50%;border:2px solid var(--px-black);background:#fff;font-size:17px;line-height:1;cursor:pointer;box-shadow:2px 2px 0 rgba(0,0,0,.3);}
+  #lanyard-close:hover{background:#eee;}
+  #lanyard-hint{position:absolute;left:0;right:0;bottom:30px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);pointer-events:none;}
   #garrison-shadow{position:fixed;left:calc(4vw + 4vh);bottom:8.6vh;z-index:4;
     width:18vh;height:3.4vh;border-radius:50%;pointer-events:none;
     background:radial-gradient(closest-side, rgba(10,30,5,.42), rgba(10,30,5,0) 70%);}
@@ -733,11 +754,11 @@ function typeAboutPanel(w){
   const h2=kids[0], rest=kids.slice(1);
   // size the name so it spans the panel edge-to-edge on one line
   h2.style.whiteSpace='nowrap'; h2.style.fontSize=''; h2.style.display='inline-block';
-  const _cs=getComputedStyle(body), _avail=body.clientWidth-parseFloat(_cs.paddingLeft)-parseFloat(_cs.paddingRight);
+  const _cs=getComputedStyle(body), _avail=body.clientWidth-parseFloat(_cs.paddingLeft)-parseFloat(_cs.paddingRight)-26;
   const _cur=parseFloat(getComputedStyle(h2).fontSize), _nw=h2.getBoundingClientRect().width;
   h2.style.display='';
   if(_nw>0&&_avail>0) h2.style.fontSize=(_cur*_avail*0.99/_nw).toFixed(2)+'px';
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ body.classList.remove('arm'); return; }  // reveal all, no animation
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ body.classList.remove('arm'); h2.classList.add('name-btn'); h2.onclick=function(){window.__openLanyard&&window.__openLanyard();}; return; }  // reveal all, no animation
   const h2t=h2.textContent;
   h2.style.minHeight=h2.offsetHeight+'px';   // reserve height so nothing jogs
   h2.textContent='';
@@ -751,6 +772,7 @@ function typeAboutPanel(w){
   const wait=ms=>new Promise(r=>setTimeout(r,ms));
   (async()=>{
     await type(h2,h2t,60);
+    h2.classList.add('name-btn'); h2.onclick=function(){window.__openLanyard&&window.__openLanyard();};
     for(const el of rest){ await wait(85); el.style.opacity='1'; el.style.transform='none'; }
   })();
 }
@@ -1072,6 +1094,71 @@ tick(); setInterval(tick,1000);
     if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
   }
   if(document.readyState==='complete')init(); else addEventListener('load',init);
+})();
+</script>
+
+<!-- Lanyard (opens from the About-panel name button) -->
+<div id="lanyard-overlay" aria-hidden="true">
+  <div id="lanyard-backdrop"></div>
+  <button id="lanyard-close" aria-label="Close lanyard">&#10005;</button>
+  <div id="lanyard-stage">
+    <div id="lanyard-arm">
+      <div id="lanyard-strap"></div>
+      <div id="lanyard-clip"></div>
+      <div id="lanyard-card"><img src="assets/lanyard/card-front.png" alt="Garrison Bullock lanyard card" draggable="false"></div>
+    </div>
+  </div>
+  <div id="lanyard-hint">grab the card &middot; click outside to close</div>
+</div>
+
+<script>
+/* ============ LANYARD — pendulum swing + drag, opens from the name button ============ */
+(function(){
+  const overlay=document.getElementById('lanyard-overlay'); if(!overlay) return;
+  const stage=document.getElementById('lanyard-stage'), arm=document.getElementById('lanyard-arm');
+  const card=document.getElementById('lanyard-card'), closeBtn=document.getElementById('lanyard-close');
+  const backdrop=document.getElementById('lanyard-backdrop');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let theta=0, omega=0, dy=0, dvel=0, dragging=false, raf=null, last=0, opened=false, pivotX=0, pivotY=0, lastT=0;
+  const GOL=20, DAMP=1.0;                 // pendulum: gravity/length, damping
+  function setPivot(){ const r=stage.getBoundingClientRect(); pivotX=r.left+r.width/2; pivotY=r.top+2; }
+  function render(){
+    arm.style.transform='translateX(-50%) translateY('+dy.toFixed(1)+'px) rotate('+theta.toFixed(4)+'rad)';
+    const tilt=Math.max(-20,Math.min(20,-omega*9));
+    card.style.transform='rotateY('+tilt.toFixed(1)+'deg)';
+  }
+  function loop(ts){
+    if(!last) last=ts; let dt=(ts-last)/1000; last=ts; if(dt>0.05) dt=0.05;
+    if(dy<-0.4||Math.abs(dvel)>2){ dvel += (0-dy)*90*dt; dvel -= dvel*7*dt; dy += dvel*dt; }
+    else { dy=0; dvel=0; }
+    if(!dragging){ const a=-GOL*Math.sin(theta)-DAMP*omega; omega+=a*dt; theta+=omega*dt; }
+    render(); raf=requestAnimationFrame(loop);
+  }
+  function open(){
+    if(opened) return; opened=true; setPivot();
+    theta=0; omega= reduce?0:1.1; dy= reduce?0:-(window.innerHeight*0.55); dvel=0; last=0;
+    overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false');
+    document.addEventListener('keydown', onKey);
+    if(reduce){ render(); } else { cancelAnimationFrame(raf); raf=requestAnimationFrame(loop); }
+  }
+  function close(){ if(!opened) return; opened=false; overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); cancelAnimationFrame(raf); raf=null; document.removeEventListener('keydown', onKey); }
+  function onKey(e){ if(e.key==='Escape') close(); }
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('pointerdown', close);
+  // drag the card
+  card.addEventListener('pointerdown', e=>{
+    dragging=true; card.classList.add('grab'); try{card.setPointerCapture(e.pointerId);}catch(_){}
+    setPivot(); lastT=performance.now(); e.preventDefault();
+  });
+  window.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    const nx=e.clientX-pivotX, ny=Math.max(6,e.clientY-pivotY);
+    const nt=Math.atan2(nx,ny), now=performance.now(), ddt=Math.max(0.001,(now-lastT)/1000);
+    omega=(nt-theta)/ddt; theta=nt; lastT=now;
+  });
+  window.addEventListener('pointerup', ()=>{ if(dragging){ dragging=false; card.classList.remove('grab'); } });
+  addEventListener('resize', setPivot);
+  window.__openLanyard=open;
 })();
 </script>
 </body>
