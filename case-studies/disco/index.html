@@ -190,6 +190,11 @@
   .foot-mark{ width:42px; height:38px; margin:0 auto 15px; background:url("assets/logo.svg") no-repeat left center; background-size:auto 38px; opacity:.85; }
   .foot-line{ font-family:var(--mono); font-size:11.5px; color:var(--text-3); letter-spacing:.05em; }
   .foot-line+.foot-line{ margin-top:5px; }
+  /* 02 · problem — text + hint gif side by side */
+  .prob-grid{ display:flex; gap:44px; align-items:flex-start; }
+  .prob-text{ flex:0 1 66ch; min-width:0; }
+  .prob-gif{ flex:0 0 auto; width:300px; max-width:38%; align-self:flex-start; margin-top:10px; }
+  @media(max-width:900px){ .prob-grid{ flex-direction:column; gap:20px; } .prob-gif{ width:240px; max-width:70%; margin:0; } }
 </style>
   <link rel="stylesheet" href="../../assets/cursors/cursors.css">
 </head>
@@ -313,12 +318,17 @@ void main(){
 
   <!-- ══════════ 02 · THE PROBLEM ══════════ -->
   <section>
+    <div class="prob-grid">
+    <div class="prob-text">
     <div class="sec-head"><div class="eyebrow">02 — The problem</div><h2 class="sec-title">The velvet rope around startup investing needs to go.</h2></div>
     <p class="prose" style="max-width:64ch;">The best rounds are reserved for accredited investors. Roughly 24 million U.S. households qualify, and most of them aren't ultra-wealthy in the Sand Hill Road sense. They're everyday Americans with some assets who'd gladly put $5K–$10K behind founders they believe in.</p>
     <p class="prose" style="max-width:64ch;">Below them sits everyone else: millions of non-accredited investors kept out by regulation. At the front of that line is the generation that understands these companies instinctively: young builders who grew up crypto-native and AI-fluent, watching the future take shape while they're shut out of owning any piece of it.</p>
     <p class="prose" style="max-width:64ch;">What stops all of them is access.</p>
     <p class="prose" style="max-width:64ch;">It used to mean geography: you had to be in the room, near the Valley, on the right list. Startups build in public now, so Disco brings the opportunity online. You find founders, learn their story, and invest fractionally, with ownership settled by smart contract and nothing held by a middleman.</p>
     <p class="prose" style="max-width:64ch;"><strong style="color:#fff;font-weight:600;">We're starting where the law already allows.</strong> Phase one serves the millions of accredited investors who were never given a clean product for smaller, high-conviction investments. Phase two drops the rope for everyone else, especially the young investors most ready to step onto the dance floor. The rules are already moving: the INVEST Act (H.R. 3383) passed the House in December 2025 and would let people qualify on knowledge and experience, not only wealth.</p>
+    </div>
+    <img class="prob-gif" src="assets/security-guy.gif" alt="Pixel-art security guard standing behind a red velvet rope at the gate" width="400" height="300" loading="lazy">
+    </div>
   </section>
 
   <!-- ══════════ 03 · HOW IT WORKS ══════════ -->
