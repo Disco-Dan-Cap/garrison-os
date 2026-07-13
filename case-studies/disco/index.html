@@ -191,10 +191,11 @@
   .foot-line{ font-family:var(--mono); font-size:11.5px; color:var(--text-3); letter-spacing:.05em; }
   .foot-line+.foot-line{ margin-top:5px; }
   /* 02 · problem — text + hint gif side by side */
-  .prob-grid{ display:flex; gap:36px; align-items:flex-start; }
-  .prob-text{ flex:1 1 auto; min-width:0; max-width:60ch; }
-  .prob-gif{ flex:0 0 auto; width:300px; max-width:40%; height:auto; align-self:flex-start; margin-top:2px; image-rendering:pixelated; }
-  @media(max-width:900px){ .prob-grid{ flex-direction:column; gap:20px; } .prob-text{ max-width:none; } .prob-gif{ width:240px; max-width:64%; margin:0; } }
+  .prob-grid{ display:flex; gap:36px; align-items:stretch; }
+  .prob-text{ flex:0 1 64ch; min-width:0; }
+  .prob-media{ flex:1 1 auto; min-width:0; display:flex; align-items:center; justify-content:center; }
+  .prob-gif{ width:300px; max-width:100%; height:auto; image-rendering:pixelated; }
+  @media(max-width:900px){ .prob-grid{ flex-direction:column; gap:20px; align-items:stretch; } .prob-text{ flex:1 1 auto; } .prob-media{ justify-content:center; } .prob-gif{ width:240px; max-width:64%; } }
 </style>
   <link rel="stylesheet" href="../../assets/cursors/cursors.css">
 </head>
@@ -327,7 +328,7 @@ void main(){
     <p class="prose" style="max-width:64ch;">It used to mean geography: you had to be in the room, near the Valley, on the right list. Startups build in public now, so Disco brings the opportunity online. You find founders, learn their story, and invest fractionally, with ownership settled by smart contract and nothing held by a middleman.</p>
     <p class="prose" style="max-width:64ch;"><strong style="color:#fff;font-weight:600;">We're starting where the law already allows.</strong> Phase one serves the millions of accredited investors who were never given a clean product for smaller, high-conviction investments. Phase two drops the rope for everyone else, especially the young investors most ready to step onto the dance floor. The rules are already moving: the INVEST Act (H.R. 3383) passed the House in December 2025 and would let people qualify on knowledge and experience, not only wealth.</p>
     </div>
-    <img class="prob-gif" src="assets/security-guy.gif" alt="Pixel-art security guard standing behind a red velvet rope at the gate" width="158" height="214" loading="lazy">
+    <div class="prob-media"><img class="prob-gif" src="assets/security-guy.gif" alt="Pixel-art security guard standing behind a red velvet rope at the gate" width="158" height="214" loading="lazy"></div>
     </div>
   </section>
 
