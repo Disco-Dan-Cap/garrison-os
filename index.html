@@ -362,7 +362,10 @@
 </head>
 <body>
 <div id="desktop">
-  <img class="bg" id="bgimg" alt="" aria-hidden="true" draggable="false">
+  <picture>
+    <source srcset="assets/bliss-mobile.webp" media="(max-width:640px) and (orientation:portrait)">
+    <img class="bg" id="bgimg" src="assets/bliss-desktop.webp" alt="" aria-hidden="true" draggable="false" fetchpriority="high" decoding="async" onerror="this.remove()">
+  </picture>
   <div id="icons"></div>
   <div id="icons-center"></div>
   <div id="icons-right"></div>
@@ -428,14 +431,12 @@
 <div id="crt"></div>
 
 <script>
-/* ================= BACKGROUND (Higgsfield art w/ fallback) ================= */
-(function(){
-  const img=document.getElementById('bgimg');
-  const src=matchMedia('(max-width:640px) and (orientation:portrait)').matches
-    ? 'assets/bliss-mobile.webp' : 'assets/bliss-desktop.webp';
-  img.onerror=()=>img.remove();           // fall back to CSS gradient
-  img.src=src;
-})();
+/* ================= BACKGROUND (Higgsfield art w/ fallback) =================
+   The wallpaper is now set directly in the HTML markup (<picture> in #desktop) so it
+   paints at first load from the <link rel=preload>, instead of only after this script
+   runs. That prevents the blue/green gradient fallback from flashing before the photo
+   appears. The <source media> handles the mobile variant; onerror falls back to the
+   CSS gradient if the photo is missing. */
 
 /* ================= PIXEL ART HELPERS ================= */
 /* Render a grid of single-character "pixels" into SVG rects. */
@@ -1062,15 +1063,20 @@ tick(); setInterval(tick,1000);
 </script>
 
 <script>
-/* Boot fade-in: reveal the desktop only once icons are laid out and the pixel font is
-   ready, so visitors never see the brief unsettled / font-swap flash on load. */
+/* Boot fade-in: reveal the desktop only once the wallpaper photo is loaded, the pixel
+   font is ready, and icons are laid out — so visitors never see the gradient fallback
+   or the font-swap flash, and everything appears together over the real background. */
 (function(){
   var done=false;
   function boot(){ if(done) return; done=true; document.body.classList.add('booted'); }
   function ready(){
-    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ requestAnimationFrame(boot); }); }
-    else { requestAnimationFrame(boot); }
-    setTimeout(boot, 1200);           // safety: never stay hidden if fonts hang
+    var waits=[];
+    if(document.fonts && document.fonts.ready) waits.push(document.fonts.ready.catch(function(){}));
+    var bg=document.getElementById('bgimg');
+    if(bg && !bg.complete) waits.push(new Promise(function(res){ bg.addEventListener('load',res); bg.addEventListener('error',res); }));
+    if(waits.length) Promise.all(waits).then(function(){ requestAnimationFrame(boot); });
+    else requestAnimationFrame(boot);
+    setTimeout(boot, 1500);           // safety: never stay hidden if an asset hangs
     addEventListener('load', boot);   // final fallback
   }
   if(document.readyState==='loading') addEventListener('DOMContentLoaded', ready); else ready();
