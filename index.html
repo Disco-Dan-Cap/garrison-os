@@ -343,6 +343,22 @@
   .wmp-track{margin-left:auto;font-size:10px;color:#33405a;font-style:italic;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   @media(max-width:640px){ #wmpwin{top:52px;} .wmp-stage{height:200px;} .wmp-track{display:none;} }
 </style>
+<style id="boot-fade">
+  /* Hold the desktop furniture hidden until icons are laid out and the pixel font is
+     ready, then fade it all in together. Prevents the brief "unsettled" flash on
+     load/refresh. The wallpaper (#bgimg) and menu bar stay visible immediately, so
+     the screen is never blank. */
+  #icons, #icons-center, #icons-right,
+  #garrison-wrap, #garrison-shadow,
+  #ufo, #bubble, #tail, #wmp-icon{ opacity:0; transition:opacity .5s ease; }
+  body.booted #icons, body.booted #icons-center, body.booted #icons-right,
+  body.booted #garrison-wrap, body.booted #garrison-shadow,
+  body.booted #ufo, body.booted #bubble, body.booted #tail, body.booted #wmp-icon{ opacity:1; }
+  @media (prefers-reduced-motion:reduce){
+    #icons, #icons-center, #icons-right, #garrison-wrap, #garrison-shadow,
+    #ufo, #bubble, #tail, #wmp-icon{ transition:none; }
+  }
+</style>
 </head>
 <body>
 <div id="desktop">
@@ -1042,6 +1058,22 @@ tick(); setInterval(tick,1000);
   function apply(){ MQ.matches?toMobile():toDesktop(); }
   apply();
   if(MQ.addEventListener) MQ.addEventListener('change',apply); else if(MQ.addListener) MQ.addListener(apply);
+})();
+</script>
+
+<script>
+/* Boot fade-in: reveal the desktop only once icons are laid out and the pixel font is
+   ready, so visitors never see the brief unsettled / font-swap flash on load. */
+(function(){
+  var done=false;
+  function boot(){ if(done) return; done=true; document.body.classList.add('booted'); }
+  function ready(){
+    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ requestAnimationFrame(boot); }); }
+    else { requestAnimationFrame(boot); }
+    setTimeout(boot, 1200);           // safety: never stay hidden if fonts hang
+    addEventListener('load', boot);   // final fallback
+  }
+  if(document.readyState==='loading') addEventListener('DOMContentLoaded', ready); else ready();
 })();
 </script>
 
