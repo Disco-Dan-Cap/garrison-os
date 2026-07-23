@@ -240,7 +240,8 @@
     animation:bob 3.4s ease-in-out infinite;}
   #ufo svg{width:108px;height:auto;display:block;
     filter:drop-shadow(0 6px 0 rgba(0,0,0,.18));}
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-14px) rotate(1deg);}}
+  /* --mx/--my carry the magnetic-cursor pull (set by JS); the bob float rides on top */
+  @keyframes bob{0%,100%{transform:translate(var(--mx,0px),var(--my,0px)) translateY(0) rotate(-1deg);}50%{transform:translate(var(--mx,0px),var(--my,0px)) translateY(-14px) rotate(1deg);}}
   #ufo .lite{animation:blink 1.4s infinite;}
   @keyframes blink{0%,100%{opacity:.25;}50%{opacity:1;}}
 
@@ -1080,6 +1081,40 @@ tick(); setInterval(tick,1000);
     addEventListener('load', boot);   // final fallback
   }
   if(document.readyState==='loading') addEventListener('DOMContentLoaded', ready); else ready();
+})();
+</script>
+
+<script>
+/* Magnetic pull: the UFO and the Windows Media Player icon lean toward the cursor when
+   it comes near, then ease back to rest. Desktop only (needs a real pointer; skipped for
+   touch and reduced-motion). The pull is layered into the existing bob float via the
+   --mx/--my custom properties, so the drift keeps running underneath.
+   Tuning knobs: STRENGTH = how hard it pulls, PAD = how far out the cursor activates it,
+   MAXOFF = max travel in px, EASE = how quickly it catches up. */
+(function(){
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var STRENGTH=0.35, PAD=80, MAXOFF=22, EASE=0.18;
+  var targets=[].map.call(document.querySelectorAll('#ufo,#wmp-icon'), function(el){ return {el:el, tx:0, ty:0}; });
+  if(!targets.length) return;
+  var px=-1e5, py=-1e5, raf=null;
+  function clamp(v){ return v<-MAXOFF?-MAXOFF:(v>MAXOFF?MAXOFF:v); }
+  function tick(){
+    raf=null; var alive=false;
+    for(var i=0;i<targets.length;i++){
+      var t=targets[i], r=t.el.getBoundingClientRect();
+      if(r.width===0){ t.tx=t.ty=0; t.el.style.removeProperty('--mx'); t.el.style.removeProperty('--my'); continue; }
+      var cx=r.left+r.width/2 - t.tx, cy=r.top+r.height/2 - t.ty;   // subtract our own offset so it can't feed back
+      var dx=px-cx, dy=py-cy, gx=0, gy=0;
+      if(Math.hypot(dx,dy) < Math.max(r.width,r.height)/2 + PAD){ gx=clamp(dx*STRENGTH); gy=clamp(dy*STRENGTH); }
+      t.tx+=(gx-t.tx)*EASE; t.ty+=(gy-t.ty)*EASE;
+      if(Math.hypot(gx-t.tx, gy-t.ty)>0.1) alive=true;
+      t.el.style.setProperty('--mx', t.tx.toFixed(2)+'px');
+      t.el.style.setProperty('--my', t.ty.toFixed(2)+'px');
+    }
+    if(alive) raf=requestAnimationFrame(tick);
+  }
+  addEventListener('pointermove', function(e){ px=e.clientX; py=e.clientY; if(!raf) raf=requestAnimationFrame(tick); }, {passive:true});
 })();
 </script>
 
