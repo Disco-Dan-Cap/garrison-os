@@ -131,7 +131,8 @@
   .preview .cover{height:130px;border:2px solid var(--px-black);overflow:hidden;
     background:linear-gradient(135deg,#cfe0f5,#e9d8b6);
     display:flex;align-items:center;justify-content:center;color:#5a5a5a;font-size:12px;}
-  .preview .cover img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto;}
+  .preview .cover img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto;
+    -webkit-user-drag:none;user-select:none;-webkit-user-select:none;pointer-events:none;}
   .preview .one{font-size:13px;margin:10px 0 12px;line-height:1.45;}
   /* large preview (copia flagship) — ~2x, wide 3-up cover shown uncropped on cream */
   .preview.large{width:min(600px,92vw);}
@@ -664,7 +665,7 @@ function openPreview(p,anchor){
   let w=document.getElementById('prev-'+p.id);
   if(!w){
     w=makeWin('preview'+(p.previewLarge?' large':'')); w.id='prev-'+p.id;
-    const cover=p.cover?`<img src="${p.cover}" alt="${p.name} cover">`:'[ cover image ]';
+    const cover=p.cover?`<img src="${p.cover}" alt="${p.name} cover" draggable="false">`:'[ cover image ]';
     const link=p.link?`<a class="link" href="${p.link}" target="_blank" rel="noopener">${p.link}</a>`:'';
     const note=p.note?`<div class="note">${p.note}</div>`:'';
     w.innerHTML=`
