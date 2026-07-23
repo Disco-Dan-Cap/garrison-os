@@ -86,7 +86,8 @@
     display:flex;align-items:center;gap:16px;padding:0 12px;
     font-size:12px;
   }
-  #menubar .logo{font-family:"Press Start 2P",monospace;font-size:10px;letter-spacing:0;}
+  #menubar .logo{font-family:"Press Start 2P",monospace;font-size:10px;letter-spacing:0;cursor:pointer;}
+  #menubar .logo:hover{color:var(--accent);}
   #menubar .mi{opacity:.85;}
   #menubar .clock{margin-left:auto;font-variant-numeric:tabular-nums;}
 
@@ -388,7 +389,7 @@
 
 <!-- menu bar -->
 <div id="menubar">
-  <span class="logo">&#9673; GARRISON OS</span>
+  <span class="logo" id="os-logo" role="button" tabindex="0" title="About Garrison" aria-label="About Garrison Bullock — education, skills, certification">&#9673; GARRISON OS</span>
   <span class="mi">File</span><span class="mi">Edit</span><span class="mi">View</span><span class="mi">Special</span>
   <span class="clock" id="clock"></span>
 </div>
@@ -856,9 +857,9 @@ function buildLogoLoop(box){
   box.appendChild(track);
 }
 (function(){
-  const g=document.getElementById('garrison-wrap'); if(!g) return;
-  g.addEventListener('click',openAbout);
-  g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openAbout(); }});
+  function wire(el){ if(!el) return; el.addEventListener('click',openAbout); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openAbout(); }}); }
+  wire(document.getElementById('garrison-wrap'));   // the figure, bottom-left
+  wire(document.getElementById('os-logo'));         // "GARRISON OS" menu-bar logo (backup entry point)
 })();
 
 /* ============ IDLE PRE-WARM — make project previews + pages feel instant ============
