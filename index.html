@@ -345,6 +345,19 @@
   .wmp-track{margin-left:auto;font-size:10px;color:#33405a;font-style:italic;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   @media(max-width:640px){ #wmpwin{top:52px;} .wmp-stage{height:200px;} .wmp-track{display:none;} }
 </style>
+<style id="sol-css">
+  /* Solitaire easter-egg icon — same bob float + magnetic pull as the WMP icon/UFO */
+  #sol-icon{position:fixed; left:calc(32vw - 48px); bottom:calc(23vh - 48px); z-index:6; width:96px; text-align:center;
+    cursor:pointer; animation:bob 3.4s ease-in-out infinite; user-select:none; -webkit-user-select:none;}
+  #sol-icon img{width:64px; height:auto; display:block; margin:0 auto 5px; image-rendering:pixelated;
+    filter:drop-shadow(0 3px 0 rgba(0,0,0,.28));}
+  #sol-icon .lbl{font-family:"Press Start 2P",monospace; font-size:8px; line-height:1.6; color:#fff;
+    padding:2px 3px; border-radius:2px; text-shadow:1px 1px 0 rgba(0,0,0,.55);}
+  #sol-icon:hover .lbl{background:var(--accent); text-shadow:none;}
+  #sol-icon:hover img{transform:translateY(-2px);}
+  #sol-icon:active img{transform:translateY(1px);}
+  @media(max-width:640px){ #sol-icon{ position:static; left:auto; right:auto; top:auto; bottom:auto; margin:0; width:auto; animation:none; display:flex; flex-direction:column; align-items:center; justify-content:center; } #sol-icon img{ width:50px; } #sol-icon .lbl{ font-size:7px; line-height:1.4; } }
+</style>
 <style id="boot-fade">
   /* Hold the desktop furniture hidden until icons are laid out and the pixel font is
      ready, then fade it all in together. Prevents the brief "unsettled" flash on
@@ -352,13 +365,13 @@
      the screen is never blank. */
   #icons, #icons-center, #icons-right,
   #garrison-wrap, #garrison-shadow,
-  #ufo, #bubble, #tail, #wmp-icon{ opacity:0; transition:opacity .5s ease; }
+  #ufo, #bubble, #tail, #wmp-icon, #sol-icon{ opacity:0; transition:opacity .5s ease; }
   body.booted #icons, body.booted #icons-center, body.booted #icons-right,
   body.booted #garrison-wrap, body.booted #garrison-shadow,
-  body.booted #ufo, body.booted #bubble, body.booted #tail, body.booted #wmp-icon{ opacity:1; }
+  body.booted #ufo, body.booted #bubble, body.booted #tail, body.booted #wmp-icon, body.booted #sol-icon{ opacity:1; }
   @media (prefers-reduced-motion:reduce){
     #icons, #icons-center, #icons-right, #garrison-wrap, #garrison-shadow,
-    #ufo, #bubble, #tail, #wmp-icon{ transition:none; }
+    #ufo, #bubble, #tail, #wmp-icon, #sol-icon{ transition:none; }
   }
 </style>
 </head>
@@ -396,6 +409,12 @@
 <div id="wmp-icon" title="Windows Media Player">
   <img src="assets/wmp-icon.png" alt="Windows Media Player">
   <div class="lbl">Windows Media<br>Player</div>
+</div>
+
+<!-- Solitaire (easter egg: click for the classic win cascade) -->
+<div id="sol-icon" title="Solitaire" role="button" tabindex="0" aria-label="Solitaire — click for a surprise">
+  <img src="assets/solitaire-icon.png" alt="Solitaire" draggable="false">
+  <div class="lbl">Solitaire</div>
 </div>
 <div id="wmpwin" role="dialog" aria-label="Windows Media Player">
   <div class="wmp-title" id="wmpTitle">
@@ -1042,13 +1061,14 @@ tick(); setInterval(tick,1000);
 (function(){
   const MQ=matchMedia('(max-width:640px)');
   const order=['marian','cbh','viking','freelance','shift','verve','unum','disco','copia','korbel','herradura','alani','dirtyshirley'];
-  const wmp=document.getElementById('wmp-icon'), ufoEl=document.getElementById('ufo');
+  const wmp=document.getElementById('wmp-icon'), ufoEl=document.getElementById('ufo'), sol=document.getElementById('sol-icon');
   let applied=false;
   function toMobile(){
     if(applied) return; applied=true;
     order.forEach(id=>{ const el=document.querySelector('.folder[data-id="'+id+'"]'); if(el) icons.appendChild(el); });
     if(wmp) icons.appendChild(wmp);
     if(ufoEl) icons.appendChild(ufoEl);
+    if(sol) icons.appendChild(sol);
     document.body.classList.add('mgrid');
   }
   function toDesktop(){
@@ -1057,6 +1077,7 @@ tick(); setInterval(tick,1000);
     PROJECTS.forEach(p=>{ const el=document.querySelector('.folder[data-id="'+p.id+'"]'); if(el)(p.rightStack?iconsRight:(p.center?iconsCenter:icons)).appendChild(el); });
     if(wmp) document.body.appendChild(wmp);
     if(ufoEl) document.body.appendChild(ufoEl);
+    if(sol) document.body.appendChild(sol);
   }
   function apply(){ MQ.matches?toMobile():toDesktop(); }
   apply();
@@ -1096,7 +1117,7 @@ tick(); setInterval(tick,1000);
   if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var STRENGTH=0.35, PAD=80, MAXOFF=22, EASE=0.18;
-  var targets=[].map.call(document.querySelectorAll('#ufo,#wmp-icon'), function(el){ return {el:el, tx:0, ty:0}; });
+  var targets=[].map.call(document.querySelectorAll('#ufo,#wmp-icon,#sol-icon'), function(el){ return {el:el, tx:0, ty:0}; });
   if(!targets.length) return;
   var px=-1e5, py=-1e5, raf=null;
   function clamp(v){ return v<-MAXOFF?-MAXOFF:(v>MAXOFF?MAXOFF:v); }
@@ -1116,6 +1137,89 @@ tick(); setInterval(tick,1000);
     if(alive) raf=requestAnimationFrame(tick);
   }
   addEventListener('pointermove', function(e){ px=e.clientX; py=e.clientY; if(!raf) raf=requestAnimationFrame(tick); }, {passive:true});
+})();
+</script>
+
+<script>
+/* Solitaire easter egg: clicking the Solitaire icon takes over the screen with the classic
+   Windows "you win" card cascade. Cards launch from the top, fall under gravity, and bounce
+   off the bottom. The canvas is never cleared, so each card leaves the ribbon trail. Click
+   anywhere or press Esc to dismiss. All vanilla, no library. */
+(function(){
+  var sol=document.getElementById('sol-icon');
+  if(!sol) return;
+  var CW=46, CH=64, FS=2;                              // card logical size; faces drawn at FSx for crispness
+  var SUITS=[{s:'♠',c:'#151515'},{s:'♥',c:'#c0142a'},{s:'♦',c:'#c0142a'},{s:'♣',c:'#151515'}];
+  var RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+  var G=0.55, REST=0.8;
+  var running=false, canvas=null, ctx=null, cards=null, faces=null, raf=0, spawnTimer=0, spawned=0, W=0, H=0, DPR=1, hint=null;
+  function roundRect(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+  function buildFaces(){
+    faces=[];
+    for(var s=0;s<4;s++){ for(var r=0;r<13;r++){
+      var cv=document.createElement('canvas'); cv.width=CW*FS; cv.height=CH*FS;
+      var c=cv.getContext('2d'); c.scale(FS,FS);
+      c.fillStyle='#fbfbf7'; roundRect(c,0.5,0.5,CW-1,CH-1,5); c.fill();
+      c.lineWidth=1; c.strokeStyle='#c9c9c0'; c.stroke();
+      var col=SUITS[s].c, sym=SUITS[s].s, rk=RANKS[r];
+      c.fillStyle=col; c.textAlign='left'; c.textBaseline='top';
+      c.font='bold 11px Arial, sans-serif'; c.fillText(rk,3,2);
+      c.font='11px Arial, sans-serif'; c.fillText(sym,3.5,13);
+      c.textAlign='center'; c.textBaseline='middle'; c.font='24px Arial, sans-serif'; c.fillText(sym,CW/2,CH/2+1);
+      c.save(); c.translate(CW,CH); c.rotate(Math.PI); c.textAlign='left'; c.textBaseline='top';
+      c.font='bold 11px Arial, sans-serif'; c.fillText(rk,3,2); c.font='11px Arial, sans-serif'; c.fillText(sym,3.5,13); c.restore();
+      faces.push(cv);
+    }}
+  }
+  function loop(){
+    for(var i=cards.length-1;i>=0;i--){
+      var k=cards[i]; k.vy+=G; k.x+=k.vx; k.y+=k.vy;
+      if(k.y+CH>H){ k.y=H-CH; k.vy=-k.vy*REST; }
+      ctx.drawImage(k.f, k.x, k.y, CW, CH);
+      if(k.x<-CW*2 || k.x>W+CW*2) cards.splice(i,1);
+    }
+    if(cards.length===0 && !spawnTimer){ raf=0; return; }   // done: trails persist until dismissed
+    raf=requestAnimationFrame(loop);
+  }
+  function onKey(e){ if(e.key==='Escape'||e.key==='Esc') stop(); }
+  function start(){
+    if(running) return; running=true;
+    if(!faces) buildFaces();
+    DPR=Math.min(2, window.devicePixelRatio||1); W=innerWidth; H=innerHeight;
+    canvas=document.createElement('canvas'); canvas.id='sol-canvas';
+    canvas.width=W*DPR; canvas.height=H*DPR;
+    canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:9998;cursor:pointer;';
+    document.body.appendChild(canvas);
+    ctx=canvas.getContext('2d'); ctx.setTransform(DPR,0,0,DPR,0,0);
+    hint=document.createElement('div'); hint.textContent='click or press esc to close';
+    hint.style.cssText='position:fixed;left:0;right:0;bottom:16px;text-align:center;z-index:9999;pointer-events:none;font:700 12px "JetBrains Mono",monospace;letter-spacing:.12em;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85);';
+    document.body.appendChild(hint);
+    cards=[]; spawned=0;
+    var piles=8, TOTAL=72;
+    spawnTimer=setInterval(function(){
+      if(spawned>=TOTAL){ clearInterval(spawnTimer); spawnTimer=0; return; }
+      var col=spawned%piles;
+      var px=(W*0.10)+(W*0.80)*(col/(piles-1));
+      var vx=(Math.random()*11-5.5); if(Math.abs(vx)<1.8) vx=vx<0?-1.8:1.8;
+      cards.push({x:px, y:54, vx:vx, vy:-(7+Math.random()*6), f:faces[Math.floor(Math.random()*52)]});
+      spawned++;
+    }, 95);
+    canvas.addEventListener('click', stop);
+    document.addEventListener('keydown', onKey);
+    loop();
+  }
+  function stop(){
+    if(!running) return; running=false;
+    if(raf) cancelAnimationFrame(raf); raf=0;
+    if(spawnTimer){ clearInterval(spawnTimer); spawnTimer=0; }
+    document.removeEventListener('keydown', onKey);
+    var cv=canvas, h=hint; canvas=null; hint=null;
+    if(cv){ cv.style.transition='opacity .45s ease'; cv.style.opacity='0'; }
+    if(h){ h.style.transition='opacity .3s'; h.style.opacity='0'; }
+    setTimeout(function(){ if(cv)cv.remove(); if(h)h.remove(); }, 480);
+  }
+  sol.addEventListener('click', start);
+  sol.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); start(); } });
 })();
 </script>
 
