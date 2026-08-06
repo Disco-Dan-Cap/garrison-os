@@ -135,6 +135,12 @@
   .preview .cover img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto;
     -webkit-user-drag:none;user-select:none;-webkit-user-select:none;pointer-events:none;}
   .preview .one{font-size:13px;margin:10px 0 12px;line-height:1.45;}
+  /* coming-soon placeholder cover (checkerboard floor tile) + disabled button */
+  .preview .soon-cover{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+    background:repeating-conic-gradient(#d9e1e8 0 25%, #adbdca 0 50%) 50%/26px 26px;}
+  .preview .soon-cover span{font-family:"Press Start 2P",monospace;font-size:10px;color:#2c3d4a;background:#fff;
+    border:2px solid var(--px-black);padding:7px 9px;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+  .preview .btn.soon{opacity:.72;cursor:default;}
   /* large preview (copia flagship) — ~2x, wide 3-up cover shown uncropped on cream */
   .preview.large{width:min(600px,92vw);}
   .preview.large .cover{height:200px;background:#FAF6EE;}
@@ -499,7 +505,9 @@ const SYMBOLS={
   /* UNUM — six guitar strings spanning the folder */
   guitar:["XXXXXXXXXXXXXXXXXXXXXXXX","........................","XXXXXXXXXXXXXXXXXXXXXXXX","........................","XXXXXXXXXXXXXXXXXXXXXXXX","........................","XXXXXXXXXXXXXXXXXXXXXXXX","........................","XXXXXXXXXXXXXXXXXXXXXXXX","........................","XXXXXXXXXXXXXXXXXXXXXXXX"],
   /* Viking Range — letter V */
-  vee:["XX.....XX","XX.....XX",".XX...XX.",".XX...XX.","..XX.XX..","..XX.XX..","...XXX...","...XXX...","....X...."]
+  vee:["XX.....XX","XX.....XX",".XX...XX.",".XX...XX.","..XX.XX..","..XX.XX..","...XXX...","...XXX...","....X...."],
+  /* Tampa Commercial Floors — checkerboard floor tile */
+  tile:["XX..XX..","XX..XX..","..XX..XX","..XX..XX","XX..XX..","XX..XX..","..XX..XX","..XX..XX"]
 };
 
 /* Pixel folder — classic open-folder shape per reference.
@@ -617,6 +625,9 @@ const PROJECTS=[
     role:"Product Design / Full-stack Concept", year:"2026",
     /* finished, self-contained case-study page — opened full-screen inside an iframe */
     embed:"case-studies/copia/index.html"},
+  {id:"tampa", name:"Tampa Commercial Floors", color:"#8fa9bd", dark:"#4f6b80", sym:"tile", center:true, soon:true,
+    one:"A commercial flooring contractor in Tampa. I'm designing and building their site end to end: brand direction, responsive design, and the front-end build.",
+    role:"Brand & Website Design / Build", year:"2026"},
   {id:"marian", name:"Marian Group", win:"The Marian Group", color:"#5b8def", dark:"#2f59b5", sym:"house",
     one:"In-house design & video for a real-estate group — a selection of the video work I’ve produced for our social channels over the past few years.",
     role:"In-house Design / Video", year:"2021–2024",
@@ -685,7 +696,8 @@ function openPreview(p,anchor){
   let w=document.getElementById('prev-'+p.id);
   if(!w){
     w=makeWin('preview'+(p.previewLarge?' large':'')); w.id='prev-'+p.id;
-    const cover=p.cover?`<img src="${p.cover}" alt="${p.name} cover" draggable="false">`:'[ cover image ]';
+    const cover=p.cover?`<img src="${p.cover}" alt="${p.name} cover" draggable="false">`
+      :(p.soon?`<div class="soon-cover"><span>COMING SOON</span></div>`:'[ cover image ]');
     const link=p.link?`<a class="link" href="${p.link}" target="_blank" rel="noopener">${p.link}</a>`:'';
     const note=p.note?`<div class="note">${p.note}</div>`:'';
     w.innerHTML=`
@@ -695,10 +707,10 @@ function openPreview(p,anchor){
         <div class="one">${p.one}</div>
         ${link}
         ${note}
-        <button class="btn">OPEN PROJECT &rarr;</button>
+        ${p.soon?'<button class="btn soon" disabled>COMING SOON</button>':'<button class="btn">OPEN PROJECT &rarr;</button>'}
       </div>`;
     wireWindow(w);
-    w.querySelector('.btn').addEventListener('click',()=>openCase(p));
+    if(!p.soon) w.querySelector('.btn').addEventListener('click',()=>openCase(p));
   }
   w.classList.add('open'); bringFront(w);
   if(p.previewLarge){ centerCase(w); return; }
@@ -1061,7 +1073,7 @@ tick(); setInterval(tick,1000);
 /* ================= MOBILE ICON GRID (reflow + UFO/player as cells) ================= */
 (function(){
   const MQ=matchMedia('(max-width:640px)');
-  const order=['marian','cbh','viking','freelance','shift','verve','unum','disco','copia','korbel','herradura','alani','dirtyshirley'];
+  const order=['marian','cbh','viking','freelance','shift','verve','unum','disco','copia','tampa','korbel','herradura','alani','dirtyshirley'];
   const wmp=document.getElementById('wmp-icon'), ufoEl=document.getElementById('ufo'), sol=document.getElementById('sol-icon');
   let applied=false;
   function toMobile(){
