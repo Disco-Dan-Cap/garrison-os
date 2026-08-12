@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /case-studies/disco/assets/pitch-deck.html
 
 Sitemap: https://garrisonbullock.com/sitemap.xml

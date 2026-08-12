@@ -135,6 +135,8 @@
   .preview .cover img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto;
     -webkit-user-drag:none;user-select:none;-webkit-user-select:none;pointer-events:none;}
   .preview .one{font-size:13px;margin:10px 0 12px;line-height:1.45;}
+  /* work-in-progress flag at the top of a preview blurb (Disco) */
+  .preview .one .wip{display:block;margin:0 0 14px;color:#c2126e;font-weight:600;}
   /* coming-soon placeholder cover (checkerboard floor tile) + disabled button */
   .preview .soon-cover{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
     background:repeating-conic-gradient(#d9e1e8 0 25%, #adbdca 0 50%) 50%/26px 26px;}
@@ -671,12 +673,12 @@ const PROJECTS=[
     cover:"case-studies/dirtyshirley/assets/cover.webp",
     embed:"case-studies/dirtyshirley/index.html"},
   {id:"disco", name:"Disco Capital", color:"#ff2d95", dark:"#b80f66", sym:"disco", center:true,
-    one:"Co-invest alongside the venture funds shaping the future you'll inherit. Buy startup equity and hold it in your crypto wallet.<br><br>Disco Capital — We get everyone on the dance floor.",
+    one:"<span class='wip'>The HTML prototype is live and the React Native app is in progress. I'm still iterating on the design as the concept develops, so expect the screens to keep changing.</span>Co-invest alongside the venture funds shaping the future you'll inherit. Buy startup equity and hold it in your crypto wallet.<br><br>Disco Capital — We get everyone on the dance floor.",
     role:"Sole designer · Brand · Design System · App", year:"2026",
     cover:"case-studies/disco/assets/cover.webp",
     previewLarge:true,
     link:"https://disco-capital.com/",
-    note:"Open it on your phone. Browse the live Dance Floors, Punch Bowl, and Disco Social. The HTML prototype is live and the React Native app is in progress. I'm still iterating on the design as the concept develops, so expect the screens to keep changing.",
+    note:"Open it on your phone. Browse the live Dance Floors, Punch Bowl, and Disco Social.",
     embed:"case-studies/disco/index.html"},
   {id:"copia", name:"Copia", color:"#8ee6b8", dark:"#3fa97c", sym:"leaf", center:true,
     one:"Copia is for buying food from your neighbors, the people who grow it — built the way a farmers market feels: calm, personal, unhurried.",
