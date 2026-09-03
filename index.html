@@ -569,7 +569,9 @@ const SYMBOLS={
   /* Viking Range — letter V */
   vee:["XX.....XX","XX.....XX",".XX...XX.",".XX...XX.","..XX.XX..","..XX.XX..","...XXX...","...XXX...","....X...."],
   /* Tampa Commercial Floors — checkerboard floor tile */
-  tile:["XX..XX..","XX..XX..","..XX..XX","..XX..XX","XX..XX..","XX..XX..","..XX..XX","..XX..XX"]
+  tile:["XX..XX..","XX..XX..","..XX..XX","..XX..XX","XX..XX..","XX..XX..","..XX..XX","..XX..XX"],
+  /* Maraschino — two cherries on a shared stem with a leaf (solid, so it reads at icon size) */
+  cherry:["......XXX....","......XXXX...","......X..XX..",".....X.X.....",".....X.X.....","....X...X....","....X...X....","..XXX...X....",".XXXXX..XXX..",".XXXXX.XXXXX.",".XXXXX.XXXXX.","..XXX..XXXXX.","........XXX.."]
 };
 
 /* Pixel folder — classic open-folder shape per reference.
@@ -692,6 +694,9 @@ const PROJECTS=[
   {id:"tampa", name:"Tampa Commercial Floors", color:"#8fa9bd", dark:"#4f6b80", sym:"tile", center:true, soon:true,
     one:"A commercial flooring contractor in Tampa. I'm designing and building their site end to end: brand direction, responsive design, and the front-end build.",
     role:"Brand & Website Design / Build", year:"2026"},
+  {id:"maraschino", name:"Maraschino", color:"#cc1122", dark:"#8c0000", sym:"cherry", center:true, soon:true,
+    one:"A vision board with a compiler. Pin exactly what you like on your inspiration images, weight it, and compile the board into a design brief an AI coding tool can actually follow.<br><br>Pinterest collects. Kive tags. Maraschino compiles.",
+    role:"Product Design / Build", year:"2026"},
   {id:"marian", name:"Marian Group", win:"The Marian Group", color:"#5b8def", dark:"#2f59b5", sym:"house",
     one:"In-house design & video for a real-estate group — a selection of the video work I’ve produced for our social channels over the past few years.",
     role:"In-house Design / Video", year:"2021–2024",
@@ -1137,7 +1142,7 @@ tick(); setInterval(tick,1000);
 /* ================= MOBILE ICON GRID (reflow + UFO/player as cells) ================= */
 (function(){
   const MQ=matchMedia('(max-width:640px)');
-  const order=['marian','cbh','viking','freelance','shift','verve','unum','disco','copia','tampa','korbel','herradura','alani','dirtyshirley'];
+  const order=['marian','cbh','viking','freelance','shift','verve','unum','disco','copia','tampa','maraschino','korbel','herradura','alani','dirtyshirley'];
   const wmp=document.getElementById('wmp-icon'), ufoEl=document.getElementById('ufo'), sol=document.getElementById('sol-icon');
   let applied=false;
   function toMobile(){
