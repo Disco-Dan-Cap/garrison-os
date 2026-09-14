@@ -147,6 +147,10 @@
   .preview.large{width:min(600px,92vw);}
   .preview.large .cover{height:200px;background:#FAF6EE;}
   .preview.large .cover img{object-fit:contain;}
+  /* image-led large preview: the slot takes the artwork's own ratio (set inline per project),
+     so the image fills it edge to edge with no letterbox at any window width */
+  .preview.large.fill .cover{height:auto;background:none;}
+  .preview.large.fill .cover img{object-fit:cover;}
   .preview.large .one{font-size:16px;margin:14px 0 10px;line-height:1.5;}
   .preview .link{display:inline-block;font-size:14px;margin:0 0 12px;font-weight:bold;
     color:#1C664D;text-decoration:none;word-break:break-word;}
@@ -699,6 +703,7 @@ const PROJECTS=[
     cover:"assets/maraschino/card-1072.webp",
     cover2x:"assets/maraschino/card-2144.webp",
     previewLarge:true,
+    coverAR:"2144 / 1040",
     role:"Product Design / Build", year:"2026"},
   {id:"marian", name:"Marian Group", win:"The Marian Group", color:"#5b8def", dark:"#2f59b5", sym:"house",
     one:"In-house design & video for a real-estate group — a selection of the video work I’ve produced for our social channels over the past few years.",
@@ -767,7 +772,7 @@ function placeNear(w,x,y){
 function openPreview(p,anchor){
   let w=document.getElementById('prev-'+p.id);
   if(!w){
-    w=makeWin('preview'+(p.previewLarge?' large':'')); w.id='prev-'+p.id;
+    w=makeWin('preview'+(p.previewLarge?' large':'')+(p.coverAR?' fill':'')); w.id='prev-'+p.id;
     const cover=p.cover?`<img src="${p.cover}"${p.cover2x?` srcset="${p.cover} 1x, ${p.cover2x} 2x"`:''} alt="${p.name} cover" draggable="false">`
       :(p.soon?`<div class="soon-cover"><span>COMING SOON</span></div>`:'[ cover image ]');
     const link=p.link?`<a class="link" href="${p.link}" target="_blank" rel="noopener">${p.link}</a>`:'';
@@ -775,7 +780,7 @@ function openPreview(p,anchor){
     w.innerHTML=`
       <div class="titlebar"><div class="closebox"></div><div class="title">${p.name}</div></div>
       <div class="winbody">
-        <div class="cover">${cover}</div>
+        <div class="cover"${p.coverAR?` style="aspect-ratio:${p.coverAR}"`:''}>${cover}</div>
         <div class="one">${p.one}</div>
         ${link}
         ${note}
