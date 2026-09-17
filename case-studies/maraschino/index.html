@@ -176,13 +176,10 @@
   .pair .pol{ margin-top:0; }
 
   /* built */
-  .stack{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:30px; }
-  @media(max-width:820px){ .stack{ grid-template-columns:1fr 1fr; } }
-  @media(max-width:520px){ .stack{ grid-template-columns:1fr; } }
-  .scard{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-lg); padding:20px; }
-  .scard .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--cherry); }
-  .scard h3{ font-size:16px; margin:8px 0 6px; letter-spacing:-.01em; }
-  .scard p{ margin:0; font-size:14px; color:var(--ink-2); line-height:1.55; }
+  /* built: one quiet strip */
+  .built{ padding:0 0 10px; text-align:center; }
+  .built-line{ display:inline-flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px 14px; font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--ink-2); padding:14px 22px; border:1px solid var(--line); border-radius:999px; background:var(--panel); }
+  .built-k{ color:var(--cherry); text-transform:uppercase; letter-spacing:.16em; font-size:10.5px; }
   /* finale: full-bleed cherry bloom loop, everything centred, red fading up into the board */
   .wrap{ padding-bottom:0; }
   .finale{ position:relative; width:100vw; margin:80px 0 0 calc(50% - 50vw); padding:220px 24px 44px; text-align:center; color:#fff; overflow:hidden; background:var(--cherry); }
@@ -465,20 +462,8 @@
   </section>
 
   <!-- ══════════ 05 · BUILT ══════════ -->
-  <section>
-    <div class="sec-head"><div class="eyebrow">05 — Built</div><h2 class="sec-title">Designed and built by one person, with the docs as the contract.</h2></div>
-    <div class="prose">
-      <p>I wrote the spec, the compiler design, the decision log and the eval protocol before the first component, then built the app with Claude Code against those documents. Every behaviour change updates its doc in the same commit. The decision numbers on this page are real; D-021 is a file you can open.</p>
-    </div>
-    <div class="stack">
-      <div class="scard"><div class="k">Front end</div><h3>Next.js · TypeScript · Tailwind</h3><p>App Router, strict mode. Tailwind is driven by Maraschino's own token file, the same tokens that style this page.</p></div>
-      <div class="scard"><div class="k">State &amp; storage</div><h3>Zustand · Dexie · IndexedDB</h3><p>Local-first. Images downscale on import so a fifty-image board stays fast; briefs and stills are blobs keyed to the board.</p></div>
-      <div class="scard"><div class="k">Compiler</div><h3>Anthropic API, vision</h3><p>Two stages: structured extraction per crop, then one synthesis call to the brief. Streamed server-side so a 55-second brief never drops.</p></div>
-      <div class="scard"><div class="k">Proof</div><h3>Higgsfield Cloud API</h3><p>One adapter per image model. Estimate, upload product references, submit, poll, download, size from the bytes.</p></div>
-      <div class="scard"><div class="k">Interaction</div><h3>Springs, one light, safe sectors</h3><p>Dock magnification, liquid pin menus, cursor-anchored zoom, hover intent with dwell and grace. All off under reduced motion.</p></div>
-      <div class="scard"><div class="k">Method</div><h3>Evals before UI</h3><p>Six recorded runs. The compiler had to beat me typing a paragraph before it earned an interface.</p></div>
-    </div>
-
+  <section class="built">
+    <div class="built-line"><span class="built-k">Built with</span>Next.js · TypeScript · Tailwind · Zustand · Dexie · Anthropic API · Higgsfield API · Claude Code</div>
   </section>
 
   <!-- finale: status + footer on the cherry bloom loop, full bleed, fading up into the board -->
