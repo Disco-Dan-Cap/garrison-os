@@ -226,9 +226,8 @@
   .demo-cap{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-top:12px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
   /* the playground: one working mini-board */
   .play{ margin-top:44px; padding-top:44px; border-top:1px solid var(--line); }
-  .play-head{ margin-bottom:22px; }
-  .play-head h3{ font-size:clamp(22px,3vw,30px); margin:6px 0 10px; letter-spacing:-.02em; line-height:1.1; }
-  .play-head p{ margin:0; color:var(--ink-2); max-width:60ch; }
+  .play-head{ margin-bottom:22px; text-align:center; }
+  .play-head h3{ font-size:clamp(22px,3vw,30px); margin:0 auto; letter-spacing:-.02em; line-height:1.1; max-width:none; }
   .play-stage{ position:relative; margin-top:14px; }
   .play-stage .rail-wrap{ position:absolute; left:16px; top:50%; transform:translateY(-50%); z-index:40; }
   #pg-board{ height:580px; width:100%; }
@@ -364,9 +363,7 @@
     <!-- playground: the real controls, wired together -->
     <div class="play">
       <div class="play-head">
-        <div class="walk-tag">Try it</div>
-        <h3>A small board to play with.</h3>
-        <p>The same controls as the app, ported from its source, with the references from my own board in the tray. Nothing here is saved.</p>
+        <h3>Try it out! Here's a small example board you can play with.</h3>
       </div>
       <div class="play-desktop">
         <div id="pg-tray"></div>
