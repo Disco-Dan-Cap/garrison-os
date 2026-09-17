@@ -201,7 +201,9 @@
   .walk.stack .walk-body p{ max-width:64ch; }
   .pins-demo{ height:360px; }
   .pins-row{ padding:6px 0 40px; border-top:1px solid var(--line); }
-  .cherry-demo{ height:240px; display:flex; align-items:center; justify-content:center; margin-top:22px; }
+  .cherry-demo{ height:340px; display:flex; align-items:center; justify-content:center; margin-top:22px; }
+  .cherry-demo .cherry-row{ gap:14px; }
+  @media(max-width:600px){ .cherry-demo{ height:260px; } .cherry-demo .cherry-row{ transform:scale(.6); } }
   .demo-cap{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-top:12px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
   /* the playground: one working mini-board */
   .play{ margin-top:44px; padding-top:44px; border-top:1px solid var(--line); }
@@ -561,7 +563,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* the weight control */
   (function(){ var host=document.getElementById('pg-cherries'); if(!host) return;
-    MZ.cherryRow(host, { value:2, size:64, gap:18, showLabel:true, labelSize:18 }); })();
+    MZ.cherryRow(host, { value:2, size:120, gap:34, showLabel:true, labelSize:24 }); })();
 
   /* the playground */
   (function(){
