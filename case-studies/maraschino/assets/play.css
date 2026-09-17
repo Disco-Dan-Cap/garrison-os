@@ -1,0 +1,123 @@
+/* ── Maraschino playground · ported from app/src. Loaded by the case study; page owns the tokens. ── */
+:root{--panel-soft:#F5F8FA;--ease-out:cubic-bezier(0.23,1,0.32,1);--spring:cubic-bezier(0.34,1.56,0.64,1)}
+/* the board surface: dot grid that never hides (grid.ts at zoom 1) */
+.mz-board{position:relative;background-color:var(--board);
+  background-image:radial-gradient(var(--dot) 1px, transparent 1px);background-size:22px 22px;background-position:11px 11px;
+  border:1px solid var(--line);border-radius:18px;overflow:hidden;user-select:none;-webkit-user-select:none}
+.mz-board.armed{cursor:crosshair}
+.mz-board.lassoing{cursor:crosshair}
+
+/* ── tool rail (ToolRail.tsx) ── */
+.mz-rail{background:var(--panel);border-radius:14px;padding:8px;box-shadow:0 8px 26px -10px rgba(31,54,74,.35);
+  display:flex;flex-direction:column;gap:4px;border:1px solid var(--line)}
+.rail-btn{position:relative;width:42px;height:42px;border-radius:10px;border:1px solid transparent;background:transparent;
+  display:grid;place-items:center;cursor:pointer;padding:0}
+.rail-btn[data-on="1"]{background:var(--panel-soft);border-color:var(--line)}
+.rail-btn:hover{background:#F5F8FA}
+.rail-dot{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:#fff;transition:box-shadow 140ms ease}
+.rail-btn[data-on="1"] .rail-dot{box-shadow:0 0 0 3px var(--c22)}
+.rail-tag{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%) translateX(-6px) scale(.92);
+  background:var(--ink);color:#fff;font-size:12px;font-weight:600;letter-spacing:.02em;padding:5px 9px;border-radius:7px;
+  white-space:nowrap;opacity:0;pointer-events:none;transition:all 140ms var(--spring);z-index:5}
+.rail-tag span{opacity:.5;margin-left:7px}
+.rail-btn:hover .rail-tag,.rail-btn:focus-visible .rail-tag{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}
+
+/* ── polaroid (Polaroid.tsx) ── */
+.mz-pol{position:absolute;background:var(--polaroid);border-radius:3px;padding:14px 14px 0;
+  box-shadow:0 10px 24px -8px rgba(31,54,74,.34), 0 2px 5px rgba(31,54,74,.14);user-select:none;touch-action:none}
+.mz-pol.static{position:relative}
+.mz-pol .area{position:relative;overflow:visible;background:var(--panel-soft)}
+.mz-pol .area img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.mz-pol .chin{display:flex;align-items:center;justify-content:center}
+.mz-pol .chin-inner{position:relative}
+.mz-pol .lasso{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.mz-pol .lasso path{transition:fill-opacity 140ms ease, stroke-width 140ms ease}
+.pin-btn{position:absolute;background:none;border:none;padding:0;cursor:grab;line-height:0;z-index:10;touch-action:none}
+.pin-btn.dragging{cursor:grabbing}
+.pin-btn.work{z-index:20}
+.pin-btn .pin-g{display:block;line-height:0;transition:transform 140ms var(--spring)}
+.pin-btn svg{overflow:visible;display:block}
+.pin-btn.dragging .pin-g{transform:scale(1.16)}
+
+/* ── cherries (Cherry.tsx) ── */
+.cherry-row{display:flex;flex-direction:column;align-items:center;gap:3px}
+.cherry-row .cr{display:flex;align-items:center}
+.cherry-btn{border:none;background:transparent;padding:0;line-height:0;cursor:pointer;transition:color 140ms var(--ease-out), transform 140ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){ .cherry-btn:hover{transform:translateY(-1px)} }
+.cherry-lbl{font-size:11px;line-height:13px;color:var(--ink-4);letter-spacing:.01em;min-height:13px;user-select:none;transition:color 140ms var(--ease-out)}
+.tray-return{position:absolute;right:100%;margin-right:6px;top:1px;width:24px;height:24px;border-radius:999px;border:none;padding:0;
+  display:grid;place-items:center;cursor:pointer;background:transparent;opacity:0;color:var(--ink-4);transform:scale(1);
+  transition:opacity 140ms ease, color 140ms ease, transform 160ms var(--spring)}
+.mz-pol:hover .tray-return,.tray-return:focus-visible{opacity:1}
+.tray-return:hover,.tray-return:focus-visible{color:var(--cherry);transform:scale(1.18)}
+.tray-return:active{transform:scale(1.02);transition-duration:80ms}
+@media (hover:none){ .tray-return{opacity:1} }
+
+/* ── note popover (PinPopover.tsx) ── */
+@keyframes pop{ from{opacity:0;transform:translate(14px,8px) scale(.94)} to{opacity:1;transform:translate(14px,14px) scale(1)} }
+.popover{position:absolute;transform:translate(14px,14px);width:258px;z-index:30;background:var(--panel);border-radius:12px;padding:11px;
+  border:1px solid var(--line);box-shadow:0 16px 40px -14px rgba(31,54,74,.45);animation:pop 220ms var(--spring);cursor:default}
+.popover .hd{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.popover .hd .dot{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.popover .hd .lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2)}
+.popover .hd .del{margin-left:auto;border:none;background:transparent;cursor:pointer;color:var(--ink-4);padding:3px;display:grid;place-items:center}
+.popover .hd .del:hover{color:var(--cherry)}
+.field{width:100%;resize:vertical;border-radius:8px;padding:7px 8px;font-size:13px;line-height:1.45;color:var(--ink);background:var(--panel-soft);
+  font-family:inherit;border:1px solid var(--line);outline:none;transition:border-color 140ms ease, box-shadow 140ms ease;display:block}
+.field:focus-visible{outline:none;border-color:var(--cherry);box-shadow:0 0 0 1px var(--cherry), 0 0 0 4px rgba(193,23,23,.16)}
+
+/* ── pin menu goo (PinMenu.tsx + globals.css) ── */
+.pin-goo{--goo-open-dur:300ms;--goo-open-ease:cubic-bezier(0.34,1.72,0.64,1);--goo-close-dur:180ms;--goo-close-ease:cubic-bezier(0.4,0,0.2,1);--goo-stagger:26ms;
+  position:fixed;z-index:60;width:140px;height:116px;pointer-events:none;transform-origin:70px 92px}
+.pin-goo-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;will-change:filter,transform}
+.pin-goo-blob{--hot:1;fill:#F2F9F9;transform:translate(0,0) scale(var(--rest,1));transform-box:fill-box;transform-origin:center;
+  transition:transform var(--goo-close-dur) var(--goo-close-ease), fill 140ms ease}
+.pin-goo[data-open="true"] .pin-goo-blob{transform:translate(var(--fx,0px),var(--fy,0px)) scale(var(--hot));
+  transition:transform var(--goo-open-dur) var(--goo-open-ease), fill 140ms ease;transition-delay:calc(var(--i,0) * var(--goo-stagger)), 0ms}
+.pin-goo[data-open="true"]:has(.pin-goo-item[data-i="0"]:hover) .pin-goo-blob[data-i="0"],
+.pin-goo[data-open="true"]:has(.pin-goo-item[data-i="1"]:hover) .pin-goo-blob[data-i="1"],
+.pin-goo[data-open="true"]:has(.pin-goo-item[data-i="2"]:hover) .pin-goo-blob[data-i="2"]{--hot:1.18;fill:var(--hue,#C13A2B);
+  transition:transform 160ms cubic-bezier(0.34,1.6,0.64,1), fill 140ms ease;transition-delay:0ms,0ms}
+.pin-goo[data-open="true"]:has(.pin-goo-item[data-kind="delete"]:hover) .pin-goo-blob[data-kind="delete"]{fill:var(--hue-delete,#C11717)}
+.pin-goo-item{position:absolute;border:0;padding:0;border-radius:50%;background:transparent;display:grid;place-items:center;cursor:pointer;pointer-events:none;
+  -webkit-tap-highlight-color:transparent;transform:translate(0,0);transition:transform var(--goo-close-dur) var(--goo-close-ease), background-color 120ms ease}
+.pin-goo[data-open="true"] .pin-goo-item{pointer-events:auto;transform:translate(var(--fx,0px),var(--fy,0px));
+  transition:transform var(--goo-open-dur) var(--goo-open-ease), background-color 120ms ease;transition-delay:calc(var(--i,0) * var(--goo-stagger)), 0ms}
+.pin-goo[data-open="true"] .pin-goo-item:hover{transform:translate(var(--fx,0px),var(--fy,0px)) scale(1.18);
+  transition:transform 160ms cubic-bezier(0.34,1.6,0.64,1), color 140ms ease;transition-delay:0ms,0ms;color:#fff !important}
+.pin-goo-item svg{display:block;opacity:0;filter:blur(2px);transition:opacity 110ms ease, filter 110ms ease}
+.pin-goo[data-open="true"] .pin-goo-item svg{opacity:1;filter:blur(0);transition:opacity 170ms ease, filter 170ms ease;transition-delay:calc(var(--i,0) * var(--goo-stagger) + 110ms)}
+.pin-goo-item:focus-visible{outline:2px solid var(--cherry);outline-offset:2px}
+.pin-goo .disc,.pin-goo .bridge{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+
+/* ── tray dock (TrayDock.tsx) ── */
+.tray{display:flex;align-items:center;gap:6px;width:100%}
+.tray-arrow{flex:0 0 34px;height:94px;border:none;background:none;padding:0;color:var(--cherry);display:grid;place-items:center;cursor:pointer;
+  transition:color 150ms var(--ease-out), transform 150ms var(--ease-out)}
+.tray-arrow:disabled{color:var(--ink-4);cursor:default}
+.tray-arrow.hidden{visibility:hidden}
+.tray-arrow:not(:disabled):hover{color:var(--cherry-deep)}
+.tray-arrow-l:not(:disabled):hover{transform:translateX(-2px)}
+.tray-arrow-r:not(:disabled):hover{transform:translateX(2px)}
+.tray-arrow:not(:disabled):active{transform:scale(.9)}
+.tray-pill{flex:1 1 auto;min-width:0;position:relative;height:94px;border:2px dashed rgba(193,23,23,.4);border-radius:16px;
+  background:rgba(216,229,237,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:visible}
+.tray-lead{position:absolute;left:9px;top:50%;transform:translateY(-50%);z-index:3;width:34px;height:34px;border-radius:999px;border:1px solid var(--line);
+  background:var(--panel);color:var(--ink-3);display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 7px -2px rgba(31,54,74,.4);
+  transition:color 150ms var(--ease-out), transform 150ms var(--ease-out)}
+.tray-lead:hover{color:var(--cherry);transform:translateY(-50%) scale(1.06)}
+.tray-lead:active{transform:translateY(-50%) scale(.94)}
+.tray-scroller{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:138px;display:flex;align-items:center;gap:10px;
+  padding-left:52px;padding-right:14px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}
+.tray-scroller::-webkit-scrollbar{display:none}
+.tray-panning,.tray-panning *{cursor:grabbing !important}
+.dock-item{flex:0 0 auto;width:74px;height:74px}
+.dock-item>div{width:100%;height:100%;border-radius:11px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 2px 6px rgba(31,54,74,.14);
+  cursor:grab;display:grid;place-items:center}
+.dock-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+@keyframes dock-flash{0%{box-shadow:0 0 0 0 rgba(193,23,23,.6), 0 2px 6px rgba(31,54,74,.14)}100%{box-shadow:0 0 0 12px rgba(193,23,23,0), 0 2px 6px rgba(31,54,74,.14)}}
+.dock-flash{animation:dock-flash 900ms ease-out 1}
+.tray-track{position:absolute;left:18px;right:18px;bottom:-3px;height:4px;z-index:0;pointer-events:none}
+.tray-thumb{position:absolute;top:0;height:4px;border-radius:2px;background:rgba(193,23,23,.72);opacity:0;transition:opacity 200ms var(--ease-out)}
+
+@media (prefers-reduced-motion:reduce){ .pin-goo-blob,.pin-goo-item,.pin-goo-item svg,.rail-tag{transition:none !important} }
