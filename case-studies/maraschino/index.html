@@ -200,17 +200,13 @@
   .finale-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
   .finale-fade{ position:absolute; left:0; right:0; top:0; height:260px; pointer-events:none;
     background:linear-gradient(to bottom, var(--board) 0%, rgba(226,235,241,.92) 22%, rgba(226,235,241,.55) 52%, rgba(226,235,241,.18) 80%, rgba(226,235,241,0) 100%); }
-  .finale-in{ position:relative; max-width:640px; margin:0 auto; }
-  .finale-lock{ height:190px; width:auto; display:block; margin:0 auto 34px; filter:drop-shadow(0 12px 30px rgba(60,0,0,.35)); }
-  .finale .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.75); margin-bottom:14px; display:flex; align-items:center; justify-content:center; gap:8px; }
-  .finale .k i{ width:7px; height:7px; border-radius:50%; background:#fff; animation:pulse 2.4s ease-in-out infinite; }
-  .finale h3{ color:#fff; font-size:clamp(24px,3.4vw,36px); margin:0 0 14px; letter-spacing:-.02em; line-height:1.08; }
-  .finale p{ margin:0 auto; color:rgba(255,255,255,.9); max-width:56ch; }
-  .finale-foot{ margin-top:110px; padding-top:22px; border-top:1px solid rgba(255,255,255,.22); }
+  .finale-in{ position:relative; max-width:760px; margin:0 auto; }
+  .finale-lock{ width:min(760px, 82vw); height:auto; display:block; margin:0 auto; filter:drop-shadow(0 12px 30px rgba(60,0,0,.35)); }
+  .finale-foot{ margin-top:150px; padding-top:22px; border-top:1px solid rgba(255,255,255,.22); }
   .foot-line{ font-family:var(--mono); font-size:11.5px; color:rgba(255,255,255,.62); letter-spacing:.05em; }
   .foot-line+.foot-line{ margin-top:5px; }
   .foot-line a{ color:#fff; text-decoration:underline; text-decoration-color:rgba(255,255,255,.4); } .foot-line a:hover{ color:#fff; }
-  @media(max-width:700px){ .finale{ padding:170px 20px 34px; } .finale-lock{ height:130px; } .finale-fade{ height:200px; } .finale-foot{ margin-top:70px; } }
+  @media(max-width:700px){ .finale{ padding:170px 20px 34px; } .finale-lock{ width:88vw; } .finale-fade{ height:200px; } .finale-foot{ margin-top:90px; } }
 
   /* ── live demos: the app's own controls, ported (assets/play.css + play.js) ── */
   .demo{ position:relative; background-color:var(--board); background-image:radial-gradient(var(--dot) 1px, transparent 1px); background-size:22px 22px; background-position:11px 11px; border:1px solid var(--line); border-radius:14px; }
@@ -218,7 +214,10 @@
   .rail-demo{ height:420px; display:flex; align-items:center; justify-content:center; }
   .tray-demo{ padding:26px 14px; }
   .walk.stack{ grid-template-columns:1fr; gap:28px; }
-  .walk.stack .walk-body p{ max-width:64ch; }
+  .walk.stack .walk-body{ text-align:center; margin:0 auto; }
+  .walk.stack .walk-body h3{ margin-left:auto; margin-right:auto; }
+  .walk.stack .walk-body p{ max-width:64ch; margin-left:auto; margin-right:auto; }
+  .walk.stack .demo{ margin:0 auto; width:100%; }
   .pins-demo{ height:360px; }
   .pins-row{ padding:6px 0 40px; border-top:1px solid var(--line); }
   .cherry-demo{ height:340px; display:flex; align-items:center; justify-content:center; margin-top:22px; }
@@ -348,7 +347,7 @@
       <div class="walk-body">
         <div class="walk-tag">The tray</div>
         <h3>Images arrive before they are placed.</h3>
-        <p>Imports land in a tray across the top, a holding shelf you drag from one image at a time. Thumbnails magnify under the pointer with distance falloff so you can read one without placing it. No labels: the thumbnail is the label. Run your pointer across this one.</p>
+        <p>Imports land in a tray across the top, a holding shelf you drag from one image at a time. Thumbnails magnify under the pointer with distance falloff so you view them easier. Run your pointer across this one and watch it work.</p>
       </div>
       <div class="demo tray-demo"><div id="pg-tray-demo"></div></div>
     </div>
@@ -529,10 +528,7 @@
     </video>
     <div class="finale-fade"></div>
     <div class="finale-in">
-      <img class="finale-lock" src="assets/cherry.svg" alt="Maraschino">
-      <div class="k"><i></i>Status</div>
-      <h3>Built and in active development. Still adding features.</h3>
-      <p>The full loop works today: board in, brief, photographs out. What is next is the Product &amp; UI profile that compiles to a design.md for coding tools, bring-your-own-key so other designers can run it, and a wider set of image models. It runs locally with my own API keys for now. Ask me for a walkthrough.</p>
+      <img class="finale-lock" src="assets/lockup-wide.svg" alt="Maraschino">
       <div class="finale-foot">
         <div class="foot-line">Maraschino · Designed &amp; built by Garrison Bullock</div>
         <div class="foot-line">© 2026 Garrison Bullock · garrisonbullock.com</div>
