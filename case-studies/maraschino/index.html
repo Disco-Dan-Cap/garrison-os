@@ -364,7 +364,7 @@
       <div class="play-head">
         <div class="walk-tag">Try it</div>
         <h3>A small board to play with.</h3>
-        <p>The same controls as the app, ported from its source, with my own stills in the tray. Nothing here is saved.</p>
+        <p>The same controls as the app, ported from its source, with the references from my own board in the tray. Nothing here is saved.</p>
       </div>
       <div class="play-desktop">
         <div id="pg-tray"></div>
@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', function(){
       if(board) board.destroy();
       boardEl.innerHTML='<div class="drop-hint">Drop to place</div>'; boardEl.classList.remove('armed','lassoing');
       document.getElementById('pg-tray').innerHTML=''; document.getElementById('pg-rail-board').innerHTML='';
-      var placed={'e6-1':1,'e3-05':1,'prod-t-front':1};
+      var placed={'j43':1,'j37':1,'j09':1};
       tray = new MZ.Tray(document.getElementById('pg-tray'), { draggable:true,
         items: IM.filter(function(i){ return !placed[i.id]; }).map(function(i){ return { id:i.id, thumb:i.thumb, name:i.name }; }) });
       board = new MZ.Board(boardEl, { imageWidth:210,
@@ -594,13 +594,13 @@ document.addEventListener('DOMContentLoaded', function(){
         onDropImage: function(id,x,y){ var src=byId[id]; if(!src) return; var w=210, h=Math.round(w*src.h/src.w);
           board.addImage({ id:src.id, src:src.big, w:src.w, h:src.h, width:w, name:src.name }, Math.max(0,x-w/2-14), Math.max(0,y-h/2-14)); tray.remove(id); } });
       rail = MZ.makeRail(document.getElementById('pg-rail-board'), { onArm: function(id){ board.arm(id); } });
-      var W=boardEl.clientWidth, H=boardEl.clientHeight, a=byId['e6-1'], b=byId['e3-05'], c=byId['prod-t-front'];
+      var W=boardEl.clientWidth, H=boardEl.clientHeight, a=byId['j43'], b=byId['j37'], c=byId['j09'];
       board.addImage({ id:a.id, src:a.big, w:a.w, h:a.h, width:210, name:a.name, weight:3, rotation:-1.2,
-        pins:[{ type:'subject', x:.46, y:.30, note:'this pose, weight on the back foot', lasso:loop(.5,.5,.26,.40,44,5) }, { type:'color', x:.82, y:.18, note:'the maroon against the grass' }] }, Math.round(W*.11), 36);
+        pins:[{ type:'subject', x:.46, y:.34, note:'this pose, the bag as a prop', lasso:loop(.5,.52,.27,.40,44,5) }, { type:'color', x:.84, y:.14, note:'this green for the studio backdrop' }] }, Math.round(W*.11), 36);
       board.addImage({ id:b.id, src:b.big, w:b.w, h:b.h, width:250, name:b.name, weight:2, rotation:.8,
-        pins:[{ type:'theme', x:.70, y:.26, note:'terrace, city behind, mid-morning' }, { type:'texture', x:.30, y:.78, note:'film grain, soft highlights' }] }, Math.round(W*.47), Math.round(H*.10));
-      board.addImage({ id:c.id, src:c.big, w:c.w, h:c.h, width:190, name:c.name, weight:1, rotation:-.6,
-        pins:[{ type:'type', x:.50, y:.56, note:'our mark, never redrawn' }] }, Math.round(W*.30), Math.round(H*.48));
+        pins:[{ type:'theme', x:.72, y:.20, note:'riviera, late sixties, off-duty' }, { type:'texture', x:.30, y:.70, note:'faded print, warm film grain' }] }, Math.round(W*.54), Math.round(H*.08));
+      board.addImage({ id:c.id, src:c.big, w:c.w, h:c.h, width:170, name:c.name, weight:1, rotation:-.6,
+        pins:[{ type:'type', x:.50, y:.44, note:'our mark, never redrawn' }] }, Math.round(W*.31), Math.round(H*.50));
     }
     boardEl.addEventListener('dragenter', function(){ boardEl.classList.add('over'); });
     boardEl.addEventListener('dragleave', function(e){ if(!boardEl.contains(e.relatedTarget)) boardEl.classList.remove('over'); });
