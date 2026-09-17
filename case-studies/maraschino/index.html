@@ -126,6 +126,7 @@
   .step .out{ margin-top:12px; font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); border-top:1px dashed var(--line); padding-top:10px; }
 
   /* proof */
+  .sub-title{ font-weight:800; font-size:clamp(22px,3vw,30px); line-height:1.12; letter-spacing:-.02em; margin:48px 0 18px; max-width:26ch; }
   .arms{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:30px 0 6px; }
   @media(max-width:700px){ .arms{ grid-template-columns:1fr; } }
   .arm{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-lg); padding:22px; }
@@ -377,19 +378,9 @@
     </div>
   </section>
 
-  <!-- ══════════ 02 · WHY ══════════ -->
+  <!-- ══════════ 02 · HOW IT WORKS ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">02 — Why it exists</div><h2 class="sec-title">I gave the AI fifty reference images and it ignored what I liked about all of them.</h2></div>
-    <div class="prose">
-      <p>That sentence is the project. Every designer working with image models or AI coding tools has done the same thing: gather a mood board, drop the whole pile into the context window, and get back something that averages the pile. The model's attention is spread across everything in every image. The one thing you actually liked, the way a collar sits, the green of one studio wall, is a rounding error.</p>
-      <p>Pinterest collects. Kive tags. Nothing compiles. A mood board is a set of unspoken preferences, and the preferences are exactly the part that never makes it into the prompt. Maraschino makes you speak them, one pin at a time, and then does the translation into a document a machine can act on.</p>
-      <p>I built it for myself first. I run a small apparel brand and I wanted campaign stills that looked like my references without hiring a photographer or writing three paragraphs of prompt every time. The tool had to earn its place against the fastest alternative, which is me typing a paragraph. So the first thing I built was the test, not the UI.</p>
-    </div>
-  </section>
-
-  <!-- ══════════ 03 · HOW IT WORKS ══════════ -->
-  <section>
-    <div class="sec-head"><div class="eyebrow">03 — How it works</div><h2 class="sec-title">Pins in, brief out, photographs after.</h2></div>
+    <div class="sec-head"><div class="eyebrow">02 — How it works</div><h2 class="sec-title">Pins in, brief out, photographs after.</h2></div>
     <div class="prose"><p>A board knows what it is for, and that routes everything downstream. The first profile is Brand &amp; Campaign: the compile produces a <b>brief.md</b> and the proof is a generated photograph. A Product &amp; UI profile that compiles to a <b>design.md</b> for coding tools has its slot reserved.</p></div>
 
     <div class="steps">
@@ -403,11 +394,17 @@
     <figure class="pol" style="margin-top:34px;"><img src="assets/ui-compile-card.webp" alt="The 'Before you compile' card: chips for what you are making, a product description with a row of product file thumbnails (cap, tee, polos, sweater), who is in frame, aspect ratio options, the period, and what must never appear, with a red Compile button." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>Before you compile · 44 pins, 7 product files</span><span>Whole-board facts, asked once</span></figcaption></figure>
   </section>
 
-  <!-- ══════════ 04 · PROOF ══════════ -->
+  <!-- ══════════ 03 · WHY IT EXISTS + PROOF ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">04 — Proof</div><h2 class="sec-title">Same taste, different grammar. The brief won three out of three, blind.</h2></div>
+    <div class="sec-head"><div class="eyebrow">03 — Why it exists</div><h2 class="sec-title">I gave the AI fifty reference images and it ignored what I liked about all of them.</h2></div>
     <div class="prose">
-      <p>Before there was an interface I ran the compiler by hand against my own best effort. Same 118 pins, same three shots, same image model. Arm A got a direction paragraph I wrote plus a shot line. Arm B got the compiled brief. I judged the pairs blind with left and right randomized.</p>
+      <p>That sentence is the project. Every designer working with image models or AI coding tools has done the same thing: gather a mood board, drop the whole pile into the context window, and get back something that averages the pile. The model's attention is spread across everything in every image. The one thing you actually liked, the way a collar sits, the green of one studio wall, is a rounding error.</p>
+      <p>Pinterest collects. Kive tags. Nothing compiles. A mood board is a set of unspoken preferences, and the preferences are exactly the part that never makes it into the prompt. Maraschino makes you speak them, one pin at a time, and translates them into a document a machine can act on.</p>
+      <p>I built it for myself first. I run a small apparel brand and I wanted campaign stills that looked like my references without hiring a photographer or writing three paragraphs of prompt every time. The tool had to beat the fastest alternative, which is me typing that paragraph. So the first thing I built was the test, not the interface.</p>
+    </div>
+    <h3 class="sub-title">Same taste, different grammar. The brief won three out of three, blind.</h3>
+    <div class="prose">
+      <p>Same 118 pins, same three shots, same image model. Arm A got a direction paragraph I wrote plus a shot line. Arm B got the compiled brief. I judged the pairs blind with left and right randomized.</p>
     </div>
     <div class="arms">
       <div class="arm">
@@ -453,21 +450,21 @@
     </table>
   </section>
 
-  <!-- ══════════ 05 · DESIGN DECISIONS ══════════ -->
+  <!-- ══════════ 04 · DESIGN DECISIONS ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">05 — Design decisions</div><h2 class="sec-title">The parts I would defend in a review.</h2></div>
+    <div class="sec-head"><div class="eyebrow">04 — Design decisions</div><h2 class="sec-title">The parts I would defend in a review.</h2></div>
 
     <div class="dec">
       <div class="dec-k">D-021 · Pin finish</div>
-      <h3>Gloss looked better in the mockup and worse on the board.</h3>
-      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>The pin head's entire job is hue separation at 24px. A full-gloss head has a white hotspot that eats about 40% of a small head and pulls every hue toward white, so red and orange stop being different pins.</p></div>
-      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Tested five finishes across 16 to 48px on real board imagery. Flat matte read as a sticker. Full gloss lost the hue below 32px. A single small specular kept the glass feel and the hue survived down to 20px. Board pins are 24px, the smallest size where the shaft still reads as a shaft.</p></div>
-      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>Full gloss is not gone, it moved to where it has room: the app icon, the empty state, marketing.</p></div>
+      <h3>Glass on the board, flat in the rail.</h3>
+      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>A pin head is 24px on screen and its whole job is hue separation. Full gloss puts a white hotspot over about 40% of a head that small and drags every hue toward white, so red and orange stop reading as different pins. Flat matte kept the hue but read as a sticker, not an object.</p></div>
+      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Tested the finishes across 16 to 48px on real board imagery and landed between the two: a glass ball-head with one small, tight specular. The hue survives down to 20px and the pin still reads as a thing pushed into the board. The rail is the opposite call. There the seven types are flat colour discs carrying an icon, because in a toolbar the icon does the identifying and a highlight would only compete with it.</p></div>
+      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>Two renderings of the same seven colours. It holds because they never sit side by side at the same size: the rail is where you choose, the board is where the choice lands.</p></div>
       <div class="pair">
-        <figure class="pol"><img src="assets/dec-pins-gloss.webp" alt="Test board with gloss-finish pins on five references and a legend of seven pin types." width="1600" height="902" loading="lazy"><figcaption class="chin"><span>Gloss @ 20px · hues collapse</span></figcaption></figure>
-        <figure class="pol"><img src="assets/dec-pins-matte.webp" alt="The same test board with matte-finish pins." width="1600" height="902" loading="lazy"><figcaption class="chin"><span>Matte @ 20px · reads as a sticker</span></figcaption></figure>
+        <figure class="pol"><img src="assets/dec-pins-gloss.webp" alt="Test board with full-gloss pins on five references and a legend of seven pin types." width="1600" height="902" loading="lazy"><figcaption class="chin"><span>Full gloss @ 20px · rejected, hues collapse</span></figcaption></figure>
+        <figure class="pol"><img src="assets/dec-pins-matte.webp" alt="The same test board with flat matte pins." width="1600" height="902" loading="lazy"><figcaption class="chin"><span>Flat matte @ 20px · rejected, reads as a sticker</span></figcaption></figure>
       </div>
-      <figure class="pol"><img src="assets/dec-pin-scale-ramp.webp" alt="Three rows of the same photograph with pins at 16, 20, 24, 32 and 48px: full gloss, subtle specular, and flat matte." width="1800" height="1023" loading="lazy"><figcaption class="chin"><span>Scale ramp · full gloss / subtle specular / flat matte · 16 to 48px</span></figcaption></figure>
+      <figure class="pol"><img src="assets/dec-pin-scale-ramp.webp" alt="Three rows of the same photograph with pins at 16, 20, 24, 32 and 48px: full gloss, subtle specular, and flat matte." width="1800" height="1023" loading="lazy"><figcaption class="chin"><span>Scale ramp · full gloss / subtle specular (shipped) / flat matte · 16 to 48px</span></figcaption></figure>
     </div>
 
     <div class="dec">
@@ -498,9 +495,9 @@
     </div>
   </section>
 
-  <!-- ══════════ 06 · BUILT ══════════ -->
+  <!-- ══════════ 05 · BUILT ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">06 — Built</div><h2 class="sec-title">Designed and built by one person, with the docs as the contract.</h2></div>
+    <div class="sec-head"><div class="eyebrow">05 — Built</div><h2 class="sec-title">Designed and built by one person, with the docs as the contract.</h2></div>
     <div class="prose">
       <p>I wrote the spec, the compiler design, the decision log and the eval protocol before the first component, then built the app with Claude Code against those documents. Every behaviour change updates its doc in the same commit. The decision numbers on this page are real; D-021 is a file you can open.</p>
     </div>
