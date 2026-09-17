@@ -30,9 +30,9 @@
 .mz-pol .area img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
 .mz-pol .chin{display:flex;align-items:center;justify-content:center}
 .mz-pol .chin-inner{position:relative}
-.mz-pol .lasso{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.mz-pol .lasso path{transition:fill-opacity 140ms ease, stroke-width 140ms ease}
-.lasso{transition:opacity 600ms ease}
+/* the loop lives in normalised 0..1 space, so the svg must fill its surface exactly — polaroid or bare sheet alike */
+.lasso{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;transition:opacity 600ms ease}
+.lasso path{transition:fill-opacity 140ms ease, stroke-width 140ms ease}
 .lasso.dissolve{opacity:0}
 @keyframes pin-born{from{transform:translateY(-14px) scale(.55);opacity:0}to{transform:none;opacity:1}}
 .pin-btn.born .pin-g{animation:pin-born 380ms var(--spring) both}
