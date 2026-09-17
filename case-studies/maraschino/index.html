@@ -71,6 +71,10 @@
 
   /* hero */
   .hero{ padding:34px 0 58px; border-top:0; }
+  .hero-lock{ display:block; height:clamp(150px,22vw,230px); width:auto; margin:8px auto 26px; }
+  .hero-chips{ justify-content:center; margin-bottom:40px; }
+  .sec-title.big{ font-weight:900; font-size:clamp(34px,5.6vw,62px); letter-spacing:-.035em; line-height:1.02; max-width:16ch; }
+  .prose.lede p+p{ font-size:17px; line-height:1.62; color:var(--ink-2); margin-top:18px; }
   .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-bottom:30px; }
   .chip{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-2); border:1px solid var(--line); border-radius:999px; padding:7px 12px; display:inline-flex; align-items:center; gap:8px; background:var(--polaroid); }
   .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--cherry); box-shadow:0 0 0 3px rgba(193,23,23,.15); animation:pulse 2.4s ease-in-out infinite; }
@@ -266,13 +270,12 @@
 
   <!-- ══════════ HERO ══════════ -->
   <section class="hero">
-    <div class="chips">
+    <img class="hero-lock" src="assets/cherry-red.svg" alt="Maraschino">
+    <div class="chips hero-chips">
       <span class="chip"><span class="live-dot"></span>Built · still adding features</span>
       <span class="chip">Local-first web app</span>
       <span class="chip">Designed &amp; built solo</span>
     </div>
-    <h1 class="hero-sentence">An art direction board with a <span class="r">compiler.</span></h1>
-    <p class="hero-sub">Pin exactly what you like on your inspiration images, weight it, and compile the board into a brief an image model or an AI coding tool can follow. Board in, photographs out.</p>
 
     <figure class="film">
       <div class="film-screen">
@@ -303,8 +306,9 @@
 
   <!-- ══════════ 01 · THE PRODUCT ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">01 — The product</div><h2 class="sec-title">A board that knows what it is for.</h2></div>
-    <div class="prose lede"><p>Maraschino is a web app. You drop your inspiration images onto a dot-grid board, push typed pins into the exact things you like, circle them, write a note, and rate each reference with cherries. Then you press Compile. Everything below is the shipped interface, running on my own retro golf apparel board.</p></div>
+    <div class="sec-head"><div class="eyebrow">01 — The product</div><h1 class="sec-title big">An art direction board with a <span class="r">compiler.</span></h1></div>
+    <div class="prose lede"><p>Pin exactly what you like on your inspiration images, weight it, and compile the board into a brief an image model or an AI coding tool can follow. Board in, photographs out.</p>
+    <p>Maraschino is a web app. You drop your inspiration images onto a dot-grid board, push typed pins into the exact things you like, circle them, write a note, and rate each reference with cherries. Then you press Compile. Everything below is the shipped interface, running on my own retro golf apparel board.</p></div>
 
     <!-- the board, on a MacBook that opens when you reach it -->
     <div class="mac-hero" id="mac-hero"><div class="load">Loading the model</div><img class="fallback" alt="The Maraschino board on a MacBook Pro: vintage golf references in polaroid frames on the dot grid, the image tray open, the seven-pin rail on the left." src="assets/mac-screen-1x.webp" loading="lazy"></div>
