@@ -78,6 +78,14 @@
   .hero-sentence{ font-weight:900; font-size:clamp(34px,5.6vw,62px); line-height:1.02; letter-spacing:-.035em; margin:0 0 20px; color:var(--ink); max-width:16ch; }
   .hero-sub{ color:var(--ink-2); font-size:clamp(17px,2vw,20px); max-width:52ch; margin:0 0 38px; line-height:1.5; }
 
+  /* the MacBook hero (assets/mac-hero.js · three.js) */
+  .mac-hero{ position:relative; width:100%; aspect-ratio:16/10; margin-top:8px; }
+  .mac-hero canvas{ display:block; width:100%; height:100%; }
+  .mac-hero .load{ position:absolute; inset:0; display:grid; place-items:center; font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); pointer-events:none; transition:opacity .4s ease; }
+  .mac-hero.ready .load{ opacity:0; }
+  .mac-hero .fallback{ display:none; width:100%; height:auto; border-radius:12px; border:1px solid var(--line); }
+  .mac-hero.failed{ aspect-ratio:auto; }
+  .mac-after{ margin-top:34px; }
   /* film frame */
   .film{ position:relative; background:var(--polaroid); border:1px solid var(--line); border-radius:var(--r-lg); padding:12px; box-shadow:var(--shadow-deep); }
   .film-screen{ position:relative; border-radius:10px; overflow:hidden; background:#0b0b0b; aspect-ratio:16/9; }
@@ -99,7 +107,7 @@
 
   /* walkthrough rows */
   .walk{ display:grid; grid-template-columns:1.25fr 1fr; gap:44px; align-items:center; padding:40px 0; border-top:1px solid var(--line); }
-  .walk:first-of-type{ border-top:0; padding-top:10px; }
+  .walk.first{ border-top:0; padding-top:10px; }
   .walk.flip .walk-fig{ order:2; }
   .walk.flip{ grid-template-columns:1fr 1.25fr; }
   @media(max-width:820px){ .walk,.walk.flip{ grid-template-columns:1fr; gap:24px; } .walk.flip .walk-fig{ order:0; } }
@@ -228,6 +236,7 @@
 </style>
 <link rel="stylesheet" href="../../assets/cursors/cursors.css">
 <link rel="stylesheet" href="assets/play.css">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/" } }</script>
 <!-- favicon -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
@@ -293,14 +302,11 @@
     <div class="sec-head"><div class="eyebrow">01 — The product</div><h2 class="sec-title">A board that knows what it is for.</h2></div>
     <div class="prose lede"><p>Maraschino is a web app. You drop your inspiration images onto a dot-grid board, push typed pins into the exact things you like, circle them, write a note, and rate each reference with cherries. Then you press Compile. Everything below is the shipped interface, running on my own retro golf apparel board.</p></div>
 
-    <div class="walk">
-      <figure class="walk-fig pol"><img src="assets/ui-board.webp" alt="The Maraschino board: dozens of vintage golf and sportswear references in polaroid frames on a pale blue dot grid, colored pushpins on each, a seven-pin rail on the left and the Maraschino pill and Compile button on top." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>The board · Asa W. Sams · 44 pins</span><span class="w"><i class="on"></i><i class="on"></i><i class="on"></i></span></figcaption></figure>
-      <div class="walk-body">
-        <div class="walk-tag">The board</div>
-        <h3>Cool ground, warm imagery.</h3>
-        <p>Reference imagery is almost always warm, so the surface is a very light slate blue with a dot grid that never hides. Every image sits in a polaroid frame: a thin white border and a deep chin. The frame gives a pin a physical edge to bite into, and the chin is where the cherries live.</p>
-        <p>Pan, zoom and select work exactly like Figma, because that is the muscle memory the people I built this for already have.</p>
-      </div>
+    <!-- the board, on a MacBook that opens when you reach it -->
+    <div class="mac-hero" id="mac-hero"><div class="load">Loading the model</div><img class="fallback" alt="The Maraschino board on a MacBook Pro: vintage golf references in polaroid frames on the dot grid, the image tray open, the seven-pin rail on the left." src="assets/mac-screen-1x.webp" loading="lazy"></div>
+    <div class="demo-cap"><span>Cool ground, warm imagery · move your cursor</span><span>MacBook Pro 13" model by timblewee, CC BY 4.0</span></div>
+    <div class="prose mac-after">
+      <p>Reference imagery is almost always warm, so the surface is a very light slate blue with a dot grid that never hides. Every image sits in a polaroid frame: a thin white border and a deep chin. The frame gives a pin a physical edge to bite into, and the chin is where the cherries live. Pan, zoom and select work exactly like Figma, because that is the muscle memory the people I built this for already have.</p>
     </div>
 
     <div class="walk">
@@ -524,9 +530,15 @@
     <img class="foot-mark" src="assets/cherry-red.svg" alt="Maraschino">
     <div class="foot-line">Maraschino · Designed &amp; built by Garrison Bullock</div>
     <div class="foot-line">© 2026 Garrison Bullock · garrisonbullock.com</div>
+    <div class="foot-line">MacBook Pro 13" (2020) 3D model by <a href="https://sketchfab.com/3d-models/macbook-pro-13-inch-2020-efab224280fd4c3993c808107f7c0b38" target="_blank" rel="noopener">timblewee</a>, CC BY 4.0 · rendered with three.js</div>
   </footer>
 
 </div>
+<script type="module">
+  import { initMacHero } from './assets/mac-hero.js';
+  const host = document.getElementById('mac-hero');
+  if (host) { try { initMacHero(host, { glb: 'assets/macbook13.glb', screen: 'assets/mac-screen.webp' }); } catch (e) { console.error(e); host.classList.add('failed'); const fb = host.querySelector('.fallback'); if (fb) fb.style.display = 'block'; } }
+</script>
 <script src="assets/play.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
