@@ -53,9 +53,9 @@
   .brand-logo{ height:28px; width:auto; display:block; }
   .brand-name{ font-family:var(--mono); font-size:14px; font-weight:600; color:var(--cherry); letter-spacing:.02em; }
   .brand-sub{ font-family:var(--mono); font-size:10.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.14em; border-left:1px solid var(--line); padding-left:12px; margin-left:2px; }
-  @media(max-width:560px){ .brand-sub{display:none;} .doc-meta{ width:100%; text-align:left; border-radius:var(--r-lg); } .doc-meta b{ display:inline-block; min-width:46px; } }
-  .doc-meta{ font-family:var(--mono); font-size:10.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.13em; text-align:right; padding:12px 18px; border-radius:var(--r-lg); }
-  .doc-meta div+div{ margin-top:5px; } .doc-meta b{ color:var(--ink-2); font-weight:500; }
+  @media(max-width:560px){ .brand-sub{display:none;} }
+  .doc-meta{ display:inline-flex; align-items:center; gap:12px; font-family:var(--mono); font-size:10.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.14em; padding:0 18px; height:48px; }
+  .doc-meta b{ color:var(--cherry); font-weight:600; letter-spacing:.02em; text-transform:none; font-size:14px; border-right:1px solid var(--line); padding-right:12px; }
 
   /* sections */
   section{ padding:58px 0; border-top:1px solid var(--line); }
@@ -261,10 +261,7 @@
       <span class="brand-name">Maraschino</span>
       <span class="brand-sub">Art direction board · Case study</span>
     </div>
-    <div class="pill doc-meta">
-      <div><b>Role</b> &nbsp;Product design · Build</div>
-      <div><b>Scope</b> &nbsp;Product · Brand · Compiler · Front end</div>
-    </div>
+    <div class="pill doc-meta"><b>Scope</b>Product · Brand · Compiler · Front end</div>
   </header>
 
   <!-- ══════════ HERO ══════════ -->
