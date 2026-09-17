@@ -187,19 +187,23 @@
   .scard .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--cherry); }
   .scard h3{ font-size:16px; margin:8px 0 6px; letter-spacing:-.01em; }
   .scard p{ margin:0; font-size:14px; color:var(--ink-2); line-height:1.55; }
-  .status{ display:grid; grid-template-columns:1fr 280px; gap:40px; align-items:center; margin-top:40px; background:var(--cherry); color:#fff; border-radius:var(--r-lg); padding:34px 36px; box-shadow:var(--shadow-deep); overflow:hidden; position:relative; }
-  @media(max-width:760px){ .status{ grid-template-columns:1fr; padding:28px 24px; } .status .lock{ display:none; } }
-  .status h3{ color:#fff; font-size:clamp(22px,3vw,30px); margin:0 0 12px; letter-spacing:-.02em; line-height:1.1; }
-  .status p{ margin:0; color:rgba(255,255,255,.88); max-width:52ch; }
-  .status .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.7); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-  .status .k i{ width:7px; height:7px; border-radius:50%; background:#fff; animation:pulse 2.4s ease-in-out infinite; }
-  .status .lock{ height:170px; width:auto; justify-self:end; opacity:.95; }
-
-  /* footer */
-  footer{ padding:52px 0 0; border-top:1px solid var(--line); text-align:center; }
-  .foot-mark{ height:56px; width:auto; margin:0 auto 14px; display:block; }
-  .foot-line{ font-family:var(--mono); font-size:11.5px; color:var(--ink-3); letter-spacing:.05em; }
+  /* finale: full-bleed cherry bloom loop, everything centred, red fading up into the board */
+  .wrap{ padding-bottom:0; }
+  .finale{ position:relative; width:100vw; margin:80px 0 0 calc(50% - 50vw); padding:220px 24px 44px; text-align:center; color:#fff; overflow:hidden; background:var(--cherry); }
+  .finale-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+  .finale-fade{ position:absolute; left:0; right:0; top:0; height:260px; pointer-events:none;
+    background:linear-gradient(to bottom, var(--board) 0%, rgba(226,235,241,.92) 22%, rgba(226,235,241,.55) 52%, rgba(226,235,241,.18) 80%, rgba(226,235,241,0) 100%); }
+  .finale-in{ position:relative; max-width:640px; margin:0 auto; }
+  .finale-lock{ height:190px; width:auto; display:block; margin:0 auto 34px; filter:drop-shadow(0 12px 30px rgba(60,0,0,.35)); }
+  .finale .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.75); margin-bottom:14px; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .finale .k i{ width:7px; height:7px; border-radius:50%; background:#fff; animation:pulse 2.4s ease-in-out infinite; }
+  .finale h3{ color:#fff; font-size:clamp(24px,3.4vw,36px); margin:0 0 14px; letter-spacing:-.02em; line-height:1.08; }
+  .finale p{ margin:0 auto; color:rgba(255,255,255,.9); max-width:56ch; }
+  .finale-foot{ margin-top:110px; padding-top:22px; border-top:1px solid rgba(255,255,255,.22); }
+  .foot-line{ font-family:var(--mono); font-size:11.5px; color:rgba(255,255,255,.62); letter-spacing:.05em; }
   .foot-line+.foot-line{ margin-top:5px; }
+  .foot-line a{ color:#fff; text-decoration:underline; text-decoration-color:rgba(255,255,255,.4); } .foot-line a:hover{ color:#fff; }
+  @media(max-width:700px){ .finale{ padding:170px 20px 34px; } .finale-lock{ height:130px; } .finale-fade{ height:200px; } .finale-foot{ margin-top:70px; } }
 
   /* ── live demos: the app's own controls, ported (assets/play.css + play.js) ── */
   .demo{ position:relative; background-color:var(--board); background-image:radial-gradient(var(--dot) 1px, transparent 1px); background-size:22px 22px; background-position:11px 11px; border:1px solid var(--line); border-radius:14px; }
@@ -232,7 +236,7 @@
   .play-touch{ display:none; font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); }
   @media (max-width:760px), (hover:none){ .play-desktop{ display:none; } .play-touch{ display:block; } }
 
-  @media(prefers-reduced-motion:reduce){ .live-dot,.status .k i{ animation:none; } }
+  @media(prefers-reduced-motion:reduce){ .live-dot,.finale .k i{ animation:none; } }
 </style>
 <link rel="stylesheet" href="../../assets/cursors/cursors.css">
 <link rel="stylesheet" href="assets/play.css">
@@ -516,21 +520,26 @@
       <div class="scard"><div class="k">Method</div><h3>Evals before UI</h3><p>Six recorded runs. The compiler had to beat me typing a paragraph before it earned an interface.</p></div>
     </div>
 
-    <div class="status">
-      <div>
-        <div class="k"><i></i>Status</div>
-        <h3>Built and in active development. Still adding features.</h3>
-        <p>The full loop works today: board in, brief, photographs out. What is next is the Product &amp; UI profile that compiles to a design.md for coding tools, bring-your-own-key so other designers can run it, and a wider set of image models. It runs locally with my own API keys for now. Ask me for a walkthrough.</p>
-      </div>
-      <img class="lock" src="assets/cherry.svg" alt="Maraschino pixel cherry lockup">
-    </div>
   </section>
 
-  <footer>
-    <img class="foot-mark" src="assets/cherry-red.svg" alt="Maraschino">
-    <div class="foot-line">Maraschino · Designed &amp; built by Garrison Bullock</div>
-    <div class="foot-line">© 2026 Garrison Bullock · garrisonbullock.com</div>
-    <div class="foot-line">MacBook Pro 13" (2020) 3D model by <a href="https://sketchfab.com/3d-models/macbook-pro-13-inch-2020-efab224280fd4c3993c808107f7c0b38" target="_blank" rel="noopener">timblewee</a>, CC BY 4.0 · rendered with three.js</div>
+  <!-- finale: status + footer on the cherry bloom loop, full bleed, fading up into the board -->
+  <footer class="finale">
+    <video class="finale-bg" autoplay loop muted playsinline preload="metadata" poster="assets/bloom-poster.jpg" aria-hidden="true">
+      <source src="assets/bloom-loop-720.mp4" type="video/mp4" media="(max-width:700px)">
+      <source src="assets/bloom-loop.mp4" type="video/mp4">
+    </video>
+    <div class="finale-fade"></div>
+    <div class="finale-in">
+      <img class="finale-lock" src="assets/cherry.svg" alt="Maraschino">
+      <div class="k"><i></i>Status</div>
+      <h3>Built and in active development. Still adding features.</h3>
+      <p>The full loop works today: board in, brief, photographs out. What is next is the Product &amp; UI profile that compiles to a design.md for coding tools, bring-your-own-key so other designers can run it, and a wider set of image models. It runs locally with my own API keys for now. Ask me for a walkthrough.</p>
+      <div class="finale-foot">
+        <div class="foot-line">Maraschino · Designed &amp; built by Garrison Bullock</div>
+        <div class="foot-line">© 2026 Garrison Bullock · garrisonbullock.com</div>
+        <div class="foot-line">MacBook Pro 13" (2020) 3D model by <a href="https://sketchfab.com/3d-models/macbook-pro-13-inch-2020-efab224280fd4c3993c808107f7c0b38" target="_blank" rel="noopener">timblewee</a>, CC BY 4.0 · rendered with three.js</div>
+      </div>
+    </div>
   </footer>
 
 </div>
