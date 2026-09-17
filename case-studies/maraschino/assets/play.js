@@ -373,7 +373,7 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
     cancelLasso() { this.lassoFor = null; this.root.classList.remove('lassoing'); this.syncAll(); }
     setPinLasso(img, pin, pts) {
       pin.lasso = pts; this.lassoFor = null; this.root.classList.remove('lassoing');
-      if (pts) this.notePin = pin.id; // circle the thing, then say why
+      if (pts && !this.o.quietLasso) this.notePin = pin.id; // circle the thing, then say why
       this.syncAll();
       if (pts && this.o.lassoTTL) {
         const e = this.els.get(img.id);

@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* the seven pins in a row */
   (function(){ var host=document.getElementById('pg-pins'); if(!host) return;
-    var b = new MZ.Board(host, { bare:true, pinSize:48, lassoTTL:3000,
+    var b = new MZ.Board(host, { bare:true, pinSize:48, lassoTTL:3000, quietLasso:true,
       // a deleted pin comes back after three seconds, so the row never empties out
       onRemovePin: function(sheet, pin){ setTimeout(function(){ if(sheet.pins.some(function(p){ return p.type===pin.type; })) return;
         sheet.pins.push({ id:MZ.uid(), type:pin.type, x:pin.x, y:pin.y, note:'', born:true }); b.sync(sheet); }, 3000); } });
