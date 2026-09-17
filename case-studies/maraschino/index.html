@@ -171,19 +171,8 @@
   @media(max-width:640px){ .ledger td:nth-child(3),.ledger th:nth-child(3){ display:none; } }
 
   /* decisions */
-  .dec{ padding:34px 0; border-top:1px solid var(--line); }
-  .dec:first-of-type{ border-top:0; padding-top:6px; }
-  .dec-k{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
-  .dec h3{ font-size:clamp(20px,2.5vw,26px); margin:0 0 16px; letter-spacing:-.01em; line-height:1.16; }
-  .dec-row{ display:grid; grid-template-columns:104px 1fr; gap:18px; align-items:baseline; padding:8px 0; }
-  .dec-row + .dec-row{ border-top:1px solid rgba(31,42,51,.06); }
-  .dec-lbl{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
-  .dec-lbl.p{ color:var(--ink-3); } .dec-lbl.c{ color:var(--cherry); } .dec-lbl.t{ color:var(--ink-2); }
-  .dec-row p{ margin:0; color:var(--ink-2); max-width:60ch; }
-  @media(max-width:640px){ .dec-row{ grid-template-columns:1fr; gap:4px; } }
   .pair{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:22px; }
   @media(max-width:700px){ .pair{ grid-template-columns:1fr; } }
-  .dec .pol{ margin-top:22px; }
   .pair .pol{ margin-top:0; }
 
   /* built */
@@ -220,6 +209,12 @@
   .walk.stack .demo{ margin:0 auto; width:100%; }
   .pins-demo{ height:360px; }
   .pins-row{ padding:6px 0 40px; border-top:1px solid var(--line); }
+  .dec-list{ list-style:none; margin:0; padding:0; max-width:72ch; }
+  .dec-list li{ position:relative; padding:14px 0 14px 26px; color:var(--ink-2); line-height:1.6; border-top:1px solid var(--line); }
+  .dec-list li:first-child{ border-top:0; padding-top:0; }
+  .dec-list li::before{ content:""; position:absolute; left:2px; top:calc(14px + .55em); width:9px; height:9px; border-radius:50%; background:var(--cherry); }
+  .dec-list li:first-child::before{ top:.55em; }
+  .dec-list b{ color:var(--ink); font-weight:600; }
   .cherry-demo{ height:340px; display:flex; align-items:center; justify-content:center; margin-top:22px; }
   .cherry-demo .cherry-row{ gap:14px; }
   @media(max-width:600px){ .cherry-demo{ height:260px; } .cherry-demo .cherry-row{ transform:scale(.6); } }
@@ -457,47 +452,16 @@
 
   <!-- ══════════ 04 · DESIGN DECISIONS ══════════ -->
   <section>
-    <div class="sec-head"><div class="eyebrow">04 — Design decisions</div><h2 class="sec-title">The parts I would defend in a review.</h2></div>
-
-    <div class="dec">
-      <div class="dec-k">D-021 · Pin finish</div>
-      <h3>Glass on the board, flat in the rail.</h3>
-      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>A pin head is 24px on screen and its whole job is hue separation. Full gloss puts a white hotspot over about 40% of a head that small and drags every hue toward white, so red and orange stop reading as different pins. Flat matte kept the hue but read as a sticker, not an object.</p></div>
-      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Tested the finishes across 16 to 48px on real board imagery and landed between the two: a glass ball-head with one small, tight specular. The hue survives down to 20px and the pin still reads as a thing pushed into the board. The rail is the opposite call. There the seven types are flat colour discs carrying an icon, because in a toolbar the icon does the identifying and a highlight would only compete with it.</p></div>
-      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>Two renderings of the same seven colours. It holds because they never sit side by side at the same size: the rail is where you choose, the board is where the choice lands.</p></div>
-      <div class="pair">
-        <figure class="pol"><img src="assets/dec-pins-gloss.webp" alt="Test board with full-gloss pins on five references and a legend of seven pin types." width="1600" height="902" loading="lazy"><figcaption class="chin"><span>Full gloss @ 20px · rejected, hues collapse</span></figcaption></figure>
-        <figure class="pol"><img src="assets/dec-pins-matte.webp" alt="The same test board with flat matte pins." width="1600" height="902" loading="lazy"><figcaption class="chin"><span>Flat matte @ 20px · rejected, reads as a sticker</span></figcaption></figure>
-      </div>
-      <figure class="pol"><img src="assets/dec-pin-scale-ramp.webp" alt="Three rows of the same photograph with pins at 16, 20, 24, 32 and 48px: full gloss, subtle specular, and flat matte." width="1800" height="1023" loading="lazy"><figcaption class="chin"><span>Scale ramp · full gloss / subtle specular (shipped) / flat matte · 16 to 48px</span></figcaption></figure>
-    </div>
-
-    <div class="dec">
-      <div class="dec-k">D-020 · Board surface</div>
-      <h3>A cool board, so warm references pop.</h3>
-      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>The first direction was warm paper, which is what a studio wall looks like. On real boards it blended into the imagery, which is overwhelmingly warm, and it drifted toward cork-board kitsch.</p></div>
-      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Very light slate blue with a regular grid of translucent slate dots, edge to edge. Warmth lives entirely in the cherry red, the pins and the imagery. Pale blue and cherry is also a pairing nobody else in the category owns; the 2026 AI-tool house style is neutral gray.</p></div>
-      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>No paper grain, no texture on the canvas. Physicality is carried by the objects on the board, roughly 5% skeuomorphism and no more.</p></div>
-      <figure class="pol"><img src="assets/dec-board-matte.webp" alt="An early board mockup: vintage golf references in polaroid frames with colored pins on the pale blue dot grid, the Maraschino pill at the top." width="1800" height="1005" loading="lazy"><figcaption class="chin"><span>Cool board, warm imagery</span></figcaption></figure>
-    </div>
-
-    <div class="dec">
-      <div class="dec-k">D-023 · Weighting</div>
-      <h3>Cherries in the chin, one weight per image.</h3>
-      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>The first version put weight inside each pin's popover and mirrored the maximum into the frame's chin. Two cherry rows on screen for one idea read as duplication, and it asked you to remember a scale instead of read one.</p></div>
-      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Zero to three cherries centred in the polaroid chin, with the word under them: noted, important, non-negotiable. The row is the control. Clicking the lit cherry clears it back to zero, so a reference can sit on the board without a claim attached.</p></div>
-      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>You can no longer say the colour here is non-negotiable but the layout is only noted on a single image. I used that distinction once. Accepted for the simpler board; it comes back if compile quality asks for it.</p></div>
-      <div class="demo cherry-demo"><div id="pg-cherries"></div></div>
-      <div class="demo-cap"><span>The weight control, live · click a cherry, click the lit one to clear</span><span>Cherry.tsx</span></div>
-    </div>
-
-    <div class="dec">
-      <div class="dec-k">D-029 · D-032 · D-025</div>
-      <h3>Borrow the muscle memory, not the look.</h3>
-      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>The people this is for live in Figma all day. Any canvas that pans, zooms or selects differently costs them a week of wrong reflexes, and a sticky pin tool left a stray pin on every click.</p></div>
-      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Figma's model outright: V and H, space to hand, zoom anchored to the cursor, shift-1 to fit, command-Z. Placing a pin is one-shot like Figma's shape tools, and 1 to 7 rearms the rail from the keyboard. Luma's interface was the reference for quiet chrome and the right rail as a live plan that ticks off each pin as it is extracted.</p></div>
-      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>Took the restraint, refused the temperature. Motion here is springy, the pins throw real shadows under one shared light, and the board should look worked on, because it holds inputs, not outputs.</p></div>
-    </div>
+    <div class="sec-head"><div class="eyebrow">04 — Design decisions</div><h2 class="sec-title">The short version.</h2></div>
+    <ul class="dec-list">
+      <li><b>Glossy pins on the board, flat discs in the rail.</b> A small glass ball-head keeps the seven hues apart down to 20px. In the toolbar the icon does the identifying, so the discs stay flat.</li>
+      <li><b>A cool board so warm references pop.</b> Reference imagery runs warm, so the surface is pale slate blue with a dot grid and the warmth lives in the cherry red, the pins and the images.</li>
+      <li><b>One weight per image, as cherries in the chin.</b> Zero to three: noted, important, non-negotiable. Click the lit cherry to clear it. Try it below.</li>
+      <li><b>Figma's muscle memory, not its look.</b> V and H, space to hand, zoom on the cursor, shift-1 to fit, command-Z. Placing a pin is one-shot and 1 to 7 rearms the rail.</li>
+      <li><b>About 5% skeuomorphism.</b> No paper grain on the canvas. The objects carry the physicality: springy motion and real shadows under one shared light.</li>
+    </ul>
+    <div class="demo cherry-demo"><div id="pg-cherries"></div></div>
+    <div class="demo-cap"><span>The weight control, live · click a cherry, click the lit one to clear</span><span>Cherry.tsx</span></div>
   </section>
 
   <!-- ══════════ 05 · BUILT ══════════ -->
