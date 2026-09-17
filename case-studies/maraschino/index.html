@@ -197,7 +197,7 @@
   .demo-frame{ background:var(--polaroid); border:1px solid var(--line); border-radius:var(--r-lg); padding:12px; box-shadow:var(--shadow-lift); }
   .rail-demo{ height:420px; display:flex; align-items:center; justify-content:center; }
   .tray-demo{ padding:26px 14px; }
-  .pins-demo{ height:250px; }
+  .pins-demo{ height:360px; }
   .pins-row{ padding:6px 0 40px; border-top:1px solid var(--line); }
   .cherry-demo{ height:240px; display:flex; align-items:center; justify-content:center; margin-top:22px; }
   .demo-cap{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-top:12px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
@@ -317,7 +317,7 @@
     </div>
     <div class="pins-row">
       <div class="demo pins-demo" id="pg-pins"></div>
-      <div class="demo-cap"><span>The seven pins, live · hover one for its menu, drag to move it</span><span>Pin.tsx · PinMenu.tsx</span></div>
+      <div class="demo-cap"><span>The seven pins, live · hover one for its menu, drag to move it, draw around it</span><span>Pin.tsx · PinMenu.tsx</span></div>
     </div>
 
     <div class="walk flip">
@@ -550,8 +550,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* the seven pins in a row */
   (function(){ var host=document.getElementById('pg-pins'); if(!host) return;
-    var b = new MZ.Board(host, { bare:true, pinSize:48 }); var sheet=b.images[0];
-    MZ.PIN_TYPES.forEach(function(t,i){ sheet.pins.push({ id:MZ.uid(), type:t.id, x:(i+0.5)/7, y:.64, note:'' }); }); b.sync(sheet); })();
+    var b = new MZ.Board(host, { bare:true, pinSize:48, lassoTTL:3000,
+      // a deleted pin comes back after three seconds, so the row never empties out
+      onRemovePin: function(sheet, pin){ setTimeout(function(){ if(sheet.pins.some(function(p){ return p.type===pin.type; })) return;
+        sheet.pins.push({ id:MZ.uid(), type:pin.type, x:pin.x, y:pin.y, note:'', born:true }); b.sync(sheet); }, 3000); } });
+    var sheet=b.images[0];
+    MZ.PIN_TYPES.forEach(function(t,i){ sheet.pins.push({ id:MZ.uid(), type:t.id, x:(i+0.5)/7, y:.40, note:'' }); }); b.sync(sheet); })();
 
   /* the weight control */
   (function(){ var host=document.getElementById('pg-cherries'); if(!host) return;

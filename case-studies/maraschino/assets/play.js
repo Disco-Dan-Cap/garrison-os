@@ -146,7 +146,7 @@ ${dragging ? '' : `<ellipse cx="${ENTRY.x}" cy="${ENTRY.y}" rx="${T.pin.hole.rx}
   function lassoSVG(pts, type, o = {}) {
     const d = lassoPath(pts); if (!d) return '';
     const t = pinType(type), hot = o.active || o.drawing;
-    return `<svg class="lasso" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="${t.color}" fill-opacity="${hot ? 0.16 : 0.09}" stroke="${t.color}" stroke-width="${hot ? 2.4 : 1.6}" stroke-linejoin="round" stroke-linecap="round" ${o.drawing ? 'stroke-dasharray="5 4"' : ''} vector-effect="non-scaling-stroke"/></svg>`;
+    return `<svg class="lasso" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"${o.id ? ` data-pin="${o.id}"` : ''}><path d="${d}" fill="${t.color}" fill-opacity="${hot ? 0.16 : 0.09}" stroke="${t.color}" stroke-width="${hot ? 2.4 : 1.6}" stroke-linejoin="round" stroke-linecap="round" ${o.drawing ? 'stroke-dasharray="5 4"' : ''} vector-effect="non-scaling-stroke"/></svg>`;
   }
 
   /* ---------------------------------------------------------------- pin menu (PinMenu.tsx, D-031) */
@@ -367,7 +367,7 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
       img.pins.push(pin); this.arm(null); this.sync(img); return pin;
     }
     movePin(img, pin, x, y) { pin.x = x; pin.y = y; this.positionPin(img, pin); }
-    removePin(img, pin) { img.pins = img.pins.filter((p) => p !== pin); if (this.notePin === pin.id) this.notePin = null; if (this.lassoFor === pin.id) this.cancelLasso(); this.menus.kill(); this.sync(img); }
+    removePin(img, pin) { img.pins = img.pins.filter((p) => p !== pin); if (this.notePin === pin.id) this.notePin = null; if (this.lassoFor === pin.id) this.cancelLasso(); this.menus.kill(); this.sync(img); if (this.o.onRemovePin) this.o.onRemovePin(img, pin); }
     updatePin(pin, patch) { Object.assign(pin, patch); }
     startLasso(pinId) { this.lassoFor = pinId; this.openNote(null); this.root.classList.add('lassoing'); this.menus.kill(); this.syncAll(); }
     cancelLasso() { this.lassoFor = null; this.root.classList.remove('lassoing'); this.syncAll(); }
@@ -375,6 +375,14 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
       pin.lasso = pts; this.lassoFor = null; this.root.classList.remove('lassoing');
       if (pts) this.notePin = pin.id; // circle the thing, then say why
       this.syncAll();
+      if (pts && this.o.lassoTTL) {
+        const e = this.els.get(img.id);
+        setTimeout(() => {
+          if (pin.lasso !== pts) return;
+          const svg = e && e.lassoLayer.querySelector(`.lasso[data-pin="${pin.id}"]`); if (svg) svg.classList.add('dissolve');
+          setTimeout(() => { if (pin.lasso === pts) { pin.lasso = undefined; this.sync(img); } }, 620);
+        }, Math.max(0, this.o.lassoTTL - 620));
+      }
     }
     openNote(pinId) { this.notePin = pinId; this.syncAll(); }
     setWeight(img, w) { img.weight = w; if (this.o.onWeight) this.o.onWeight(img, w); }
@@ -458,7 +466,7 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
 
     lassoMarkup(img) {
       return img.pins.filter((p) => p.lasso && p.lasso.length >= 3)
-        .map((p) => lassoSVG(p.lasso, p.type, { active: this.notePin === p.id || this.lassoFor === p.id || this.menus.isOpenFor(p.id) })).join('');
+        .map((p) => lassoSVG(p.lasso, p.type, { id: p.id, active: this.notePin === p.id || this.lassoFor === p.id || this.menus.isOpenFor(p.id) })).join('');
     }
 
     positionPin(img, pin) {
@@ -473,7 +481,7 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
       for (const [id, el] of e.pinEls) if (!live.has(id)) { el.remove(); e.pinEls.delete(id); }
       img.pins.forEach((p) => {
         let el = e.pinEls.get(p.id);
-        if (!el) { el = this.makePinEl(img, p); e.pinEls.set(p.id, el); e.area.appendChild(el); }
+        if (!el) { el = this.makePinEl(img, p); e.pinEls.set(p.id, el); e.area.appendChild(el); if (p.born) { el.classList.add('born'); delete p.born; } }
         const selected = this.notePin === p.id || this.lassoFor === p.id, dragging = this.dragPin === p.id;
         const key = `${selected}|${dragging}`;
         if (el.dataset.key !== key) { el.dataset.key = key; el.firstChild.innerHTML = pinSVG(p.type, { size: this.pinSize, selected, dragging, uid: 'p' + p.id }); }
@@ -531,6 +539,8 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
       const t = pinType(pin.type);
       const pop = document.createElement('div'); pop.className = 'popover'; pop.dataset.pin = pin.id;
       pop.style.left = (pin.x * 100) + '%'; pop.style.top = (pin.y * 100) + '%';
+      // near the right edge the note opens to the left, so the surface's clip never eats it
+      if (pin.x > 0.72) pop.classList.add('left');
       pop.innerHTML = `<div class="hd"><span class="dot" style="background:${t.color}">${icon(t.icon, 10, 2.8)}</span><span class="lbl">${t.label}</span><button type="button" class="del" aria-label="Delete pin">${icon('trash-2', 14, 2)}</button></div>
 <textarea class="field" rows="3" placeholder="${pin.type === 'avoid' ? 'what to never do, and why' : `why this ${t.hint}?`}"></textarea>`;
       pop.addEventListener('pointerdown', (e) => e.stopPropagation());
