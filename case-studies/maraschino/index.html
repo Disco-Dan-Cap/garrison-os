@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maraschino — Case Study · Garrison Bullock</title>
+<meta name="description" content="Maraschino: an art direction board with a compiler. Pin exactly what you like on your inspiration images, weight it, and compile the board into a brief an image model or AI coding tool can follow. Designed and built by Garrison Bullock.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ── Maraschino's own tokens (app/src/lib/tokens.ts), dogfooded ── */
+  :root{
+    --board:#E2EBF1; --dot:#A9BECD;
+    --ink:#1F2A33; --ink-2:#42525F; --ink-3:#7C8E9C; --ink-4:#B6C5D1;
+    --panel:#F2F9F9; --line:#D8E3EB; --polaroid:#FCFCFA;
+    --cherry:#C11717; --cherry-deep:#8E1F1A; --cherry-empty:#C3CFD9;
+    --pin-color:#C11717; --pin-type:#2F6FE4; --pin-format:#E4B10F; --pin-texture:#7A3FD1;
+    --pin-subject:#2EA85C; --pin-theme:#E8702A; --pin-avoid:#141414;
+    --font:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --ease:cubic-bezier(0.23,1,0.32,1);
+    --r-md:12px; --r-lg:16px;
+    --shadow-lift:0 1px 2px rgba(31,42,51,.08), 0 10px 28px rgba(31,42,51,.12);
+    --shadow-deep:0 2px 4px rgba(31,42,51,.10), 0 26px 60px rgba(31,42,51,.18);
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--board); color:var(--ink-2); font-family:var(--font);
+    font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility; position:relative; overflow-x:hidden;
+  }
+  /* the board: dot grid, never hidden */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:radial-gradient(circle, var(--dot) 1px, transparent 1.2px);
+    background-size:22px 22px; background-position:11px 11px; opacity:.7;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:40px 44px 110px; position:relative; z-index:1;}
+  @media(max-width:700px){ .wrap{padding:28px 20px 80px;} }
+  a{color:var(--cherry); text-decoration:none;} a:hover{color:var(--cherry-deep);}
+  h1,h2,h3{color:var(--ink);}
+  ::selection{background:rgba(193,23,23,.18);}
+
+  /* masthead: two chrome-white pills, like the app's top bar */
+  header.masthead{ display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; padding-bottom:26px; }
+  .pill{ background:var(--polaroid); border:1px solid var(--line); border-radius:999px; box-shadow:var(--shadow-lift); }
+  .brand{ display:inline-flex; align-items:center; gap:12px; padding:9px 18px 9px 12px; }
+  .brand-logo{ height:28px; width:auto; display:block; }
+  .brand-name{ font-family:var(--mono); font-size:14px; font-weight:600; color:var(--cherry); letter-spacing:.02em; }
+  .brand-sub{ font-family:var(--mono); font-size:10.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.14em; border-left:1px solid var(--line); padding-left:12px; margin-left:2px; }
+  @media(max-width:560px){ .brand-sub{display:none;} .doc-meta{ width:100%; text-align:left; border-radius:var(--r-lg); } .doc-meta b{ display:inline-block; min-width:46px; } }
+  .doc-meta{ font-family:var(--mono); font-size:10.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.13em; text-align:right; padding:12px 18px; border-radius:var(--r-lg); }
+  .doc-meta div+div{ margin-top:5px; } .doc-meta b{ color:var(--ink-2); font-weight:500; }
+
+  /* sections */
+  section{ padding:58px 0; border-top:1px solid var(--line); }
+  .eyebrow{ font-family:var(--mono); font-size:11px; color:var(--cherry); text-transform:uppercase; letter-spacing:.2em; }
+  .sec-head{ margin-bottom:30px; }
+  .sec-title{ font-weight:800; font-size:clamp(27px,4.2vw,42px); line-height:1.05; letter-spacing:-.02em; margin:14px 0 0; max-width:22ch; }
+  .prose{ color:var(--ink-2); max-width:64ch; }
+  .prose p{ margin:0 0 16px; } .prose p:last-child{ margin-bottom:0; }
+  .prose.lede{ font-size:clamp(18px,2.2vw,22px); line-height:1.5; color:var(--ink); max-width:60ch; }
+  .prose em{ color:var(--ink); font-style:normal; font-weight:600; }
+  .prose b{ color:var(--ink); font-weight:600; }
+  .r{ color:var(--cherry); }
+
+  /* hero */
+  .hero{ padding:34px 0 58px; border-top:0; }
+  .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-bottom:30px; }
+  .chip{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-2); border:1px solid var(--line); border-radius:999px; padding:7px 12px; display:inline-flex; align-items:center; gap:8px; background:var(--polaroid); }
+  .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--cherry); box-shadow:0 0 0 3px rgba(193,23,23,.15); animation:pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .hero-sentence{ font-weight:900; font-size:clamp(34px,5.6vw,62px); line-height:1.02; letter-spacing:-.035em; margin:0 0 20px; color:var(--ink); max-width:16ch; }
+  .hero-sub{ color:var(--ink-2); font-size:clamp(17px,2vw,20px); max-width:52ch; margin:0 0 38px; line-height:1.5; }
+
+  /* film frame */
+  .film{ position:relative; background:var(--polaroid); border:1px solid var(--line); border-radius:var(--r-lg); padding:12px 12px 14px; box-shadow:var(--shadow-deep); }
+  .film-screen{ position:relative; border-radius:10px; overflow:hidden; background:#0b0b0b; aspect-ratio:16/9; }
+  .film video{ display:block; width:100%; height:100%; object-fit:cover; }
+  .film-ctl{ position:absolute; right:14px; bottom:14px; z-index:2; display:flex; gap:8px; }
+  .film-btn{ font:600 11px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:#fff; background:rgba(20,20,20,.62); border:1px solid rgba(255,255,255,.22); border-radius:999px; padding:10px 14px; cursor:pointer; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); display:inline-flex; align-items:center; gap:8px; transition:background .2s var(--ease), transform .2s var(--ease); }
+  .film-btn:hover{ background:var(--cherry); border-color:var(--cherry); transform:translateY(-1px); }
+  .film-btn svg{ width:13px; height:13px; }
+  .film-btn:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
+  .film-cap{ display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); padding:12px 4px 0; }
+
+  /* polaroid frames: thin border, deep chin, soft contact shadow */
+  figure{ margin:0; }
+  .pol{ position:relative; background:var(--polaroid); border:1px solid var(--line); border-radius:6px; padding:12px 12px 0; box-shadow:var(--shadow-lift); }
+  .pol img{ display:block; width:100%; height:auto; border-radius:3px; background:var(--board); }
+  .pol .chin{ display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:46px; padding:12px 2px 13px; font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); }
+  .pol .chin .w{ display:inline-flex; gap:4px; }
+  .pol .chin .w i{ width:9px; height:9px; border-radius:50%; background:var(--cherry-empty); display:inline-block; }
+  .pol .chin .w i.on{ background:var(--cherry); }
+
+  /* walkthrough rows */
+  .walk{ display:grid; grid-template-columns:1.25fr 1fr; gap:44px; align-items:center; padding:40px 0; border-top:1px solid var(--line); }
+  .walk:first-of-type{ border-top:0; padding-top:10px; }
+  .walk.flip .walk-fig{ order:2; }
+  .walk.flip{ grid-template-columns:1fr 1.25fr; }
+  @media(max-width:820px){ .walk,.walk.flip{ grid-template-columns:1fr; gap:24px; } .walk.flip .walk-fig{ order:0; } }
+  .walk-tag{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--cherry); margin-bottom:11px; }
+  .walk-body h3{ font-size:clamp(20px,2.7vw,28px); margin:0 0 13px; letter-spacing:-.02em; line-height:1.1; }
+  .walk-body p{ color:var(--ink-2); margin:0 0 12px; max-width:46ch; }
+  .walk-body p:last-child{ margin-bottom:0; }
+
+  /* the rail (seven pin types) as a legend */
+  .rail{ display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:16px; }
+  .rail span{ display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); }
+  .rail i{ width:12px; height:12px; border-radius:50%; display:inline-block; background:radial-gradient(circle at 34% 30%, rgba(255,255,255,.8) 0 1px, transparent 2px), var(--c); box-shadow:1px 2px 3px rgba(31,42,51,.25); }
+
+  /* at a glance */
+  .glance{ display:grid; grid-template-columns:max-content 1fr; gap:0 36px; max-width:820px; margin:0; }
+  .glance dt{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-3); padding:14px 0; border-top:1px solid var(--line); }
+  .glance dd{ margin:0; padding:14px 0; border-top:1px solid var(--line); color:var(--ink); }
+  @media(max-width:560px){ .glance{ grid-template-columns:1fr; gap:0; } .glance dt{ padding-bottom:2px; } .glance dd{ border-top:0; padding-top:0; } }
+
+  /* how it works: five steps */
+  .steps{ display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-top:34px; position:relative; }
+  @media(max-width:900px){ .steps{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:520px){ .steps{ grid-template-columns:1fr; } }
+  .step{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-lg); padding:18px 18px 20px; position:relative; }
+  .step .n{ font-family:var(--mono); font-size:11px; color:var(--cherry); letter-spacing:.14em; }
+  .step h3{ font-size:17px; margin:10px 0 6px; letter-spacing:-.01em; }
+  .step p{ margin:0; font-size:14px; color:var(--ink-2); line-height:1.5; }
+  .step .out{ margin-top:12px; font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); border-top:1px dashed var(--line); padding-top:10px; }
+
+  /* proof */
+  .arms{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:30px 0 6px; }
+  @media(max-width:700px){ .arms{ grid-template-columns:1fr; } }
+  .arm{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-lg); padding:22px; }
+  .arm .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+  .arm h3{ font-size:19px; margin:8px 0 8px; letter-spacing:-.01em; }
+  .arm p{ margin:0; font-size:15px; color:var(--ink-2); }
+  .arm.win{ border-color:var(--cherry); box-shadow:0 0 0 3px rgba(193,23,23,.10); }
+  .arm.win .k{ color:var(--cherry); }
+  .score{ display:inline-flex; align-items:center; gap:10px; margin-top:16px; font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); }
+  .score b{ font-size:26px; letter-spacing:-.02em; color:var(--cherry); font-family:var(--font); font-weight:900; }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:34px; }
+  @media(max-width:820px){ .grid3{ grid-template-columns:1fr; } }
+  .shots{ display:grid; grid-template-columns:repeat(6,1fr); gap:14px; margin-top:34px; }
+  .shots .pol:nth-child(1){ grid-column:span 2; } .shots .pol:nth-child(2){ grid-column:span 2; } .shots .pol:nth-child(3){ grid-column:span 2; }
+  .shots .pol:nth-child(4){ grid-column:span 3; } .shots .pol:nth-child(5){ grid-column:span 3; }
+  .shots .pol img{ aspect-ratio:3/4; object-fit:cover; }
+  .shots .pol:nth-child(4) img,.shots .pol:nth-child(5) img{ aspect-ratio:16/10; }
+  @media(max-width:820px){ .shots{ grid-template-columns:1fr 1fr; } .shots .pol{ grid-column:span 1 !important; } }
+  .ai-note{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-top:18px; max-width:70ch; line-height:1.7; }
+  .ledger{ width:100%; border-collapse:collapse; margin-top:34px; font-size:15px; }
+  .ledger th{ text-align:left; font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:500; padding:0 12px 12px 0; border-bottom:1px solid var(--line); }
+  .ledger td{ padding:13px 12px 13px 0; border-bottom:1px solid var(--line); vertical-align:top; color:var(--ink-2); }
+  .ledger td:first-child{ font-family:var(--mono); font-size:12px; color:var(--ink-3); white-space:nowrap; }
+  .ledger td b{ color:var(--ink); font-weight:600; }
+  .ledger .ok{ color:var(--cherry); font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; }
+  .ledger .no{ color:var(--ink-3); font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; }
+  @media(max-width:640px){ .ledger td:nth-child(3),.ledger th:nth-child(3){ display:none; } }
+
+  /* decisions */
+  .dec{ padding:34px 0; border-top:1px solid var(--line); }
+  .dec:first-of-type{ border-top:0; padding-top:6px; }
+  .dec-k{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
+  .dec h3{ font-size:clamp(20px,2.5vw,26px); margin:0 0 16px; letter-spacing:-.01em; line-height:1.16; }
+  .dec-row{ display:grid; grid-template-columns:104px 1fr; gap:18px; align-items:baseline; padding:8px 0; }
+  .dec-row + .dec-row{ border-top:1px solid rgba(31,42,51,.06); }
+  .dec-lbl{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+  .dec-lbl.p{ color:var(--ink-3); } .dec-lbl.c{ color:var(--cherry); } .dec-lbl.t{ color:var(--ink-2); }
+  .dec-row p{ margin:0; color:var(--ink-2); max-width:60ch; }
+  @media(max-width:640px){ .dec-row{ grid-template-columns:1fr; gap:4px; } }
+  .pair{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:22px; }
+  @media(max-width:700px){ .pair{ grid-template-columns:1fr; } }
+  .dec .pol{ margin-top:22px; }
+  .pair .pol{ margin-top:0; }
+
+  /* built */
+  .stack{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:30px; }
+  @media(max-width:820px){ .stack{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:520px){ .stack{ grid-template-columns:1fr; } }
+  .scard{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-lg); padding:20px; }
+  .scard .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--cherry); }
+  .scard h3{ font-size:16px; margin:8px 0 6px; letter-spacing:-.01em; }
+  .scard p{ margin:0; font-size:14px; color:var(--ink-2); line-height:1.55; }
+  .status{ display:grid; grid-template-columns:1fr 280px; gap:40px; align-items:center; margin-top:40px; background:var(--cherry); color:#fff; border-radius:var(--r-lg); padding:34px 36px; box-shadow:var(--shadow-deep); overflow:hidden; position:relative; }
+  @media(max-width:760px){ .status{ grid-template-columns:1fr; padding:28px 24px; } .status .lock{ display:none; } }
+  .status h3{ color:#fff; font-size:clamp(22px,3vw,30px); margin:0 0 12px; letter-spacing:-.02em; line-height:1.1; }
+  .status p{ margin:0; color:rgba(255,255,255,.88); max-width:52ch; }
+  .status .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.7); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .status .k i{ width:7px; height:7px; border-radius:50%; background:#fff; animation:pulse 2.4s ease-in-out infinite; }
+  .status .lock{ height:170px; width:auto; justify-self:end; opacity:.95; }
+
+  /* footer */
+  footer{ padding:52px 0 0; border-top:1px solid var(--line); text-align:center; }
+  .foot-mark{ height:56px; width:auto; margin:0 auto 14px; display:block; }
+  .foot-line{ font-family:var(--mono); font-size:11.5px; color:var(--ink-3); letter-spacing:.05em; }
+  .foot-line+.foot-line{ margin-top:5px; }
+
+  @media(prefers-reduced-motion:reduce){ .live-dot,.status .k i{ animation:none; } }
+</style>
+<link rel="stylesheet" href="../../assets/cursors/cursors.css">
+<!-- favicon -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ══════════ MASTHEAD ══════════ -->
+  <header class="masthead">
+    <div class="pill brand">
+      <img class="brand-logo" src="assets/cherry-mark-red.svg" alt="">
+      <span class="brand-name">Maraschino</span>
+      <span class="brand-sub">Art direction board · Case study</span>
+    </div>
+    <div class="pill doc-meta">
+      <div><b>Role</b> &nbsp;Product design · Build</div>
+      <div><b>Scope</b> &nbsp;Product · Brand · Compiler · Front end</div>
+      <div><b>Year</b> &nbsp;2026</div>
+    </div>
+  </header>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="chips">
+      <span class="chip"><span class="live-dot"></span>Built · still adding features</span>
+      <span class="chip">Local-first web app</span>
+      <span class="chip">Designed &amp; built solo</span>
+    </div>
+    <h1 class="hero-sentence">An art direction board with a <span class="r">compiler.</span></h1>
+    <p class="hero-sub">Pin exactly what you like on your inspiration images, weight it, and compile the board into a brief an image model or an AI coding tool can follow. Board in, photographs out.</p>
+
+    <figure class="film">
+      <div class="film-screen">
+        <video id="heroFilm" autoplay loop muted playsinline preload="auto" poster="assets/hero-poster.webp" aria-label="Maraschino product film: pinning references on the board, compiling the brief, and the generated stills.">
+          <source src="assets/hero-720.mp4" type="video/mp4" media="(max-width:700px)">
+          <source src="assets/hero.mp4" type="video/mp4">
+        </video>
+        <div class="film-ctl">
+          <button class="film-btn" id="filmSound" type="button" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>
+            <span>Sound on</span>
+          </button>
+        </div>
+      </div>
+      <figcaption class="film-cap"><span>Product film · cut in Raylight from the real app</span><span>1:00 · loops</span></figcaption>
+    </figure>
+    <script>
+    (function(){
+      var v=document.getElementById('heroFilm'), b=document.getElementById('filmSound'), lbl=b.querySelector('span');
+      var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(reduce){ v.removeAttribute('autoplay'); v.pause(); v.setAttribute('controls',''); }
+      b.addEventListener('click',function(){
+        if(v.muted){ v.muted=false; v.currentTime=0; v.play().catch(function(){}); lbl.textContent='Mute'; b.setAttribute('aria-pressed','true'); }
+        else{ v.muted=true; lbl.textContent='Sound on'; b.setAttribute('aria-pressed','false'); }
+      });
+    })();
+    </script>
+  </section>
+
+  <!-- ══════════ 01 · THE PRODUCT ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">01 — The product</div><h2 class="sec-title">A board that knows what it is for.</h2></div>
+    <div class="prose lede"><p>Maraschino is a web app. You drop your inspiration images onto a dot-grid board, push typed pins into the exact things you like, circle them, write a note, and rate each reference with cherries. Then you press Compile. Everything below is the shipped interface, running on my own retro golf apparel board.</p></div>
+
+    <div class="walk">
+      <figure class="walk-fig pol"><img src="assets/ui-board.webp" alt="The Maraschino board: dozens of vintage golf and sportswear references in polaroid frames on a pale blue dot grid, colored pushpins on each, a seven-pin rail on the left and the Maraschino pill and Compile button on top." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>The board · Asa W. Sams · 44 pins</span><span class="w"><i class="on"></i><i class="on"></i><i class="on"></i></span></figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">The board</div>
+        <h3>Cool ground, warm imagery.</h3>
+        <p>Reference imagery is almost always warm, so the surface is a very light slate blue with a dot grid that never hides. Every image sits in a polaroid frame: a thin white border and a deep chin. The frame gives a pin a physical edge to bite into, and the chin is where the cherries live.</p>
+        <p>Pan, zoom and select work exactly like Figma, because that is the muscle memory the people I built this for already have.</p>
+      </div>
+    </div>
+
+    <div class="walk flip">
+      <figure class="walk-fig pol"><img src="assets/ui-rail.webp" alt="Close-up of the left tool rail: seven ball-head pushpins stacked vertically, with the top one flipped out to read 'Color · 1'. Behind it, polaroid-framed golf references with green lasso loops drawn on them." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>The rail · seven pin types</span><span class="w"><i class="on"></i><i class="on"></i><i></i></span></figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">The rail</div>
+        <h3>Seven pins. That is the whole budget.</h3>
+        <p>Each pin type is a hue, and a pin head is 24px on screen. Past seven hues they stop separating, so the rail is capped at seven and adding a type means spending one. Hover flips out the name; the keys <b>1</b> to <b>7</b> arm the next pin.</p>
+        <div class="rail">
+          <span><i style="--c:var(--pin-color)"></i>Color</span><span><i style="--c:var(--pin-type)"></i>Type</span><span><i style="--c:var(--pin-format)"></i>Format</span><span><i style="--c:var(--pin-texture)"></i>Texture</span><span><i style="--c:var(--pin-subject)"></i>Subject</span><span><i style="--c:var(--pin-theme)"></i>Theme</span><span><i style="--c:var(--pin-avoid)"></i>Avoid</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="walk">
+      <figure class="walk-fig pol"><img src="assets/ui-lasso-subject.webp" alt="A Subject pin on a photo of a golfer in a green studio, with a green freehand lasso drawn around the figure and a small note popover reading 'I like this pose'." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>Pin · lasso · note</span><span class="w"><i class="on"></i><i class="on"></i><i class="on"></i></span></figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">Pin, circle, say why</div>
+        <h3>Pins carry coordinates.</h3>
+        <p>Hover a pin and three bubbles split out of it: note, draw around it, delete. The lasso is a freehand loop in the pin's own hue, and its boundary is the crop the model gets. The note rides along with the crop. That is the whole trick: the model sees the pose you circled and the four words you wrote about it, not fifty whole images.</p>
+      </div>
+    </div>
+
+    <div class="walk flip">
+      <figure class="walk-fig pol"><img src="assets/ui-popover-color.webp" alt="A red Color pin on the same green studio photo with a note popover reading 'I like this color for the studio background'." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>Color pin · same image, different claim</span><span class="w"><i class="on"></i><i class="on"></i><i></i></span></figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">Typed claims</div>
+        <h3>One image, several opinions.</h3>
+        <p>The same photo can hold a Subject pin for the pose and a Color pin for the backdrop. Each becomes its own crop, its own note, its own line in the extraction. A black Avoid pin does the opposite job: never this.</p>
+        <p>Weight is per image, zero to three cherries in the chin, labeled <em>noted</em>, <em>important</em>, <em>non-negotiable</em>. The cherries are the quantity and the words are the judgement.</p>
+      </div>
+    </div>
+
+    <div class="walk">
+      <figure class="walk-fig pol"><img src="assets/ui-tray.webp" alt="The image tray open across the top of the board: a horizontal strip of thumbnails that magnify under the cursor, dock-style, above the pinned board." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>The tray · staging shelf</span><span class="w"><i class="on"></i><i></i><i></i></span></figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">The tray</div>
+        <h3>Images arrive before they are placed.</h3>
+        <p>Imports land in a tray across the top, a holding shelf you drag from one image at a time. Thumbnails magnify under the pointer with distance falloff so you can read one without placing it. No labels: the thumbnail is the label.</p>
+      </div>
+    </div>
+
+    <div class="walk flip">
+      <figure class="walk-fig pol"><img src="assets/ui-boards.webp" alt="The Boards panel over a blurred board: one saved board card, 'Asa W. Sams', and a 'New board' slot." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>Boards · one on the table, the rest on the shelf</span><span class="w"><i class="on"></i><i></i><i></i></span></figcaption></figure>
+      <div class="walk-body">
+        <div class="walk-tag">Boards</div>
+        <h3>Everything stays on this computer.</h3>
+        <p>Boards, images, pins, briefs and stills live in the browser's IndexedDB. There is no account and no upload step. One board is on the table; the rest wait on a shelf with their camera position remembered.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 02 · WHY ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">02 — Why it exists</div><h2 class="sec-title">I gave the AI fifty reference images and it ignored what I liked about all of them.</h2></div>
+    <div class="prose">
+      <p>That sentence is the project. Every designer working with image models or AI coding tools has done the same thing: gather a mood board, drop the whole pile into the context window, and get back something that averages the pile. The model's attention is spread across everything in every image. The one thing you actually liked, the way a collar sits, the green of one studio wall, is a rounding error.</p>
+      <p>Pinterest collects. Kive tags. Nothing compiles. A mood board is a set of unspoken preferences, and the preferences are exactly the part that never makes it into the prompt. Maraschino makes you speak them, one pin at a time, and then does the translation into a document a machine can act on.</p>
+      <p>I built it for myself first. I run a small apparel brand and I wanted campaign stills that looked like my references without hiring a photographer or writing three paragraphs of prompt every time. The tool had to earn its place against the fastest alternative, which is me typing a paragraph. So the first thing I built was the test, not the UI.</p>
+    </div>
+  </section>
+
+  <!-- ══════════ 03 · HOW IT WORKS ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">03 — How it works</div><h2 class="sec-title">Pins in, brief out, photographs after.</h2></div>
+    <div class="prose"><p>A board knows what it is for, and that routes everything downstream. The first profile is Brand &amp; Campaign: the compile produces a <b>brief.md</b> and the proof is a generated photograph. A Product &amp; UI profile that compiles to a <b>design.md</b> for coding tools has its slot reserved.</p></div>
+
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>Pin</h3><p>Typed pins on the exact things you like. Lasso the region, write the note, weight the image.</p><div class="out">Out: pins with coordinates</div></div>
+      <div class="step"><div class="n">02</div><h3>Card</h3><p>Six questions before compile: what you are making, the product and its files, who is in frame, where it lives, the era, what must never appear.</p><div class="out">Out: board intent</div></div>
+      <div class="step"><div class="n">03</div><h3>Crop &amp; extract</h3><p>Each pin becomes a crop with its note attached. A vision model reads them in batches and returns structured findings per pin.</p><div class="out">Out: extraction JSON</div></div>
+      <div class="step"><div class="n">04</div><h3>Synthesize</h3><p>One call turns the findings into a brief: concept, palette, light, wardrobe, a shot list, and a Never list seeded by the Avoid pins.</p><div class="out">Out: brief.md</div></div>
+      <div class="step"><div class="n">05</div><h3>Proof</h3><p>The Stills tab makes the shot list on an image model with your product files as references. Wrong still? Fix the pins and recompile.</p><div class="out">Out: photographs</div></div>
+    </div>
+
+    <figure class="pol" style="margin-top:34px;"><img src="assets/ui-compile-card.webp" alt="The 'Before you compile' card: chips for what you are making, a product description with a row of product file thumbnails (cap, tee, polos, sweater), who is in frame, aspect ratio options, the period, and what must never appear, with a red Compile button." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>Before you compile · 44 pins, 7 product files</span><span>Whole-board facts, asked once</span></figcaption></figure>
+  </section>
+
+  <!-- ══════════ 04 · PROOF ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">04 — Proof</div><h2 class="sec-title">Same taste, different grammar. The brief won three out of three, blind.</h2></div>
+    <div class="prose">
+      <p>Before there was an interface I ran the compiler by hand against my own best effort. Same 118 pins, same three shots, same image model. Arm A got a direction paragraph I wrote plus a shot line. Arm B got the compiled brief. I judged the pairs blind with left and right randomized.</p>
+    </div>
+    <div class="arms">
+      <div class="arm">
+        <div class="k">Arm A · my paragraph</div>
+        <h3>A collage, every time.</h3>
+        <p>All three shots came back as mood-board sheets: many small images, not a photograph. Each one also invented garbled brand wordmarks, breaking the board's own Avoid rules. The paragraph described a list of references, so the model rendered a list.</p>
+      </div>
+      <div class="arm win">
+        <div class="k">Arm B · compiled brief</div>
+        <h3>One scene, one photograph.</h3>
+        <p>Single, coherent campaign frames with the pinned palette, the film grain, the warm tungsten and golden-hour light, the period wardrobe. The brief describes one scene with the taste encoded inside it.</p>
+        <div class="score"><b>3/3</b> blind, randomized</div>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:30px;"><p>Then the loop had to hold inside the app, with no hand on the pipeline. The screens below are the compile rail during one run on the same board: extraction, brief, stills.</p></div>
+
+    <div class="grid3">
+      <figure class="pol"><img src="assets/ui-extraction.webp" alt="The compile rail's Extraction tab: per-pin findings with the crop thumbnail, the note, and structured fields such as palette hexes and treatment." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>Extraction · 41 pins read in 9 calls</span></figcaption></figure>
+      <figure class="pol"><img src="assets/ui-brief.webp" alt="The Brief tab: a 2,389-word brief with Concept and Photographic Treatment sections, Copy and Download actions." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>Brief · 2,389 words</span></figcaption></figure>
+      <figure class="pol"><img src="assets/ui-shots.webp" alt="The Stills tab: generated photographs listed by shot, 'Locker Room, Low Light' and 'Country Club Interior', each with Remake and Download." width="1800" height="1048" loading="lazy"><figcaption class="chin"><span>Stills · 5 shots · Soul 2</span></figcaption></figure>
+    </div>
+
+    <div class="shots">
+      <figure class="pol"><img src="assets/gen-shot-1.webp" alt="Generated still: a man in a maroon polo with a checkered collar and cap seated on a white chair on a golf course, holding a club, late afternoon light." width="1400" height="1867" loading="lazy"><figcaption class="chin"><span>Shot 1 · course, golden hour</span></figcaption></figure>
+      <figure class="pol"><img src="assets/gen-shot-3.webp" alt="Generated still: a woman in a maroon sweater and cap beside a golf bag against an olive studio wall, styled as a vintage magazine spread." width="1400" height="1867" loading="lazy"><figcaption class="chin"><span>Shot 3 · studio, print spread</span></figcaption></figure>
+      <figure class="pol"><img src="assets/gen-shot-5.webp" alt="Generated still: a flat product shot of a maroon polo with a checkered collar on black, with a small cap, socks and belt beside it." width="1400" height="1400" loading="lazy"><figcaption class="chin"><span>Shot 5 · product on black</span></figcaption></figure>
+      <figure class="pol"><img src="assets/gen-shot-2.webp" alt="Generated still: three men in polos and pleated trousers seated in a dark wood locker room with golf bags, low warm light." width="1400" height="1050" loading="lazy"><figcaption class="chin"><span>Shot 2 · locker room, low light</span></figcaption></figure>
+      <figure class="pol"><img src="assets/gen-shot-4.webp" alt="Generated still: two men slumped on a navy leather sofa in a clubhouse, one in a checkered shirt and cap, one in a striped polo, flash-lit." width="1400" height="788" loading="lazy"><figcaption class="chin"><span>Shot 4 · clubhouse, on-camera flash</span></figcaption></figure>
+    </div>
+    <p class="ai-note">These five photographs are AI-generated by Maraschino from the brief above, on Higgsfield Soul 2 at 1080p, with my own cap, tee and polos passed as product references. The set cost about 0.45 credits. Nobody wrote a prompt.</p>
+
+    <table class="ledger">
+      <thead><tr><th>Run</th><th>What it tested</th><th>Result</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Eval 1</td><td>Landing page built from the brief vs. from raw images, judged blind.</td><td>The instrument broke: both arms got contaminated. One durable number survived: the compiled brief was 35% cheaper to act on in tokens.</td><td class="no">Inconclusive</td></tr>
+        <tr><td>Eval 2</td><td>Three campaign stills, my paragraph vs. the compiled brief, blind.</td><td><b>Brief swept 3/3.</b> The paragraph produced collages with fake wordmarks; the brief produced photographs.</td><td class="ok">Passed</td></tr>
+        <tr><td>Eval 3</td><td>Twelve stills straight off the first real compile of the board.</td><td>12/12 lived in the board's world; 8/12 clean of the Never rules; 4 rendered text. Text became a rule.</td><td class="ok">Passed</td></tr>
+        <tr><td>Eval 4</td><td>First brief written inside the app, with my own products pinned as references.</td><td>A usable brief on the first try. Three contradictions found and turned into compiler rules.</td><td class="ok">Passed</td></tr>
+        <tr><td>Eval 5</td><td>The app's own Generate step against the image API.</td><td>Parse, estimate, upload, submit, poll, download. Five stills for three cents.</td><td class="ok">Passed</td></tr>
+        <tr><td>Eval 6</td><td>The whole cycle, run by me in the rail with nothing driven from outside.</td><td><b>Board in, photographs out.</b> 52 pins, 19 product files, brief, five stills, three minutes.</td><td class="ok">Passed</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══════════ 05 · DESIGN DECISIONS ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">05 — Design decisions</div><h2 class="sec-title">The parts I would defend in a review.</h2></div>
+
+    <div class="dec">
+      <div class="dec-k">D-021 · Pin finish</div>
+      <h3>Gloss looked better in the mockup and worse on the board.</h3>
+      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>The pin head's entire job is hue separation at 24px. A full-gloss head has a white hotspot that eats about 40% of a small head and pulls every hue toward white, so red and orange stop being different pins.</p></div>
+      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Tested five finishes across 16 to 48px on real board imagery. Flat matte read as a sticker. Full gloss lost the hue below 32px. A single small specular kept the glass feel and the hue survived down to 20px. Board pins are 24px, the smallest size where the shaft still reads as a shaft.</p></div>
+      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>Full gloss is not gone, it moved to where it has room: the app icon, the empty state, marketing.</p></div>
+      <div class="pair">
+        <figure class="pol"><img src="assets/dec-pins-gloss.webp" alt="Test board with gloss-finish pins on five references and a legend of seven pin types." width="1600" height="902" loading="lazy"><figcaption class="chin"><span>Gloss @ 20px · hues collapse</span></figcaption></figure>
+        <figure class="pol"><img src="assets/dec-pins-matte.webp" alt="The same test board with matte-finish pins." width="1600" height="902" loading="lazy"><figcaption class="chin"><span>Matte @ 20px · reads as a sticker</span></figcaption></figure>
+      </div>
+      <figure class="pol"><img src="assets/dec-pin-scale-ramp.webp" alt="Three rows of the same photograph with pins at 16, 20, 24, 32 and 48px: full gloss, subtle specular, and flat matte." width="1800" height="1023" loading="lazy"><figcaption class="chin"><span>Scale ramp · full gloss / subtle specular / flat matte · 16 to 48px</span></figcaption></figure>
+    </div>
+
+    <div class="dec">
+      <div class="dec-k">D-020 · Board surface</div>
+      <h3>A cool board, so warm references pop.</h3>
+      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>The first direction was warm paper, which is what a studio wall looks like. On real boards it blended into the imagery, which is overwhelmingly warm, and it drifted toward cork-board kitsch.</p></div>
+      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Very light slate blue with a regular grid of translucent slate dots, edge to edge. Warmth lives entirely in the cherry red, the pins and the imagery. Pale blue and cherry is also a pairing nobody else in the category owns; the 2026 AI-tool house style is neutral gray.</p></div>
+      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>No paper grain, no texture on the canvas. Physicality is carried by the objects on the board, roughly 5% skeuomorphism and no more.</p></div>
+      <figure class="pol"><img src="assets/dec-board-matte.webp" alt="An early board mockup: vintage golf references in polaroid frames with colored pins on the pale blue dot grid, the Maraschino pill at the top." width="1800" height="1005" loading="lazy"><figcaption class="chin"><span>Cool board, warm imagery</span></figcaption></figure>
+    </div>
+
+    <div class="dec">
+      <div class="dec-k">D-023 · Weighting</div>
+      <h3>Cherries in the chin, one weight per image.</h3>
+      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>The first version put weight inside each pin's popover and mirrored the maximum into the frame's chin. Two cherry rows on screen for one idea read as duplication, and it asked you to remember a scale instead of read one.</p></div>
+      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Zero to three cherries centred in the polaroid chin, with the word under them: noted, important, non-negotiable. The row is the control. Clicking the lit cherry clears it back to zero, so a reference can sit on the board without a claim attached.</p></div>
+      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>You can no longer say the colour here is non-negotiable but the layout is only noted on a single image. I used that distinction once. Accepted for the simpler board; it comes back if compile quality asks for it.</p></div>
+      <figure class="pol"><img src="assets/dec-polaroid.webp" alt="Polaroid frame study: five references with thin white borders and deep chins holding one to three small cherries, 24px specular pins on each." width="1600" height="944" loading="lazy"><figcaption class="chin"><span>Polaroid frames · cherries in the chin · 24px pins</span></figcaption></figure>
+    </div>
+
+    <div class="dec">
+      <div class="dec-k">D-029 · D-032 · D-025</div>
+      <h3>Borrow the muscle memory, not the look.</h3>
+      <div class="dec-row"><div class="dec-lbl p">Problem</div><p>The people this is for live in Figma all day. Any canvas that pans, zooms or selects differently costs them a week of wrong reflexes, and a sticky pin tool left a stray pin on every click.</p></div>
+      <div class="dec-row"><div class="dec-lbl c">Call</div><p>Figma's model outright: V and H, space to hand, zoom anchored to the cursor, shift-1 to fit, command-Z. Placing a pin is one-shot like Figma's shape tools, and 1 to 7 rearms the rail from the keyboard. Luma's interface was the reference for quiet chrome and the right rail as a live plan that ticks off each pin as it is extracted.</p></div>
+      <div class="dec-row"><div class="dec-lbl t">Trade</div><p>Took the restraint, refused the temperature. Motion here is springy, the pins throw real shadows under one shared light, and the board should look worked on, because it holds inputs, not outputs.</p></div>
+    </div>
+  </section>
+
+  <!-- ══════════ 06 · BUILT ══════════ -->
+  <section>
+    <div class="sec-head"><div class="eyebrow">06 — Built</div><h2 class="sec-title">Designed and built by one person, with the docs as the contract.</h2></div>
+    <div class="prose">
+      <p>I wrote the spec, the compiler design, the decision log and the eval protocol before the first component, then built the app with Claude Code against those documents. Every behaviour change updates its doc in the same commit. The decision numbers on this page are real; D-021 is a file you can open.</p>
+    </div>
+    <div class="stack">
+      <div class="scard"><div class="k">Front end</div><h3>Next.js · TypeScript · Tailwind</h3><p>App Router, strict mode. Tailwind is driven by Maraschino's own token file, the same tokens that style this page.</p></div>
+      <div class="scard"><div class="k">State &amp; storage</div><h3>Zustand · Dexie · IndexedDB</h3><p>Local-first. Images downscale on import so a fifty-image board stays fast; briefs and stills are blobs keyed to the board.</p></div>
+      <div class="scard"><div class="k">Compiler</div><h3>Anthropic API, vision</h3><p>Two stages: structured extraction per crop, then one synthesis call to the brief. Streamed server-side so a 55-second brief never drops.</p></div>
+      <div class="scard"><div class="k">Proof</div><h3>Higgsfield Cloud API</h3><p>One adapter per image model. Estimate, upload product references, submit, poll, download, size from the bytes.</p></div>
+      <div class="scard"><div class="k">Interaction</div><h3>Springs, one light, safe sectors</h3><p>Dock magnification, liquid pin menus, cursor-anchored zoom, hover intent with dwell and grace. All off under reduced motion.</p></div>
+      <div class="scard"><div class="k">Method</div><h3>Evals before UI</h3><p>Six recorded runs. The compiler had to beat me typing a paragraph before it earned an interface.</p></div>
+    </div>
+
+    <div class="status">
+      <div>
+        <div class="k"><i></i>Status</div>
+        <h3>Built and in active development. Still adding features.</h3>
+        <p>The full loop works today: board in, brief, photographs out. What is next is the Product &amp; UI profile that compiles to a design.md for coding tools, bring-your-own-key so other designers can run it, and a wider set of image models. It runs locally with my own API keys for now. Ask me for a walkthrough.</p>
+      </div>
+      <img class="lock" src="assets/cherry.svg" alt="Maraschino pixel cherry lockup">
+    </div>
+  </section>
+
+  <footer>
+    <img class="foot-mark" src="assets/cherry-red.svg" alt="Maraschino">
+    <div class="foot-line">Maraschino · Designed &amp; built by Garrison Bullock</div>
+    <div class="foot-line">© 2026 Garrison Bullock · garrisonbullock.com</div>
+  </footer>
+
+</div>
+</body>
+</html>
