@@ -197,6 +197,8 @@
   .demo-frame{ background:var(--polaroid); border:1px solid var(--line); border-radius:var(--r-lg); padding:12px; box-shadow:var(--shadow-lift); }
   .rail-demo{ height:420px; display:flex; align-items:center; justify-content:center; }
   .tray-demo{ padding:26px 14px; }
+  .walk.stack{ grid-template-columns:1fr; gap:28px; }
+  .walk.stack .walk-body p{ max-width:64ch; }
   .pins-demo{ height:360px; }
   .pins-row{ padding:6px 0 40px; border-top:1px solid var(--line); }
   .cherry-demo{ height:240px; display:flex; align-items:center; justify-content:center; margin-top:22px; }
@@ -330,13 +332,13 @@
       </div>
     </div>
 
-    <div class="walk">
-      <div class="walk-fig demo tray-demo"><div id="pg-tray-demo"></div></div>
+    <div class="walk stack">
       <div class="walk-body">
         <div class="walk-tag">The tray</div>
         <h3>Images arrive before they are placed.</h3>
         <p>Imports land in a tray across the top, a holding shelf you drag from one image at a time. Thumbnails magnify under the pointer with distance falloff so you can read one without placing it. No labels: the thumbnail is the label. Run your pointer across this one.</p>
       </div>
+      <div class="demo tray-demo"><div id="pg-tray-demo"></div></div>
     </div>
 
     <div class="walk flip">
