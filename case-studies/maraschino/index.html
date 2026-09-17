@@ -195,9 +195,7 @@
   /* ── live demos: the app's own controls, ported (assets/play.css + play.js) ── */
   .demo{ position:relative; background-color:var(--board); background-image:radial-gradient(var(--dot) 1px, transparent 1px); background-size:22px 22px; background-position:11px 11px; border:1px solid var(--line); border-radius:14px; }
   .demo-frame{ background:var(--polaroid); border:1px solid var(--line); border-radius:var(--r-lg); padding:12px; box-shadow:var(--shadow-lift); }
-  .rail-demo{ height:420px; display:flex; align-items:center; justify-content:center; gap:36px; }
-  .readout{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); min-width:15ch; }
-  .readout b{ color:var(--ink); font-weight:600; }
+  .rail-demo{ height:420px; display:flex; align-items:center; justify-content:center; }
   .tray-demo{ padding:26px 14px; }
   .pins-demo{ height:250px; }
   .pins-row{ padding:6px 0 40px; border-top:1px solid var(--line); }
@@ -300,8 +298,8 @@
       </div>
     </div>
 
-    <div class="walk flip">
-      <div class="walk-fig demo rail-demo"><div id="pg-rail"></div><div class="readout" id="pg-readout">Armed: <b>nothing</b></div></div>
+    <div class="walk">
+      <div class="walk-fig demo rail-demo"><div id="pg-rail"></div></div>
       <div class="walk-body">
         <div class="walk-tag">The rail</div>
         <h3>Seven pins. That is the whole budget.</h3>
@@ -536,9 +534,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* the rail, on its own */
   (function(){
-    var readout = document.getElementById('pg-readout'), host = document.getElementById('pg-rail'); if(!host) return;
+    var host = document.getElementById('pg-rail'); if(!host) return;
     var rail = MZ.makeRail(host, { onArm: set });
-    function set(id){ rail.setArmed(id); readout.innerHTML = 'Armed: <b>' + (id ? MZ.pinType(id).label : 'nothing') + '</b>'; }
+    function set(id){ rail.setArmed(id); }
     var card = host.closest('.walk');
     document.addEventListener('keydown', function(e){
       if(!card.matches(':hover')) return; var t=(e.target.tagName||''); if(t==='TEXTAREA'||t==='INPUT') return;
