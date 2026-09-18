@@ -93,6 +93,10 @@
   .mac-hero .fallback{ display:none; width:100%; height:auto; border-radius:12px; border:1px solid var(--line); }
   .mac-hero.failed{ aspect-ratio:auto; }
   .mac-after{ margin:34px auto 0; max-width:66ch; text-align:center; }
+  /* why it exists: the two paragraphs beside the real board */
+  .why{ display:grid; grid-template-columns:1.1fr 1fr; gap:44px; align-items:center; }
+  .why .prose{ max-width:none; }
+  @media(max-width:820px){ .why{ grid-template-columns:1fr; gap:28px; } }
   /* film frame */
   .film{ position:relative; background:var(--polaroid); border:1px solid var(--line); border-radius:var(--r-lg); padding:12px; box-shadow:var(--shadow-deep); }
   .film-screen{ position:relative; border-radius:10px; overflow:hidden; background:#0b0b0b; aspect-ratio:16/9; }
@@ -398,9 +402,12 @@
   <!-- ══════════ 03 · WHY IT EXISTS ══════════ -->
   <section>
     <div class="sec-head"><h2 class="sec-title">Why it exists</h2></div>
+    <div class="why">
     <div class="prose">
       <p>I keep a cork board at home covered in torn-out ads, film stills, and product photos, with pins on the exact things I like. When I tried to hand that same board to AI as fifty images and a paragraph, it blended everything into one generic vibe. Nothing told it that I wanted the grain from one photo, the layout from another, and to ignore the rest. Maraschino is that cork board as software. You pin what you specifically like about each image, weight what matters most, and it compiles a design file and a brief the AI can actually follow.</p>
       <p>To validate the idea, I ran the same fifty images through both methods, same image generator producing several outputs, and built a quick scoring page that shuffled the results so I could vote blindly on which ones I liked best. The paragraph version spit out collages of the mood board itself, with fake logos I'd specifically said to avoid. The Maraschino version won every time. The images looked like the brand, not like a pile of references.</p>
+    </div>
+    <figure class="pol why-fig"><img src="assets/cork-board.webp" alt="The real cork board: a large ornate grey frame filled with dark cork, torn-out ski and film ads, vintage magazine covers, an Asa W. Sams patch, a hoodie colour sheet, and a red sticker that says It's good for the plot." width="1800" height="1419" loading="lazy"><figcaption class="chin"><span>The cork board at home · where this started</span></figcaption></figure>
     </div>
   </section>
 
