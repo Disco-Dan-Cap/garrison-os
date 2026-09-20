@@ -4,6 +4,8 @@
 .mz-board{position:relative;background-color:var(--board);
   background-image:radial-gradient(var(--dot) 1px, transparent 1px);background-size:22px 22px;background-position:11px 11px;
   border:1px solid var(--line);border-radius:18px;overflow:hidden;user-select:none;-webkit-user-select:none}
+/* the bare sheet (the pins row) is not a canvas, so notes and menus may spill past its edge */
+.mz-board.bare{overflow:visible}
 .mz-board.armed{cursor:crosshair}
 .mz-board.lassoing{cursor:crosshair}
 

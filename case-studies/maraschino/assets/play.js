@@ -316,7 +316,7 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
   class Board {
     constructor(root, o = {}) {
       this.root = root; this.o = o; this.bare = !!o.bare; this.pinSize = o.pinSize || T.pin.size;
-      root.classList.add('mz-board');
+      root.classList.add('mz-board'); if (o.bare) root.classList.add('bare');
       this.images = []; this.armed = null; this.lassoFor = null; this.notePin = null; this.dragPin = null; this.z = 1;
       this.menus = new MenuController();
       this.els = new Map(); // imageId -> {wrap, area, lassoLayer, pinEls: Map, pop, cherry}
@@ -474,8 +474,10 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
     }
 
     positionPin(img, pin) {
-      const el = this.els.get(img.id).pinEls.get(pin.id); if (!el) return;
+      const e = this.els.get(img.id), el = e.pinEls.get(pin.id); if (!el) return;
       el.style.left = (pin.x * 100) + '%'; el.style.top = (pin.y * 100) + '%';
+      // an open note rides with its pin
+      if (e.pop && e.pop.dataset.pin === pin.id) { e.pop.style.left = el.style.left; e.pop.style.top = el.style.top; e.pop.classList.toggle('left', pin.x > 0.72); }
     }
 
     /** Reconcile one image's pins, lassos and popover with state. Pin buttons persist across syncs (menu anchors). */
