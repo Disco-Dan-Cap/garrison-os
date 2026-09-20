@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function(){
       onRemovePin: function(sheet, pin){ setTimeout(function(){ if(sheet.pins.some(function(p){ return p.type===pin.type; })) return;
         sheet.pins.push({ id:MZ.uid(), type:pin.type, x:pin.x, y:pin.y, note:'', born:true }); b.sync(sheet); }, 3000); } });
     var sheet=b.images[0];
-    MZ.PIN_TYPES.forEach(function(t,i){ sheet.pins.push({ id:MZ.uid(), type:t.id, x:(i+0.5)/7, y:.40, note:'' }); }); b.sync(sheet); })();
+    MZ.PIN_TYPES.forEach(function(t,i){ sheet.pins.push({ id:MZ.uid(), type:t.id, x:(i+0.5)/7-.015, y:.60, note:'' }); }); b.sync(sheet); })();
 
   /* the weight control */
   (function(){ var host=document.getElementById('pg-cherries'); if(!host) return;
