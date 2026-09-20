@@ -330,10 +330,12 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
         this.els.set(img.id, { wrap: area, area, lassoLayer, pinEls: new Map(), pop: null });
         this.wireArea(img, area);
       } else {
-        // clicking the empty board deselects, like the canvas does
-        root.addEventListener('pointerdown', (e) => { if (e.target === root) this.select(null); });
-        root.addEventListener('dragover', (e) => { if (o.onDropImage) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; } });
-        root.addEventListener('drop', (e) => {
+        // clicking the empty board deselects, like the canvas does. All three go through on() so
+        // destroy() takes them off again: a rebuilt board on the same element used to inherit the old
+        // drop handler and place every dropped image twice.
+        this.on(root, 'pointerdown', (e) => { if (e.target === root) this.select(null); });
+        this.on(root, 'dragover', (e) => { if (o.onDropImage) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; } });
+        this.on(root, 'drop', (e) => {
           if (!o.onDropImage) return; e.preventDefault();
           const id = e.dataTransfer.getData('text/maraschino-image'); if (!id) return;
           const r = root.getBoundingClientRect();
@@ -351,8 +353,9 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
         const n = parseInt(e.key, 10);
         if (!this.bare && n >= 1 && n <= 7 && !e.metaKey && !e.ctrlKey && !e.altKey) this.arm(PIN_TYPES[n - 1].id);
       };
-      document.addEventListener('keydown', onKey); this.listeners.push(() => document.removeEventListener('keydown', onKey));
+      this.on(document, 'keydown', onKey);
     }
+    on(target, type, fn) { target.addEventListener(type, fn); this.listeners.push(() => target.removeEventListener(type, fn)); }
 
     /* ---- state ops (lib/store.ts) */
     arm(id) { this.armed = id; this.root.classList.toggle('armed', !!id); if (this.o.onArm) this.o.onArm(id); }
@@ -391,6 +394,7 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
 
     /** Add a polaroid. `src`/`w`/`h` describe the picture; `width` is the rendered picture width. */
     addImage(spec, x, y) {
+      if (spec.id) { const dup = this.images.find((i) => i.id === spec.id); if (dup) return dup; } // one polaroid per image
       const img = { id: spec.id || uid(), src: spec.src, w: spec.w, h: spec.h, width: spec.width || this.o.imageWidth || PLACE_W,
                     x, y, z: ++this.z, rotation: spec.rotation || 0, weight: spec.weight || 0, pins: spec.pins ? spec.pins.map((p) => Object.assign({ id: uid(), note: '' }, p)) : [], name: spec.name || '' };
       this.images.push(img); this.mountImage(img); return img;
@@ -551,7 +555,12 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
       return pop;
     }
 
-    destroy() { this.menus.kill(); this.listeners.forEach((f) => f()); }
+    destroy() {
+      this.menus.kill(); this.listeners.forEach((f) => f()); this.listeners = [];
+      this.lassoFor = null; this.notePin = null; this.armed = null;
+      for (const e of this.els.values()) { if (e.pop) e.pop.remove(); e.wrap.remove(); }
+      this.els.clear(); this.images = []; this.root.classList.remove('mz-board', 'armed', 'lassoing');
+    }
   }
 
   /* ---------------------------------------------------------------- tray dock (TrayDock.tsx, D-026 / D-028) */
