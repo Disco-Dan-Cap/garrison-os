@@ -121,6 +121,15 @@
 .dock-item>div{width:100%;height:100%;border-radius:11px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 2px 6px rgba(31,54,74,.14);
   cursor:grab;display:grid;place-items:center}
 .dock-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+/* the demo tray: a tile can be lifted off the strip and dropped anywhere on the page (index.html wires it) */
+.tray-lift .dock-item>div{cursor:grab}
+body.mz-lifting,body.mz-lifting *{cursor:grabbing !important;user-select:none}
+.mz-pol.lifted{position:fixed;z-index:9000;pointer-events:none;will-change:transform;transform:rotate(var(--rot,0deg)) scale(1.05);
+  box-shadow:0 26px 48px -18px rgba(31,54,74,.5), 0 4px 10px rgba(31,54,74,.16);
+  transition:transform 220ms var(--spring), opacity 420ms ease, filter 420ms ease, box-shadow 220ms ease}
+.mz-pol.lifted.down{transform:rotate(var(--rot,0deg)) scale(1);box-shadow:0 10px 24px -8px rgba(31,54,74,.34), 0 2px 5px rgba(31,54,74,.14)}
+.mz-pol.lifted.gone{opacity:0;filter:blur(7px);transform:rotate(var(--rot,0deg)) scale(.88)}
+.mz-pol.lifted .area img{background:var(--panel-soft)}
 @keyframes dock-flash{0%{box-shadow:0 0 0 0 rgba(193,23,23,.6), 0 2px 6px rgba(31,54,74,.14)}100%{box-shadow:0 0 0 12px rgba(193,23,23,0), 0 2px 6px rgba(31,54,74,.14)}}
 .dock-flash{animation:dock-flash 900ms ease-out 1}
 .tray-track{position:absolute;left:18px;right:18px;bottom:-3px;height:4px;z-index:0;pointer-events:none}

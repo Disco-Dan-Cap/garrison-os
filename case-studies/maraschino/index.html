@@ -339,7 +339,7 @@
     <div class="walk stack">
       <div class="walk-body">
         <h3>The tray, where images arrive before they are placed.</h3>
-        <p>Imports land in a tray across the top, a holding shelf you drag from one image at a time. Thumbnails magnify under the pointer with distance falloff so you view them easier. Run your pointer across this one and watch it work.</p>
+        <p>Imports land in a tray across the top, a holding shelf you drag from one image at a time. Thumbnails magnify under the pointer with distance falloff so you view them easier. Run your pointer across this one and watch it work, or pull an image off it and drop it anywhere on the page.</p>
       </div>
       <div class="demo tray-demo"><div id="pg-tray-demo"></div></div>
     </div>
@@ -468,7 +468,31 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* the tray, on its own */
   (function(){ var host=document.getElementById('pg-tray-demo'); if(!host) return;
-    new MZ.Tray(host, { items: IM.map(function(i){ return { id:i.id, thumb:i.thumb, name:i.name }; }) }); })();
+    var HOLD=1000, FADE=440, W=170;
+    var tray = new MZ.Tray(host, {
+      items: IM.map(function(i){ return { id:i.id, thumb:i.thumb, big:i.big, w:i.w, h:i.h, name:i.name }; }),
+      // pull a tile off the strip and it becomes a polaroid under the pointer; drop it anywhere on the
+      // page, it lands, sits for a second, dissolves, and the tile slides back into its slot
+      onLift: function(item, e){
+        var slot = tray.remove(item.id);
+        var B=MZ.T.polaroid.border, h=Math.round(W*item.h/item.w), chin=Math.max(MZ.T.polaroid.chinMin, Math.round(h*MZ.T.polaroid.chinRatio));
+        var pol=document.createElement('div'); pol.className='mz-pol lifted';
+        pol.style.setProperty('--rot', ((Math.random()*5)-2.5).toFixed(2)+'deg');
+        pol.style.width=(W+B*2)+'px';
+        pol.innerHTML='<div class="area" style="width:'+W+'px;height:'+h+'px"><img src="'+item.big+'" alt="" draggable="false" style="background-image:url('+item.thumb+');background-size:cover"></div><div class="chin" style="height:'+chin+'px"><div class="chin-inner"></div></div>';
+        MZ.cherryRow(pol.querySelector('.chin-inner'), { value:0, size:26, showLabel:true });
+        var ox=-(W/2+B), oy=-(h/2+B);
+        function place(x,y){ pol.style.left=(x+ox)+'px'; pol.style.top=(y+oy)+'px'; }
+        place(e.clientX,e.clientY); document.body.appendChild(pol); document.body.classList.add('mz-lifting');
+        var id=e.pointerId;
+        function move(ev){ if(ev.pointerId!==id) return; place(ev.clientX,ev.clientY); }
+        function up(ev){ if(ev.pointerId!==id) return;
+          window.removeEventListener('pointermove',move); window.removeEventListener('pointerup',up); window.removeEventListener('pointercancel',up);
+          document.body.classList.remove('mz-lifting'); pol.classList.add('down');
+          setTimeout(function(){ pol.classList.add('gone');
+            setTimeout(function(){ pol.remove(); tray.add(item, 'quiet', slot); }, FADE); }, HOLD); }
+        window.addEventListener('pointermove',move); window.addEventListener('pointerup',up); window.addEventListener('pointercancel',up);
+      } }); })();
 
   /* the seven pins in a row */
   (function(){ var host=document.getElementById('pg-pins'); if(!host) return;

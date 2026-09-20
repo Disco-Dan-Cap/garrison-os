@@ -572,11 +572,12 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
 <button type="button" class="tray-arrow tray-arrow-r" aria-label="Scroll images right">${icon('chevron-right', 26, 2.5)}</button>`;
       this.el = el; this.pill = el.querySelector('.tray-pill'); this.scroller = el.querySelector('.tray-scroller'); this.thumb = el.querySelector('.tray-thumb');
       this.arrowL = el.querySelector('.tray-arrow-l'); this.arrowR = el.querySelector('.tray-arrow-r'); this.lead = el.querySelector('.tray-lead');
-      this.pointerX = null; this.panning = false; this.raf = 0;
+      this.pointerX = null; this.panning = false; this.lifting = false; this.raf = 0;
+      if (o.onLift) el.classList.add('tray-lift');
       this.lead.addEventListener('click', () => { if (o.onAdd) o.onAdd(); else { this.lead.animate([{ transform: 'translateY(-50%) rotate(0)' }, { transform: 'translateY(-50%) rotate(90deg)' }], { duration: 260, easing: 'cubic-bezier(0.34,1.56,0.64,1)' }); } });
 
       // dock magnification: pointer x over the pill (mouse only)
-      this.pill.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && !this.panning) { this.pointerX = e.clientX; this.animate(); } });
+      this.pill.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && !this.panning && !this.lifting) { this.pointerX = e.clientX; this.animate(); } });
       this.pill.addEventListener('pointerleave', () => { this.pointerX = null; this.animate(); });
 
       // wheel: a plain vertical wheel scrolls sideways; trackpad deltaX passes through
@@ -619,7 +620,9 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
       this.measure();
     }
 
-    add(item, flash) {
+    /** `flash`: true scrolls the item into view and flashes it; 'quiet' flashes in place.
+     *  `index` puts it back at a given slot (what remove() returned), else at the end. */
+    add(item, flash, index) {
       if (this.items.has(item.id)) return;
       const wrap = document.createElement('div'); wrap.className = 'dock-item'; wrap.dataset.id = item.id;
       const inner = document.createElement('div');
@@ -629,13 +632,41 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
         inner.draggable = true;
         inner.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/maraschino-image', item.id); e.dataTransfer.effectAllowed = 'move'; this.pointerX = null; this.animate(); });
       }
+      if (this.o.onLift) this.wireLift(item, inner);
       if (this.o.onPick) { inner.addEventListener('click', () => this.o.onPick(item)); inner.style.cursor = 'pointer'; }
-      wrap.appendChild(inner); this.scroller.appendChild(wrap);
-      this.items.set(item.id, { item, el: wrap, size: DOCK.base, v: 0, target: DOCK.base });
-      if (flash) { wrap.scrollIntoView({ inline: 'center', block: 'nearest', behavior: reduceMotion() ? 'auto' : 'smooth' }); inner.classList.add('dock-flash'); setTimeout(() => inner.classList.remove('dock-flash'), 950); }
+      wrap.appendChild(inner);
+      const kids = this.scroller.children;
+      if (index != null && index >= 0 && index < kids.length) this.scroller.insertBefore(wrap, kids[index]); else this.scroller.appendChild(wrap);
+      // rebuild the map in DOM order so remove() keeps returning true slots
+      const next = new Map(); next.set(item.id, { item, el: wrap, size: DOCK.base, v: 0, target: DOCK.base });
+      for (const k of kids) { const id = k.dataset.id; next.set(id, id === item.id ? next.get(item.id) : this.items.get(id)); }
+      this.items = next;
+      if (flash) {
+        if (flash !== 'quiet') wrap.scrollIntoView({ inline: 'center', block: 'nearest', behavior: reduceMotion() ? 'auto' : 'smooth' });
+        inner.classList.add('dock-flash'); setTimeout(() => inner.classList.remove('dock-flash'), 950);
+      }
       this.measure();
     }
-    remove(id) { const it = this.items.get(id); if (!it) return; it.el.remove(); this.items.delete(id); this.measure(); }
+    /** Returns the slot the item held, so add() can put it back there. */
+    remove(id) { const it = this.items.get(id); if (!it) return -1; const index = [...this.scroller.children].indexOf(it.el); it.el.remove(); this.items.delete(id); this.measure(); return index; }
+
+    /** Pointer lift (the demo tray): press and move a few pixels and onLift(item, event) fires once,
+     *  with the pointer captured on the tile so the page keeps getting move/up wherever it goes. */
+    wireLift(item, inner) {
+      inner.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 || e.pointerType === 'touch') return;
+        const sx = e.clientX, sy = e.clientY, id = e.pointerId; let lifted = false;
+        const move = (ev) => {
+          if (ev.pointerId !== id || lifted) return;
+          if (Math.hypot(ev.clientX - sx, ev.clientY - sy) < 4) return;
+          lifted = true; this.lifting = true; this.pointerX = null; this.animate();
+          try { inner.setPointerCapture(id); } catch (_) {}
+          this.o.onLift(item, ev);
+        };
+        const up = (ev) => { if (ev.pointerId !== id) return; window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); this.lifting = false; };
+        window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+      });
+    }
 
     /** Arrows, fades and the hairline. */
     measure() {
