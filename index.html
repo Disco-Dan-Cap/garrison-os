@@ -11,7 +11,7 @@
 
 <!-- Open Graph / Link Preview -->
 <meta property="og:title" content="Garrison Bullock — Product Designer">
-<meta property="og:description" content="Product designer working AI-first: Disco Capital, a venture-investing fintech app, and Copia, a local-food marketplace, designed and shipped end to end.">
+<meta property="og:description" content="Product designer working AI-first: Maraschino, a mood board that compiles into a brief AI tools can follow; Disco Capital, a venture-investing fintech app; and Copia, a local-food marketplace. All designed and built end to end.">
 <meta property="og:image" content="https://garrisonbullock.com/assets/og-preview.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -21,11 +21,11 @@
 <!-- Twitter Card (uses same image) -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Garrison Bullock — Product Designer">
-<meta name="twitter:description" content="Product designer working AI-first: Disco Capital, a venture-investing fintech app, and Copia, a local-food marketplace, designed and shipped end to end.">
+<meta name="twitter:description" content="Product designer working AI-first: Maraschino, a mood board that compiles into a brief AI tools can follow; Disco Capital, a venture-investing fintech app; and Copia, a local-food marketplace. All designed and built end to end.">
 <meta name="twitter:image" content="https://garrisonbullock.com/assets/og-preview.jpg">
 
 <title>Garrison Bullock — Product Designer</title>
-<meta name="description" content="Product designer working AI-first: Disco Capital, a venture-investing fintech app, and Copia, a local-food marketplace, designed and shipped end to end.">
+<meta name="description" content="Product designer working AI-first: Maraschino, a mood board that compiles into a brief AI tools can follow; Disco Capital, a venture-investing fintech app; and Copia, a local-food marketplace. All designed and built end to end.">
 <!--
   GARRISON OS — desktop portfolio v0.2 "skinned"
   Changes from v0.1:
@@ -433,9 +433,9 @@
 <nav class="sr-only" aria-label="Projects">
   <h2>Projects by Garrison Bullock</h2>
   <ul>
+    <li><a href="case-studies/maraschino/index.html">Maraschino: an art direction board with a compiler, designed and built end to end</a></li>
     <li><a href="case-studies/disco/index.html">Disco Capital: venture co-investment app, brand, design system, and iPhone-first product design</a></li>
     <li><a href="case-studies/copia/index.html">Copia: local-food marketplace, buyer and seller apps designed and built end to end</a></li>
-    <li><a href="case-studies/maraschino/index.html">Maraschino: an art direction board with a compiler, designed and built end to end</a></li>
     <li><a href="case-studies/marian/index.html">The Marian Group: in-house design and video for a real-estate developer</a></li>
     <li><a href="case-studies/cbh/index.html">CBH, Custom Beer Handles: 3D CAD tap-handle design, POS displays, and packaging</a></li>
     <li><a href="case-studies/viking/index.html">Viking Range: industrial design internship</a></li>
@@ -679,6 +679,14 @@ const PROJECTS=[
     role:"Concept · Art Direction · Edit", year:"2024",
     cover:"case-studies/dirtyshirley/assets/cover.webp",
     embed:"case-studies/dirtyshirley/index.html"},
+  {id:"maraschino", name:"Maraschino", color:"#cc1122", dark:"#8c0000", sym:"cherry", center:true,
+    one:"<span class='wip' style='color:#c11717'>Built and in active development. The full loop works today and I'm still adding features.</span>An art direction board with a compiler. Pin exactly what you like on your inspiration images, weight it, and compile the board into a design brief an AI coding tool can actually follow.",
+    cover:"assets/maraschino/card-1072.webp",
+    cover2x:"assets/maraschino/card-2144.webp",
+    previewLarge:true,
+    coverAR:"2144 / 1040",
+    role:"Product Design / Build", year:"2026",
+    embed:"case-studies/maraschino/index.html"},
   {id:"disco", name:"Disco Capital", color:"#ff2d95", dark:"#b80f66", sym:"disco", center:true,
     one:"<span class='wip'>The HTML prototype is live and the React Native app is in progress. I'm still iterating on the design as the concept develops, so expect the screens to keep changing.</span>Co-invest alongside the venture funds shaping the future you'll inherit. Buy startup equity and hold it in your crypto wallet.<br><br>Disco Capital — We get everyone on the dance floor.",
     role:"Sole designer · Brand · Design System · App", year:"2026",
@@ -699,14 +707,6 @@ const PROJECTS=[
   {id:"tampa", name:"Tampa Commercial Floors", color:"#8fa9bd", dark:"#4f6b80", sym:"tile", center:true, soon:true,
     one:"A commercial flooring contractor in Tampa. I'm designing and building their site end to end: brand direction, responsive design, and the front-end build.",
     role:"Brand & Website Design / Build", year:"2026"},
-  {id:"maraschino", name:"Maraschino", color:"#cc1122", dark:"#8c0000", sym:"cherry", center:true,
-    one:"<span class='wip' style='color:#c11717'>Built and in active development. The full loop works today and I'm still adding features.</span>An art direction board with a compiler. Pin exactly what you like on your inspiration images, weight it, and compile the board into a design brief an AI coding tool can actually follow.",
-    cover:"assets/maraschino/card-1072.webp",
-    cover2x:"assets/maraschino/card-2144.webp",
-    previewLarge:true,
-    coverAR:"2144 / 1040",
-    role:"Product Design / Build", year:"2026",
-    embed:"case-studies/maraschino/index.html"},
   {id:"marian", name:"Marian Group", win:"The Marian Group", color:"#5b8def", dark:"#2f59b5", sym:"house",
     one:"In-house design & video for a real-estate group — a selection of the video work I’ve produced for our social channels over the past few years.",
     role:"In-house Design / Video", year:"2021–2024",
@@ -994,8 +994,8 @@ function buildLogoLoop(box){
       l.rel='prefetch'; l.as='document'; l.href=p.embed;
       document.head.appendChild(l);
     });
-    // Priority projects: fully pre-load Disco + Copia so they open ready and scroll without loading.
-    if(fast) PROJECTS.forEach(p=>{ if((p.id==='disco'||p.id==='copia') && p.embed) warmAssets(p.embed,1); });
+    // Priority projects: fully pre-load Maraschino + Disco + Copia so they open ready and scroll without loading.
+    if(fast) PROJECTS.forEach(p=>{ if((p.id==='maraschino'||p.id==='disco'||p.id==='copia') && p.embed) warmAssets(p.embed,1); });
   }
   const wIcon=document.getElementById('wmp-icon'); if(wIcon) wIcon.addEventListener('pointerenter',warm,{once:true}); // warm early if they head for the player
   function schedule(){ ('requestIdleCallback' in window) ? requestIdleCallback(warm,{timeout:4000}) : setTimeout(warm,1800); }
