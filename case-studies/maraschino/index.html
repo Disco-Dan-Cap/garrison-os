@@ -448,7 +448,7 @@
 <script type="module">
   import { initMacHero } from './assets/mac-hero.js';
   const host = document.getElementById('mac-hero');
-  if (host) { try { initMacHero(host, { glb: 'assets/macbook13.glb', screen: 'assets/mac-screen.webp' }); } catch (e) { console.error(e); host.classList.add('failed'); const fb = host.querySelector('.fallback'); if (fb) fb.style.display = 'block'; } }
+  if (host) { try { window.MZ_MAC = initMacHero(host, { glb: 'assets/macbook13.glb', screen: 'assets/mac-screen.webp' }); } catch (e) { console.error(e); host.classList.add('failed'); const fb = host.querySelector('.fallback'); if (fb) fb.style.display = 'block'; } }
 </script>
 <script src="assets/play.js" defer></script>
 <script>

@@ -12,7 +12,9 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 export function initMacHero(host, opts) {
   const o = Object.assign({ glb: 'assets/macbook13.glb', screen: 'assets/mac-screen.webp', draco: 'https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/libs/draco/gltf/',
-    fit: 3.6, pitch: 0.17, y: 0.16, ampX: 0.10, ampY: 0.26, scale: 1.04, openMs: 1400, openDelay: 250 }, opts || {});
+    fit: 3.6, pitch: 0.17, y: 0.16, ampX: 0.10, ampY: 0.26, scale: 1.04, openMs: 1400, openDelay: 250,
+    // the sticker on the lid: image, width as a share of the lid's width, centre in the lid's own space (x across, z hinge→front edge), tilt in degrees
+    sticker: 'assets/sticker.png', stickerW: 0.36, stickerX: -0.235, stickerZ: 0.545, stickerTilt: 12 }, opts || {});
   const fb = host.querySelector('.fallback'), load = host.querySelector('.load');
   const fail = () => { if (fb) { fb.src = o.screen; fb.style.display = 'block'; } if (load) load.remove(); host.classList.add('failed'); };
   const test = document.createElement('canvas'); if (!test.getContext('webgl2')) { fail(); return null; }
@@ -37,7 +39,7 @@ export function initMacHero(host, opts) {
 
   const group = new THREE.Group(); scene.add(group);
   const Q_CLOSED = new THREE.Quaternion(0, 0, 0, 1), Q_OPEN = new THREE.Quaternion(-0.7833269096274834, 0, 0, 0.6216099682706644);
-  let lid = null, openAmt = 0, openFrom = 0, openTarget = 0, openStart = 0, opening = false;
+  let lid = null, sticker = null, openAmt = 0, openFrom = 0, openTarget = 0, openStart = 0, opening = false;
   // ease the lid from wherever it is to `target` (1 open, 0 closed), so a click mid-swing just turns it around
   const setLid = (target) => { openFrom = openAmt; openTarget = target; openStart = performance.now(); opening = true; host.classList.toggle('closed', target === 0); host.setAttribute('aria-pressed', target === 0 ? 'true' : 'false'); go(); };
 
@@ -57,6 +59,19 @@ export function initMacHero(host, opts) {
       screen.material = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
     }
     model.traverse((n) => { if (n.isMesh) { n.castShadow = true; n.receiveShadow = false; } });
+    // the sticker: a flat quad glued to the lid's outer face, so it swings with the lid and reads when it is closed.
+    // Lid space: x across (±0.55), z from the hinge (0) to the front edge (0.765), +y is the outside; the Apple mark sits at y≈0.0255.
+    if (lid && o.sticker) {
+      const box = new THREE.Box3(); lid.updateMatrixWorld(true); const inv = new THREE.Matrix4().copy(lid.matrixWorld).invert();
+      lid.traverse((n) => { if (n.isMesh) { n.geometry.computeBoundingBox(); box.union(n.geometry.boundingBox.clone().applyMatrix4(new THREE.Matrix4().multiplyMatrices(inv, n.matrixWorld))); } });
+      const lidW = box.max.x - box.min.x, w = lidW * o.stickerW;
+      const st = new THREE.TextureLoader().load(o.sticker, (t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); const a = t.image.width / t.image.height; quad.scale.set(1, 1 / a, 1); render(); });
+      const quad = new THREE.Mesh(new THREE.PlaneGeometry(w, w), new THREE.MeshBasicMaterial({ map: st, transparent: true, alphaTest: 0.04, toneMapped: false, color: 0xf2f2f2, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+      quad.name = 'sticker'; quad.renderOrder = 2; quad.castShadow = false;
+      quad.position.set(o.stickerX, box.max.y + 0.0008, o.stickerZ);
+      quad.rotation.set(-Math.PI / 2, 0, 0); quad.rotateZ(THREE.MathUtils.degToRad(o.stickerTilt));
+      lid.add(quad); sticker = quad;
+    }
     // measure with the lid OPEN so the framing fits the final pose, then start closed
     if (lid) lid.quaternion.copy(Q_OPEN);
     model.updateMatrixWorld(true);
@@ -103,5 +118,5 @@ export function initMacHero(host, opts) {
     host.addEventListener('pointermove', (e) => { const r = host.getBoundingClientRect(); ty = ((e.clientX - r.left - r.width / 2) / (r.width / 2)) * o.ampY; tx = (-(e.clientY - r.top - r.height / 2) / (r.height / 2)) * o.ampX; go(); });
     host.addEventListener('pointerleave', () => { tx = 0; ty = 0; ts = 1; go(); });
   }
-  return { renderer, scene, camera, open: () => setLid(1), close: () => setLid(0), toggle: () => setLid(openTarget === 1 ? 0 : 1) };
+  return { renderer, scene, camera, THREE, get lid() { return lid; }, get sticker() { return sticker; }, get model() { return group; }, render, open: () => setLid(1), close: () => setLid(0), toggle: () => setLid(openTarget === 1 ? 0 : 1) };
 }
