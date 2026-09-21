@@ -3,7 +3,8 @@
    Threepipe device-mockup scene (Palash Bansal, MIT), iPhone and tabletop removed, wallpaper texture
    dropped, Draco-compressed: 12.4MB → 203KB. Lid pivot is the "Bevels_2" node; closed = identity,
    open = the scene's stored "open" transform. Screen is the "Object_7" quad; we give it UVs and our texture.
-   Interaction: lid swings open when the hero scrolls into view, then the cursor tilts the whole machine. */
+   Interaction: lid swings open when the hero scrolls into view, then the cursor tilts the whole machine;
+   a click (or Enter / Space) closes the lid, another opens it again. */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -36,7 +37,9 @@ export function initMacHero(host, opts) {
 
   const group = new THREE.Group(); scene.add(group);
   const Q_CLOSED = new THREE.Quaternion(0, 0, 0, 1), Q_OPEN = new THREE.Quaternion(-0.7833269096274834, 0, 0, 0.6216099682706644);
-  let lid = null, openAmt = 0, openTarget = 0, openStart = 0, opening = false;
+  let lid = null, openAmt = 0, openFrom = 0, openTarget = 0, openStart = 0, opening = false;
+  // ease the lid from wherever it is to `target` (1 open, 0 closed), so a click mid-swing just turns it around
+  const setLid = (target) => { openFrom = openAmt; openTarget = target; openStart = performance.now(); opening = true; host.classList.toggle('closed', target === 0); host.setAttribute('aria-pressed', target === 0 ? 'true' : 'false'); go(); };
 
   const tex = new THREE.TextureLoader().load(o.screen, () => render());
   tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -67,9 +70,13 @@ export function initMacHero(host, opts) {
     host.classList.add('ready'); render();
     // open when the hero is on screen
     if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((en) => { if (en[0].isIntersecting) { io.disconnect(); setTimeout(() => { openTarget = 1; opening = true; openStart = performance.now(); go(); }, o.openDelay); } }, { threshold: 0.45 });
+      const io = new IntersectionObserver((en) => { if (en[0].isIntersecting) { io.disconnect(); setTimeout(() => setLid(1), o.openDelay); } }, { threshold: 0.45 });
       io.observe(host);
-    } else { openTarget = 1; opening = true; openStart = performance.now(); go(); }
+    } else setLid(1);
+    // click to close, click to open again
+    host.setAttribute('role', 'button'); host.setAttribute('tabindex', '0'); host.setAttribute('aria-label', 'MacBook showing the Maraschino board. Click to close the lid, click again to open it.'); host.setAttribute('aria-pressed', 'false');
+    host.addEventListener('click', () => setLid(openTarget === 1 ? 0 : 1));
+    host.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLid(openTarget === 1 ? 0 : 1); } });
   }, undefined, (e) => { console.error(e); fail(); });
 
   // tilt + lid, lerped; render only while something moves
@@ -84,7 +91,7 @@ export function initMacHero(host, opts) {
   }
   function tick(now) {
     let busy = false;
-    if (opening) { const t = Math.min(1, (now - openStart) / o.openMs); openAmt = easeOut(t) * openTarget; if (t < 1) busy = true; else opening = false; }
+    if (opening) { const t = Math.min(1, (now - openStart) / o.openMs); openAmt = openFrom + (openTarget - openFrom) * easeOut(t); if (t < 1) busy = true; else opening = false; }
     cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12; cs += (ts - cs) * 0.12;
     if (Math.abs(tx - cx) > 0.0005 || Math.abs(ty - cy) > 0.0005 || Math.abs(ts - cs) > 0.0005) busy = true;
     render();
@@ -96,5 +103,5 @@ export function initMacHero(host, opts) {
     host.addEventListener('pointermove', (e) => { const r = host.getBoundingClientRect(); ty = ((e.clientX - r.left - r.width / 2) / (r.width / 2)) * o.ampY; tx = (-(e.clientY - r.top - r.height / 2) / (r.height / 2)) * o.ampX; go(); });
     host.addEventListener('pointerleave', () => { tx = 0; ty = 0; ts = 1; go(); });
   }
-  return { renderer, scene, camera, open: () => { openTarget = 1; opening = true; openStart = performance.now(); go(); } };
+  return { renderer, scene, camera, open: () => setLid(1), close: () => setLid(0), toggle: () => setLid(openTarget === 1 ? 0 : 1) };
 }
