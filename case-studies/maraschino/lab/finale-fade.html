@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Lab · finale fade options</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{ --board:#E2EBF1; --dot:#A9BECD; --ink:#1F2A33; --ink-2:#42525F; --ink-3:#7C8E9C; --line:#D8E3EB; --cherry:#C11717; --panel:#F2F9F9; --polaroid:#FCFCFA; --mono:'JetBrains Mono',monospace; --font:'Inter',sans-serif; }
+*{box-sizing:border-box} html,body{margin:0}
+body{ background:var(--board); font-family:var(--font); color:var(--ink-2); position:relative; }
+body::before{ content:""; position:fixed; inset:0; pointer-events:none; z-index:0; background-image:radial-gradient(circle, var(--dot) 1px, transparent 1.2px); background-size:22px 22px; background-position:11px 11px; opacity:.7; }
+.wrap{ max-width:1080px; margin:0 auto; padding:60px 44px 0; position:relative; z-index:1; }
+.built{ text-align:center; }
+.built-line{ display:inline-flex; gap:14px; font-family:var(--mono); font-size:12px; letter-spacing:.06em; padding:14px 22px; border:1px solid var(--line); border-radius:999px; background:var(--panel); }
+.built-k{ color:var(--cherry); text-transform:uppercase; letter-spacing:.16em; font-size:10.5px; }
+.finale{ position:relative; width:100vw; margin:80px 0 0 calc(50% - 50vw); padding:220px 24px 44px; text-align:center; color:#fff; overflow:hidden; background:var(--cherry); }
+.finale-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+.finale-fade{ position:absolute; left:0; right:0; top:0; height:260px; pointer-events:none; background:linear-gradient(to bottom, var(--board) 0%, rgba(226,235,241,.92) 22%, rgba(226,235,241,.55) 52%, rgba(226,235,241,.18) 80%, rgba(226,235,241,0) 100%); }
+.finale-lock{ width:min(760px,82vw); height:auto; display:block; margin:0 auto; filter:drop-shadow(0 12px 30px rgba(60,0,0,.35)); position:relative; }
+.tag{ position:fixed; left:14px; top:12px; z-index:9; font:600 12px/1 var(--mono); background:#000; color:#fff; padding:8px 10px; border-radius:6px; }
+
+/* A · same overlay, taller and eased (460px, smoothstep) */
+body.a .finale-fade{ height:460px; background:linear-gradient(to bottom, rgba(226,235,241,1.000) 0.0%, rgba(226,235,241,0.980) 8.3%, rgba(226,235,241,0.926) 16.7%, rgba(226,235,241,0.844) 25.0%, rgba(226,235,241,0.741) 33.3%, rgba(226,235,241,0.624) 41.7%, rgba(226,235,241,0.500) 50.0%, rgba(226,235,241,0.376) 58.3%, rgba(226,235,241,0.259) 66.7%, rgba(226,235,241,0.156) 75.0%, rgba(226,235,241,0.074) 83.3%, rgba(226,235,241,0.020) 91.7%, rgba(226,235,241,0.000) 100.0%); }
+
+/* B · no overlay: the finale is transparent so the dot grid keeps going, and the video itself fades in through an eased mask */
+body.b .finale{ background:transparent; margin-top:0; padding-top:300px; }
+body.b .finale-fade{ display:none; }
+body.b .finale-bg{ -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0.000) 0px, rgba(0,0,0,0.015) 37px, rgba(0,0,0,0.055) 74px, rgba(0,0,0,0.118) 111px, rgba(0,0,0,0.198) 149px, rgba(0,0,0,0.292) 186px, rgba(0,0,0,0.394) 223px, rgba(0,0,0,0.500) 260px, rgba(0,0,0,0.606) 297px, rgba(0,0,0,0.708) 334px, rgba(0,0,0,0.802) 371px, rgba(0,0,0,0.882) 409px, rgba(0,0,0,0.945) 446px, rgba(0,0,0,0.985) 483px, rgba(0,0,0,1.000) 520px); mask-image:linear-gradient(to bottom, rgba(0,0,0,0.000) 0px, rgba(0,0,0,0.015) 37px, rgba(0,0,0,0.055) 74px, rgba(0,0,0,0.118) 111px, rgba(0,0,0,0.198) 149px, rgba(0,0,0,0.292) 186px, rgba(0,0,0,0.394) 223px, rgba(0,0,0,0.500) 260px, rgba(0,0,0,0.606) 297px, rgba(0,0,0,0.708) 334px, rgba(0,0,0,0.802) 371px, rgba(0,0,0,0.882) 409px, rgba(0,0,0,0.945) 446px, rgba(0,0,0,0.985) 483px, rgba(0,0,0,1.000) 520px); }
+
+/* C · like B but longer and starting right under the pill, with a soft red bloom ahead of the video */
+body.c .finale{ background:transparent; margin-top:0; padding-top:380px; }
+body.c .finale-fade{ display:none; }
+body.c .finale-bg{ -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0.000) 0px, rgba(0,0,0,0.015) 54px, rgba(0,0,0,0.055) 109px, rgba(0,0,0,0.118) 163px, rgba(0,0,0,0.198) 217px, rgba(0,0,0,0.292) 271px, rgba(0,0,0,0.394) 326px, rgba(0,0,0,0.500) 380px, rgba(0,0,0,0.606) 434px, rgba(0,0,0,0.708) 489px, rgba(0,0,0,0.802) 543px, rgba(0,0,0,0.882) 597px, rgba(0,0,0,0.945) 651px, rgba(0,0,0,0.985) 706px, rgba(0,0,0,1.000) 760px); mask-image:linear-gradient(to bottom, rgba(0,0,0,0.000) 0px, rgba(0,0,0,0.015) 54px, rgba(0,0,0,0.055) 109px, rgba(0,0,0,0.118) 163px, rgba(0,0,0,0.198) 217px, rgba(0,0,0,0.292) 271px, rgba(0,0,0,0.394) 326px, rgba(0,0,0,0.500) 380px, rgba(0,0,0,0.606) 434px, rgba(0,0,0,0.708) 489px, rgba(0,0,0,0.802) 543px, rgba(0,0,0,0.882) 597px, rgba(0,0,0,0.945) 651px, rgba(0,0,0,0.985) 706px, rgba(0,0,0,1.000) 760px); }
+body.c .finale::before{ content:""; position:absolute; left:0; right:0; top:0; height:760px; pointer-events:none; background:radial-gradient(ellipse 70% 100% at 50% 100%, rgba(193,23,23,.28), transparent 70%); }
+</style></head><body>
+<div class="tag" id="tag"></div>
+<div class="wrap"><div class="built"><div class="built-line"><span class="built-k">Built with</span>Next.js · TypeScript · Tailwind · Zustand · Dexie · Anthropic API · Higgsfield API · Claude Code</div></div></div>
+<footer class="finale">
+  <video class="finale-bg" autoplay loop muted playsinline preload="auto" poster="../assets/bloom-poster.jpg" aria-hidden="true"><source src="../assets/bloom-loop.mp4" type="video/mp4"></video>
+  <div class="finale-fade"></div>
+  <div class="finale-in"><img class="finale-lock" src="../assets/lockup-wide.svg" alt="Maraschino"><div style="height:120px"></div></div>
+</footer>
+<script>const v=new URLSearchParams(location.search).get('v')||''; if(v) document.body.classList.add(v); document.getElementById('tag').textContent={'':'CURRENT','a':'A · taller, eased overlay','b':'B · dots continue, video fades in','c':'C · long dissolve with red bloom'}[v];</script>
+</body></html>
