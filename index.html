@@ -1432,6 +1432,20 @@ tick(); setInterval(tick,1000);
   window.__openLanyard=open;
 })();
 </script>
+<script>
+/* Deep links: garrisonbullock.com/#maraschino opens the desktop with that case study's
+   window already on top, exactly as if the visitor had clicked it. Used for shared links. */
+(function(){
+  function fromHash(){
+    var id=(location.hash||'').slice(1).toLowerCase();
+    if(!id || typeof PROJECTS==='undefined' || typeof openCase!=='function') return;
+    var p=PROJECTS.find(function(x){ return x.id===id && x.embed && !x.soon; });
+    if(p) openCase(p);
+  }
+  if(document.readyState==='complete') setTimeout(fromHash,0); else addEventListener('load',fromHash);
+  addEventListener('hashchange',fromHash);
+})();
+</script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "495c7fa3f7544163bba06e1f509ba3b0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

@@ -556,5 +556,14 @@ document.addEventListener('DOMContentLoaded', function(){
   })();
 });
 </script>
+<script>
+/* Opened on its own (e.g. from a shared link) rather than inside GARRISON OS: send the
+   visitor to the desktop with this window already open. Crawlers don't run JS, so the
+   OG preview tags above still work for LinkedIn and others. */
+(function(){
+  var framed; try { framed = window.self !== window.top; } catch(e){ framed = true; }
+  if (!framed) location.replace('/#maraschino');
+})();
+</script>
 </body>
 </html>
