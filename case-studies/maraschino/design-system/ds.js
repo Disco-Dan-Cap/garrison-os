@@ -586,7 +586,7 @@ ${cap('primitive.color.slate · the number in each chip is its contrast on chrom
   function curveSVG(bz, id) {
     const [x1, y1, x2, y2] = bz; const W = 200, H = 150, P = 20, ymin = -0.2, ymax = 1.3;
     const X = (x) => P + x * (W - 2 * P), Y = (y) => H - P - ((y - ymin) / (ymax - ymin)) * (H - 2 * P);
-    return `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true">
+    return `<svg class="cv" viewBox="0 0 ${W} ${H}" aria-hidden="true">
       <line x1="${X(0)}" y1="${Y(0)}" x2="${X(1)}" y2="${Y(0)}" stroke="var(--color-surface-line)"/><line x1="${X(0)}" y1="${Y(1)}" x2="${X(1)}" y2="${Y(1)}" stroke="var(--color-surface-line)" stroke-dasharray="3 3"/>
       <line x1="${X(0)}" y1="${Y(ymin)}" x2="${X(0)}" y2="${Y(ymax)}" stroke="var(--color-surface-line)"/>
       <line x1="${X(0)}" y1="${Y(0)}" x2="${X(x1)}" y2="${Y(y1)}" stroke="var(--color-ink-faint)" stroke-width="1"/><line x1="${X(1)}" y1="${Y(1)}" x2="${X(x2)}" y2="${Y(y2)}" stroke="var(--color-ink-faint)" stroke-width="1"/>
@@ -636,7 +636,7 @@ ${cap('primitive.color.slate · the number in each chip is its contrast on chrom
         ball.animate([{ opacity: 1, transform: 'translateX(0)' }, { opacity: 1, transform: `translateX(${W}px)` }], { duration: ms, easing: 'linear', fill: 'none' });
       }));
       const ride = (card, f, dur) => {
-        const svg = $('svg', card), ph = $('.ph', svg), pt = $('.pt', svg), ball = $('.track i', card), tr = $('.track', card);
+        const svg = $('svg.cv', card), ph = $('.ph', svg), pt = $('.pt', svg), ball = $('.track i', card), tr = $('.track', card);
         const vb = svg.viewBox.baseVal, P = 20, ymin = -0.2, ymax = 1.3;
         const X = (x) => P + x * (vb.width - 2 * P), Y = (y) => vb.height - P - ((y - ymin) / (ymax - ymin)) * (vb.height - 2 * P);
         const t0 = performance.now(); let raf = 0;
