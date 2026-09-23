@@ -1,32 +1,36 @@
-/* ── Maraschino playground · ported from app/src. Loaded by the case study; page owns the tokens. ── */
-:root{--panel-soft:#F5F8FA;--ease-out:cubic-bezier(0.23,1,0.32,1);--spring:cubic-bezier(0.34,1.56,0.64,1)}
+/* ── Maraschino playground · ported from app/src. Every value is a token from tokens/tokens.css, the file the app
+   generates from src/lib/tokens.ts (D-048); the port names none of its own. ── */
+:root{--panel-soft:var(--color-surface-panel-soft);--ease-out:var(--motion-ease-out);--spring:var(--motion-ease-spring)}
+/* the ported parts wear the app's own type family, not the page's */
+.mz-board,.mz-rail,.popover,.tray,.pin-goo,.cherry-row{font-family:var(--type-family)}
 /* the board surface: dot grid that never hides (grid.ts at zoom 1) */
-.mz-board{position:relative;background-color:var(--board);
-  background-image:radial-gradient(var(--dot) 1px, transparent 1px);background-size:22px 22px;background-position:11px 11px;
-  border:1px solid var(--line);border-radius:18px;overflow:hidden;user-select:none;-webkit-user-select:none}
+.mz-board{position:relative;background-color:var(--color-board-bg);
+  background-image:radial-gradient(var(--color-board-dot) 1px, transparent 1px);background-size:22px 22px;background-position:11px 11px;
+  border:1px solid var(--color-surface-line);border-radius:var(--radius-card);overflow:hidden;user-select:none;-webkit-user-select:none}
 /* the bare sheet (the pins row) is not a canvas, so notes and menus may spill past its edge */
 .mz-board.bare{overflow:visible}
 .mz-board.armed{cursor:crosshair}
 .mz-board.lassoing{cursor:crosshair}
 
 /* ── tool rail (ToolRail.tsx) ── */
-.mz-rail{background:var(--panel);border-radius:14px;padding:8px;box-shadow:0 8px 26px -10px rgba(31,54,74,.35);
-  display:flex;flex-direction:column;gap:4px;border:1px solid var(--line)}
-.rail-btn{position:relative;width:42px;height:42px;border-radius:10px;border:1px solid transparent;background:transparent;
+.mz-rail{background:var(--color-surface-panel);border-radius:var(--radius-rail);padding:var(--space-8);box-shadow:var(--shadow-rail);
+  display:flex;flex-direction:column;gap:var(--space-4);border:1px solid var(--color-surface-line)}
+.rail-btn{position:relative;width:42px;height:42px;border-radius:var(--radius-control);border:1px solid transparent;background:transparent;
   display:grid;place-items:center;cursor:pointer;padding:0}
-.rail-btn[data-on="1"]{background:var(--panel-soft);border-color:var(--line)}
-.rail-btn:hover{background:#F5F8FA}
-.rail-dot{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:#fff;transition:box-shadow 140ms ease}
+.rail-btn[data-on="1"]{background:var(--color-surface-panel-soft);border-color:var(--color-surface-line)}
+.rail-btn:hover{background:var(--color-surface-panel-soft)}
+.rail-dot{width:20px;height:20px;border-radius:var(--radius-round);display:grid;place-items:center;color:var(--color-ink-on-dark);transition:box-shadow var(--motion-quick) ease}
 .rail-btn[data-on="1"] .rail-dot{box-shadow:0 0 0 3px var(--c22)}
 .rail-tag{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%) translateX(-6px) scale(.92);
-  background:var(--ink);color:#fff;font-size:12px;font-weight:600;letter-spacing:.02em;padding:5px 9px;border-radius:7px;
-  white-space:nowrap;opacity:0;pointer-events:none;transition:all 140ms var(--spring);z-index:5}
-.rail-tag span{opacity:.5;margin-left:7px}
+  background:var(--color-ink-strong);color:var(--color-ink-on-dark);font-size:var(--type-size-body);font-weight:var(--type-weight-medium);
+  letter-spacing:var(--type-tracking-fine);padding:var(--space-5) var(--space-9);border-radius:var(--radius-tag);
+  white-space:nowrap;opacity:0;pointer-events:none;transition:all var(--motion-quick) var(--motion-ease-spring);z-index:5}
+.rail-tag span{opacity:.5;margin-left:var(--space-7)}
 .rail-btn:hover .rail-tag,.rail-btn:focus-visible .rail-tag{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}
 
 /* ── polaroid (Polaroid.tsx) ── */
-.mz-pol{position:absolute;background:var(--polaroid);border-radius:3px;padding:14px 14px 0;
-  box-shadow:0 10px 24px -8px rgba(31,54,74,.34), 0 2px 5px rgba(31,54,74,.14);user-select:none;touch-action:none}
+.mz-pol{position:absolute;background:var(--color-surface-polaroid);border-radius:var(--polaroid-radius);padding:var(--polaroid-border) var(--polaroid-border) 0;
+  box-shadow:var(--shadow-polaroid);user-select:none;touch-action:none}
 .mz-pol.static{position:relative}
 .mz-pol .area{position:relative;overflow:visible;background:var(--panel-soft)}
 .mz-pol .area img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
@@ -34,107 +38,108 @@
 .mz-pol .chin-inner{position:relative}
 /* the loop lives in normalised 0..1 space, so the svg must fill its surface exactly — polaroid or bare sheet alike */
 .lasso{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;transition:opacity 600ms ease}
-.lasso path{transition:fill-opacity 140ms ease, stroke-width 140ms ease}
+.lasso path{transition:fill-opacity var(--motion-quick) ease, stroke-width var(--motion-quick) ease}
 .lasso.dissolve{opacity:0}
 @keyframes pin-born{from{transform:translateY(-14px) scale(.55);opacity:0}to{transform:none;opacity:1}}
 .pin-btn.born .pin-g{animation:pin-born 380ms var(--spring) both}
 .pin-btn{position:absolute;background:none;border:none;padding:0;cursor:grab;line-height:0;z-index:10;touch-action:none}
 .pin-btn.dragging{cursor:grabbing}
 .pin-btn.work{z-index:20}
-.pin-btn .pin-g{display:block;line-height:0;transition:transform 140ms var(--spring)}
+.pin-btn .pin-g{display:block;line-height:0;transition:transform var(--motion-quick) var(--motion-ease-spring)}
 .pin-btn svg{overflow:visible;display:block}
 .pin-btn.dragging .pin-g{transform:scale(1.16)}
 
 /* ── cherries (Cherry.tsx) ── */
 .cherry-row{display:flex;flex-direction:column;align-items:center;gap:3px}
 .cherry-row .cr{display:flex;align-items:center}
-.cherry-btn{border:none;background:transparent;padding:0;line-height:0;cursor:pointer;transition:color 140ms var(--ease-out), transform 140ms var(--ease-out)}
+.cherry-btn{border:none;background:transparent;padding:0;line-height:0;cursor:pointer;transition:color var(--motion-quick) var(--motion-ease-out), transform var(--motion-quick) var(--motion-ease-out)}
 @media (hover:hover) and (pointer:fine){ .cherry-btn:hover{transform:translateY(-1px)} }
-.cherry-lbl{font-size:11px;line-height:13px;color:var(--ink-4);letter-spacing:.01em;min-height:13px;user-select:none;transition:color 140ms var(--ease-out)}
-.tray-return{position:absolute;right:100%;margin-right:6px;top:1px;width:24px;height:24px;border-radius:999px;border:none;padding:0;
-  display:grid;place-items:center;cursor:pointer;background:transparent;opacity:0;color:var(--ink-4);transform:scale(1);
-  transition:opacity 140ms ease, color 140ms ease, transform 160ms var(--spring)}
+.cherry-lbl{font-size:var(--type-size-label);line-height:var(--type-leading-chip);color:var(--color-ink-faint);letter-spacing:var(--type-tracking-hair);min-height:13px;user-select:none;transition:color var(--motion-quick) var(--motion-ease-out)}
+.tray-return{position:absolute;right:100%;margin-right:var(--space-6);top:1px;width:24px;height:24px;border-radius:var(--radius-pill);border:none;padding:0;
+  display:grid;place-items:center;cursor:pointer;background:transparent;opacity:0;color:var(--color-ink-faint);transform:scale(1);
+  transition:opacity var(--motion-quick) ease, color var(--motion-quick) ease, transform var(--motion-base) var(--motion-ease-spring)}
 .mz-pol:hover .tray-return,.tray-return:focus-visible{opacity:1}
-.tray-return:hover,.tray-return:focus-visible{color:var(--cherry);transform:scale(1.18)}
-.tray-return:active{transform:scale(1.02);transition-duration:80ms}
+.tray-return:hover,.tray-return:focus-visible{color:var(--color-brand-cherry);transform:scale(var(--motion-goo-hover-scale))}
+.tray-return:active{transform:scale(1.02);transition-duration:var(--motion-press)}
 @media (hover:none){ .tray-return{opacity:1} }
 
 /* ── note popover (PinPopover.tsx) ── */
 @keyframes pop{ from{opacity:0;transform:translate(14px,8px) scale(.94)} to{opacity:1;transform:translate(14px,14px) scale(1)} }
 @keyframes pop-l{ from{opacity:0;transform:translate(calc(-100% - 14px),8px) scale(.94)} to{opacity:1;transform:translate(calc(-100% - 14px),14px) scale(1)} }
 .popover.left{transform:translate(calc(-100% - 14px),14px);animation-name:pop-l}
-.popover{position:absolute;transform:translate(14px,14px);width:258px;z-index:30;background:var(--panel);border-radius:12px;padding:11px;
-  border:1px solid var(--line);box-shadow:0 16px 40px -14px rgba(31,54,74,.45);animation:pop 220ms var(--spring);cursor:default}
-.popover .hd{display:flex;align-items:center;gap:7px;margin-bottom:8px}
-.popover .hd .dot{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;color:#fff}
-.popover .hd .lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2)}
-.popover .hd .del{margin-left:auto;border:none;background:transparent;cursor:pointer;color:var(--ink-4);padding:3px;display:grid;place-items:center}
-.popover .hd .del:hover{color:var(--cherry)}
-.field{width:100%;resize:vertical;border-radius:8px;padding:7px 8px;font-size:13px;line-height:1.45;color:var(--ink);background:var(--panel-soft);
-  font-family:inherit;border:1px solid var(--line);outline:none;transition:border-color 140ms ease, box-shadow 140ms ease;display:block}
-.field:focus-visible{outline:none;border-color:var(--cherry);box-shadow:0 0 0 1px var(--cherry), 0 0 0 4px rgba(193,23,23,.16)}
+/* the note's entrance is motion.base like every other lift (D-048a) */
+.popover{position:absolute;transform:translate(14px,14px);width:258px;z-index:var(--z-popover);background:var(--color-surface-panel);border-radius:var(--radius-popover);padding:var(--space-11);
+  border:1px solid var(--color-surface-line);box-shadow:var(--shadow-popover);animation:pop var(--motion-base) var(--motion-ease-spring);cursor:default}
+.popover .hd{display:flex;align-items:center;gap:var(--space-7);margin-bottom:var(--space-8)}
+.popover .hd .dot{width:16px;height:16px;border-radius:var(--radius-round);display:grid;place-items:center;color:var(--color-ink-on-dark)}
+.popover .hd .lbl{font-size:var(--type-size-label);font-weight:var(--type-weight-bold);letter-spacing:var(--type-tracking-wider);text-transform:uppercase;color:var(--color-ink-body)}
+.popover .hd .del{margin-left:auto;border:none;background:transparent;cursor:pointer;color:var(--color-ink-faint);padding:var(--space-3);display:grid;place-items:center}
+.popover .hd .del:hover{color:var(--color-brand-cherry)}
+.field{width:100%;resize:vertical;border-radius:var(--radius-chip);padding:var(--space-7) var(--space-8);font-size:var(--type-size-ui);line-height:var(--type-leading-base);color:var(--color-ink-strong);background:var(--color-surface-panel-soft);
+  font-family:inherit;border:1px solid var(--color-surface-line);outline:none;transition:border-color var(--motion-quick) ease, box-shadow var(--motion-quick) ease;display:block}
+.field:focus-visible{outline:none;border-color:var(--color-focus);box-shadow:var(--shadow-focus-halo)}
 
 /* ── pin menu goo (PinMenu.tsx + globals.css) ── */
-.pin-goo{--goo-open-dur:300ms;--goo-open-ease:cubic-bezier(0.34,1.72,0.64,1);--goo-close-dur:180ms;--goo-close-ease:cubic-bezier(0.4,0,0.2,1);--goo-stagger:26ms;
-  position:fixed;z-index:60;width:140px;height:116px;pointer-events:none;transform-origin:70px 92px}
+.pin-goo{--goo-open-dur:var(--motion-goo-open);--goo-open-ease:var(--motion-ease-spring-open);--goo-close-dur:var(--motion-goo-close);--goo-close-ease:var(--motion-ease-goo-close);--goo-stagger:var(--motion-goo-stagger);
+  position:fixed;z-index:var(--z-pin-menu);width:140px;height:116px;pointer-events:none;transform-origin:70px 92px}
 .pin-goo-layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;will-change:filter,transform}
-.pin-goo-blob{--hot:1;fill:#F2F9F9;transform:translate(0,0) scale(var(--rest,1));transform-box:fill-box;transform-origin:center;
-  transition:transform var(--goo-close-dur) var(--goo-close-ease), fill 140ms ease}
+.pin-goo-blob{--hot:1;fill:var(--color-surface-panel);transform:translate(0,0) scale(var(--rest,1));transform-box:fill-box;transform-origin:center;
+  transition:transform var(--goo-close-dur) var(--goo-close-ease), fill var(--motion-quick) ease}
 .pin-goo[data-open="true"] .pin-goo-blob{transform:translate(var(--fx,0px),var(--fy,0px)) scale(var(--hot));
-  transition:transform var(--goo-open-dur) var(--goo-open-ease), fill 140ms ease;transition-delay:calc(var(--i,0) * var(--goo-stagger)), 0ms}
+  transition:transform var(--goo-open-dur) var(--goo-open-ease), fill var(--motion-quick) ease;transition-delay:calc(var(--i,0) * var(--goo-stagger)), 0ms}
 .pin-goo[data-open="true"]:has(.pin-goo-item[data-i="0"]:hover) .pin-goo-blob[data-i="0"],
 .pin-goo[data-open="true"]:has(.pin-goo-item[data-i="1"]:hover) .pin-goo-blob[data-i="1"],
-.pin-goo[data-open="true"]:has(.pin-goo-item[data-i="2"]:hover) .pin-goo-blob[data-i="2"]{--hot:1.18;fill:var(--hue,#C13A2B);
-  transition:transform 160ms cubic-bezier(0.34,1.6,0.64,1), fill 140ms ease;transition-delay:0ms,0ms}
-.pin-goo[data-open="true"]:has(.pin-goo-item[data-kind="delete"]:hover) .pin-goo-blob[data-kind="delete"]{fill:var(--hue-delete,#C11717)}
+.pin-goo[data-open="true"]:has(.pin-goo-item[data-i="2"]:hover) .pin-goo-blob[data-i="2"]{--hot:var(--motion-goo-hover-scale);fill:var(--hue,var(--color-pin-color-hue));
+  transition:transform var(--motion-goo-hover) var(--motion-ease-spring-pop), fill var(--motion-quick) ease;transition-delay:0ms,0ms}
+.pin-goo[data-open="true"]:has(.pin-goo-item[data-kind="delete"]:hover) .pin-goo-blob[data-kind="delete"]{fill:var(--hue-delete,var(--color-brand-cherry))}
 .pin-goo-item{position:absolute;border:0;padding:0;border-radius:50%;background:transparent;display:grid;place-items:center;cursor:pointer;pointer-events:none;
-  -webkit-tap-highlight-color:transparent;transform:translate(0,0);transition:transform var(--goo-close-dur) var(--goo-close-ease), background-color 120ms ease}
+  -webkit-tap-highlight-color:transparent;transform:translate(0,0);transition:transform var(--goo-close-dur) var(--goo-close-ease), background-color var(--motion-goo-bg) ease}
 .pin-goo[data-open="true"] .pin-goo-item{pointer-events:auto;transform:translate(var(--fx,0px),var(--fy,0px));
-  transition:transform var(--goo-open-dur) var(--goo-open-ease), background-color 120ms ease;transition-delay:calc(var(--i,0) * var(--goo-stagger)), 0ms}
-.pin-goo[data-open="true"] .pin-goo-item:hover{transform:translate(var(--fx,0px),var(--fy,0px)) scale(1.18);
-  transition:transform 160ms cubic-bezier(0.34,1.6,0.64,1), color 140ms ease;transition-delay:0ms,0ms;color:#fff !important}
-.pin-goo-item svg{display:block;opacity:0;filter:blur(2px);transition:opacity 110ms ease, filter 110ms ease}
-.pin-goo[data-open="true"] .pin-goo-item svg{opacity:1;filter:blur(0);transition:opacity 170ms ease, filter 170ms ease;transition-delay:calc(var(--i,0) * var(--goo-stagger) + 110ms)}
-.pin-goo-item:focus-visible{outline:2px solid var(--cherry);outline-offset:2px}
+  transition:transform var(--goo-open-dur) var(--goo-open-ease), background-color var(--motion-goo-bg) ease;transition-delay:calc(var(--i,0) * var(--goo-stagger)), 0ms}
+.pin-goo[data-open="true"] .pin-goo-item:hover{transform:translate(var(--fx,0px),var(--fy,0px)) scale(var(--motion-goo-hover-scale));
+  transition:transform var(--motion-goo-hover) var(--motion-ease-spring-pop), color var(--motion-quick) ease;transition-delay:0ms,0ms;color:var(--color-ink-on-dark) !important}
+.pin-goo-item svg{display:block;opacity:0;filter:blur(2px);transition:opacity var(--motion-goo-icon-in) ease, filter var(--motion-goo-icon-in) ease}
+.pin-goo[data-open="true"] .pin-goo-item svg{opacity:1;filter:blur(0);transition:opacity var(--motion-goo-icon-out) ease, filter var(--motion-goo-icon-out) ease;transition-delay:calc(var(--i,0) * var(--goo-stagger) + var(--motion-goo-icon-in))}
+.pin-goo-item:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}
 .pin-goo .disc,.pin-goo .bridge{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 
 /* ── tray dock (TrayDock.tsx) ── */
 .tray{display:flex;align-items:center;gap:6px;width:100%}
-.tray-arrow{flex:0 0 34px;height:94px;border:none;background:none;padding:0;color:var(--cherry);display:grid;place-items:center;cursor:pointer;
-  transition:color 150ms var(--ease-out), transform 150ms var(--ease-out)}
-.tray-arrow:disabled{color:var(--ink-4);cursor:default}
+.tray-arrow{flex:0 0 34px;height:94px;border:none;background:none;padding:0;color:var(--color-brand-cherry);display:grid;place-items:center;cursor:pointer;
+  transition:color var(--motion-tray) var(--motion-ease-out), transform var(--motion-tray) var(--motion-ease-out)}
+.tray-arrow:disabled{color:var(--color-ink-faint);cursor:default}
 .tray-arrow.hidden{visibility:hidden}
-.tray-arrow:not(:disabled):hover{color:var(--cherry-deep)}
+.tray-arrow:not(:disabled):hover{color:var(--color-brand-cherry-deep)}
 .tray-arrow-l:not(:disabled):hover{transform:translateX(-2px)}
 .tray-arrow-r:not(:disabled):hover{transform:translateX(2px)}
 .tray-arrow:not(:disabled):active{transform:scale(.9)}
-.tray-pill{flex:1 1 auto;min-width:0;position:relative;height:94px;border:2px dashed rgba(193,23,23,.4);border-radius:16px;
-  background:rgba(216,229,237,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:visible}
-.tray-lead{position:absolute;left:9px;top:50%;transform:translateY(-50%);z-index:3;width:34px;height:34px;border-radius:999px;border:1px solid var(--line);
-  background:var(--panel);color:var(--ink-3);display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 7px -2px rgba(31,54,74,.4);
-  transition:color 150ms var(--ease-out), transform 150ms var(--ease-out)}
-.tray-lead:hover{color:var(--cherry);transform:translateY(-50%) scale(1.06)}
+.tray-pill{flex:1 1 auto;min-width:0;position:relative;height:94px;border:2px dashed var(--color-wash-cherry-line);border-radius:var(--radius-shelf);
+  background:var(--color-wash-shelf);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:visible}
+.tray-lead{position:absolute;left:var(--space-9);top:50%;transform:translateY(-50%);z-index:var(--z-tray-lead);width:34px;height:34px;border-radius:var(--radius-pill);border:1px solid var(--color-surface-line);
+  background:var(--color-surface-panel);color:var(--color-ink-muted);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-tray-lead);
+  transition:color var(--motion-tray) var(--motion-ease-out), transform var(--motion-tray) var(--motion-ease-out)}
+.tray-lead:hover{color:var(--color-brand-cherry);transform:translateY(-50%) scale(1.06)}
 .tray-lead:active{transform:translateY(-50%) scale(.94)}
 .tray-scroller{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:138px;display:flex;align-items:center;gap:10px;
   padding-left:52px;padding-right:14px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}
 .tray-scroller::-webkit-scrollbar{display:none}
 .tray-panning,.tray-panning *{cursor:grabbing !important}
 .dock-item{flex:0 0 auto;width:74px;height:74px}
-.dock-item>div{width:100%;height:100%;border-radius:11px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 2px 6px rgba(31,54,74,.14);
+.dock-item>div{width:100%;height:100%;border-radius:var(--radius-thumb);overflow:hidden;background:var(--color-surface-white);border:1px solid var(--color-surface-line);box-shadow:var(--shadow-thumb);
   cursor:grab;display:grid;place-items:center}
 .dock-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 /* the demo tray: a tile can be lifted off the strip and dropped anywhere on the page (index.html wires it) */
 .tray-lift .dock-item>div{cursor:grab}
 body.mz-lifting,body.mz-lifting *{cursor:grabbing !important;user-select:none}
 .mz-pol.lifted{position:fixed;z-index:9000;pointer-events:none;will-change:transform;transform:rotate(var(--rot,0deg)) scale(1.05);
-  box-shadow:0 26px 48px -18px rgba(31,54,74,.5), 0 4px 10px rgba(31,54,74,.16);
-  transition:transform 220ms var(--spring), opacity 420ms ease, filter 420ms ease, box-shadow 220ms ease}
-.mz-pol.lifted.down{transform:rotate(var(--rot,0deg)) scale(1);box-shadow:0 10px 24px -8px rgba(31,54,74,.34), 0 2px 5px rgba(31,54,74,.14)}
+  box-shadow:0 26px 48px -18px rgba(var(--color-shadow-rgb),.5), 0 4px 10px rgba(var(--color-shadow-rgb),.16);
+  transition:transform var(--motion-slow) var(--motion-ease-spring), opacity 420ms ease, filter 420ms ease, box-shadow var(--motion-slow) ease}
+.mz-pol.lifted.down{transform:rotate(var(--rot,0deg)) scale(1);box-shadow:var(--shadow-polaroid)}
 .mz-pol.lifted.gone{opacity:0;filter:blur(7px);transform:rotate(var(--rot,0deg)) scale(.88)}
 .mz-pol.lifted .area img{background:var(--panel-soft)}
-@keyframes dock-flash{0%{box-shadow:0 0 0 0 rgba(193,23,23,.6), 0 2px 6px rgba(31,54,74,.14)}100%{box-shadow:0 0 0 12px rgba(193,23,23,0), 0 2px 6px rgba(31,54,74,.14)}}
-.dock-flash{animation:dock-flash 900ms ease-out 1}
+@keyframes dock-flash{0%{box-shadow:var(--shadow-flash-from), var(--shadow-thumb)}100%{box-shadow:var(--shadow-flash-to), var(--shadow-thumb)}}
+.dock-flash{animation:dock-flash var(--motion-flash) ease-out 1}
 .tray-track{position:absolute;left:18px;right:18px;bottom:-3px;height:4px;z-index:0;pointer-events:none}
-.tray-thumb{position:absolute;top:0;height:4px;border-radius:2px;background:rgba(193,23,23,.72);opacity:0;transition:opacity 200ms var(--ease-out)}
+.tray-thumb{position:absolute;top:0;height:4px;border-radius:var(--radius-track);background:var(--color-wash-cherry-track);opacity:0;transition:opacity var(--motion-fade) var(--motion-ease-out)}
 
 @media (prefers-reduced-motion:reduce){ .pin-goo-blob,.pin-goo-item,.pin-goo-item svg,.rail-tag{transition:none !important} }

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maraschino — Design system · Garrison Bullock</title>
+<meta name="description" content="The Maraschino design system, explorable: every token, colour, type size, shadow and curve, and the app's own components running live — pins, the pin menu, the rail, polaroids, the tray. Built from the same token file the app generates.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://garrisonbullock.com/case-studies/maraschino/design-system/">
+<meta property="og:title" content="Maraschino — Design system">
+<meta property="og:description" content="Every token and component of Maraschino, running live and searchable.">
+<meta property="og:image" content="https://garrisonbullock.com/case-studies/maraschino/assets/maraschino-og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- the app's tokens, generated from app/src/lib/tokens.ts — this page names no value of its own -->
+<link rel="stylesheet" href="../assets/tokens/tokens.css">
+<link rel="stylesheet" href="../assets/play.css">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="../../../assets/cursors/cursors.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<script>
+/* Opened on its own rather than inside GARRISON OS: go to the desktop with the Maraschino case study
+   and this window open on top of it. ?solo keeps it standalone (for checking the page by itself). */
+(function(){
+  var framed; try { framed = window.self !== window.top; } catch(e){ framed = true; }
+  if (!framed && !/[?&]solo\b/.test(location.search)) location.replace('/#maraschino/design-system' + (location.hash ? '/' + location.hash.slice(1) : ''));
+})();
+</script>
+</head>
+<body>
+<div class="ds" id="ds">
+  <aside class="ds-side" id="ds-side" aria-label="Design system">
+    <div class="ds-brand">
+      <span class="ds-brand-mark" aria-hidden="true" id="ds-mark"></span>
+      <span class="ds-brand-name">Maraschino</span>
+      <span class="ds-brand-sub">Design system</span>
+      <button type="button" class="ds-menu-btn" id="ds-menu-btn" aria-expanded="false" aria-controls="ds-nav" aria-label="Sections"></button>
+    </div>
+    <div class="ds-search">
+      <label class="ds-search-box">
+        <span class="ds-search-ico" aria-hidden="true" id="ds-search-ico"></span>
+        <input id="ds-q" type="search" autocomplete="off" spellcheck="false" placeholder="Search tokens, parts…" aria-label="Search the design system" aria-controls="ds-results" aria-expanded="false">
+        <kbd aria-hidden="true">/</kbd>
+      </label>
+      <div class="ds-results" id="ds-results" role="listbox" hidden></div>
+    </div>
+    <nav class="ds-nav" id="ds-nav" aria-label="Sections"></nav>
+    <div class="ds-side-foot" id="ds-side-foot"></div>
+  </aside>
+  <main class="ds-main" id="ds-main" tabindex="-1">
+    <div class="ds-view" id="ds-view" aria-live="polite"></div>
+  </main>
+  <div class="ds-toast" id="ds-toast" role="status" aria-live="polite"></div>
+</div>
+<script src="../assets/play.js" defer></script>
+<script src="ds.js" defer></script>
+</body>
+</html>

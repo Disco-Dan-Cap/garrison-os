@@ -178,6 +178,9 @@
     overflow:hidden;}
   .case.embed .embedframe{flex:1;min-height:0;width:100%;border:0;display:block;
     background:#fff;border-radius:0 0 2px 2px;}
+  /* Maraschino's design system opens as its own window over the case study, a step smaller
+     and offset so the case study still peeks out behind it */
+  .case.embed.ds{width:min(1480px,92vw);height:86vh;max-height:86vh}
 
   /* ---------- BOTTOM-LEFT: GARRISON (fisheye) STANDING ON THE PLANET CURVE ---------- */
   /* z-index sits in the background layer with the UFO: above wallpaper, below the
@@ -835,6 +838,36 @@ function openCase(p){
   else placeNear(w,innerWidth/2-Math.min(320,innerWidth*.47),70);
 }
 
+/* ============ MARASCHINO — DESIGN SYSTEM ============ */
+/* The case study's "Open the design system" door calls this (same origin). `section` is the
+   explorer's own route, e.g. "colour" or "colour/ramp"; an open window just navigates. */
+function openDesignSystem(section){
+  section=String(section||'').replace(/^#/,'');
+  const src='case-studies/maraschino/design-system/index.html'+(section?'#'+section:'');
+  let w=document.getElementById('case-maraschino-ds'), fresh=false;
+  if(!w){
+    fresh=true;
+    w=makeWin('case embed ds'); w.id='case-maraschino-ds';
+    w.innerHTML=`
+      <div class="titlebar"><div class="closebox"></div><div class="title">Maraschino — DESIGN SYSTEM</div></div>
+      <iframe class="embedframe" src="${src}" title="Maraschino design system"></iframe>`;
+    wireWindow(w);
+  }else if(section){
+    const f=w.querySelector('iframe'), parts=section.split('/');
+    try{ f.contentWindow.MZ_DS.go(parts[0], parts[1]||null, true); }catch(e){ f.src=src; }
+  }
+  const wasOpen=w.classList.contains('open');
+  w.classList.add('open'); bringFront(w);
+  if(fresh || !wasOpen){
+    centerCase(w);
+    // nudge down and right so the case study's title bar stays visible behind it
+    const r=w.getBoundingClientRect();
+    w.style.left=Math.min(innerWidth-r.width-8, r.left+Math.min(28,innerWidth*.02))+'px';
+    w.style.top=Math.min(innerHeight-r.height-8, r.top+Math.min(26,innerHeight*.03))+'px';
+  }
+}
+window.openDesignSystem=openDesignSystem;
+
 /* close + drag (pointer events: mouse + touch) */
 function wireWindow(w){
   w.querySelector('.closebox').addEventListener('click',()=>w.classList.remove('open'));
@@ -1436,11 +1469,14 @@ tick(); setInterval(tick,1000);
 /* Deep links: garrisonbullock.com/#maraschino opens the desktop with that case study's
    window already on top, exactly as if the visitor had clicked it. Used for shared links. */
 (function(){
+  /* #maraschino/design-system[/view[/anchor]] opens the case study with the design system over it */
   function fromHash(){
-    var id=(location.hash||'').slice(1).toLowerCase();
+    var parts=(location.hash||'').slice(1).split('/'), id=(parts[0]||'').toLowerCase();
     if(!id || typeof PROJECTS==='undefined' || typeof openCase!=='function') return;
     var p=PROJECTS.find(function(x){ return x.id===id && x.embed && !x.soon; });
-    if(p) openCase(p);
+    if(!p) return;
+    openCase(p);
+    if(id==='maraschino' && parts[1]==='design-system' && typeof openDesignSystem==='function') openDesignSystem(parts.slice(2).join('/'));
   }
   if(document.readyState==='complete') setTimeout(fromHash,0); else addEventListener('load',fromHash);
   addEventListener('hashchange',fromHash);

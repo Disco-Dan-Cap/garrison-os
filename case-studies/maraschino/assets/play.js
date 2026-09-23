@@ -1,18 +1,41 @@
 /* ── Maraschino playground core · vanilla port of app/src components ──
    Pin.tsx, PinMenu.tsx, ToolRail.tsx, TrayDock.tsx, Cherry.tsx, Polaroid.tsx, Lasso.tsx, PinPopover.tsx, BoardCanvas.tsx (pin/lasso/drag logic).
-   Same numbers, same timings, no React. */
+   Same numbers, same timings, no React. Every colour and size is read from assets/tokens/tokens.css, the file the
+   app generates from src/lib/tokens.ts (D-048) — `npm run tokens:portfolio` in the app refreshes it. The literals
+   below are only fallbacks for a page that failed to load that stylesheet. */
 (function (global) {
   'use strict';
 
-  /* ---------------------------------------------------------------- tokens (lib/tokens.ts) */
+  /* ---------------------------------------------------------------- tokens (tokens.css ← lib/tokens.ts) */
+  const rootStyle = (() => { try { return getComputedStyle(document.documentElement); } catch (e) { return null; } })();
+  /** a custom property from tokens.css, or the fallback if the sheet is missing */
+  const tok = (name, fb) => { const v = rootStyle && rootStyle.getPropertyValue('--' + name).trim(); return v || fb; };
+  const num = (name, fb) => { const v = parseFloat(tok(name, '')); return Number.isFinite(v) ? v : fb; };
   const T = {
-    board: { bg: '#E2EBF1', dot: '#A9BECD', dotGap: 22 },
-    ink: { strong: '#1F2A33', body: '#42525F', muted: '#7C8E9C', faint: '#B6C5D1' },
-    surface: { panel: '#F2F9F9', panelSoft: '#F5F8FA', line: '#D8E3EB', polaroid: '#FCFCFA' },
-    brand: { cherry: '#C11717', cherryDeep: '#8E1F1A', cherryEmpty: '#C3CFD9' },
-    pin: { size: 24, light: { k: -0.58, sy: 0.24 }, lightLifted: { k: -0.82, sy: 0.24 }, shadow: '#1B2C3B',
-           hole: { rx: 5.5, ry: 3.3, fill: '#0B1015', opacity: 0.92, blur: 0.35 } },
-    polaroid: { border: 14, chinRatio: 0.19, chinMin: 62, radius: 3 },
+    board: { bg: tok('color-board-bg', '#E2EBF1'), dot: tok('color-board-dot', '#A9BECD'), dotGap: num('board-dot-gap', 22) },
+    ink: { strong: tok('color-ink-strong', '#1F2A33'), body: tok('color-ink-body', '#42525F'), muted: tok('color-ink-muted', '#7C8E9C'),
+           faint: tok('color-ink-faint', '#B6C5D1'), onDark: tok('color-ink-on-dark', '#FFFFFF') },
+    surface: { panel: tok('color-surface-panel', '#F2F9F9'), panelSoft: tok('color-surface-panel-soft', '#F5F8FA'),
+               line: tok('color-surface-line', '#D8E3EB'), polaroid: tok('color-surface-polaroid', '#FCFCFA') },
+    brand: { cherry: tok('color-brand-cherry', '#C11717'), cherryDeep: tok('color-brand-cherry-deep', '#8E1F1A'),
+             cherryEmpty: tok('color-cherry-empty', '#C3CFD9') },
+    /** the one navy every shadow is drawn in (D-048b) */
+    shadow: tok('color-shadow', '#1F364A'),
+    menu: { ring: num('shadow-menu-ring', 0.12), near: num('shadow-menu-near', 0.16), far: num('shadow-menu-far', 0.20) },
+    mask: tok('color-mask', '#000000'),
+    ease: { spring: tok('motion-ease-spring', 'cubic-bezier(0.34, 1.56, 0.64, 1)') },
+    pin: { size: num('pin-size', 24),
+           light: { k: num('pin-light-k', -0.58), sy: num('pin-light-sy', 0.24) },
+           lightLifted: { k: num('pin-light-lifted-k', -0.82), sy: num('pin-light-lifted-sy', 0.24) },
+           shadow: tok('color-pin-parts-shadow', '#1B2C3B'),
+           shaft: { light: tok('color-pin-parts-shaft-light', '#E4E8EC'), mid: tok('color-pin-parts-shaft-mid', '#B9C0C8'),
+                    dark: tok('color-pin-parts-shaft-dark', '#8E97A1') },
+           specular: tok('color-pin-parts-specular', '#FFFFFF'), glow: tok('color-pin-parts-glow', '#FFFFFF'),
+           stroke: tok('color-pin-parts-stroke', '#FFFFFF'),
+           hole: { rx: num('pin-hole-rx', 5.5), ry: num('pin-hole-ry', 3.3), fill: tok('color-pin-parts-hole', '#0B1015'),
+                   opacity: num('pin-hole-opacity', 0.92), blur: num('pin-hole-blur', 0.35) } },
+    polaroid: { border: num('polaroid-border', 14), chinRatio: num('polaroid-chin-ratio', 0.19), chinMin: num('polaroid-chin-min', 62),
+                radius: num('polaroid-radius', 3) },
   };
 
   /* ---------------------------------------------------------------- lucide icons (lucide-react 1.34, inner nodes) */
@@ -37,13 +60,13 @@
 
   /* ---------------------------------------------------------------- pin types (lib/pinTypes.ts, D-029) */
   const PIN_TYPES = [
-    { id: 'color',   label: 'Color',   color: '#C13A2B', shade: '#8E1F1A', icon: 'palette',         hint: 'palette, hue, warmth' },
-    { id: 'type',    label: 'Type',    color: '#3B82F6', shade: '#1D4ED8', icon: 'type',            hint: 'lettering, hierarchy' },
-    { id: 'format',  label: 'Format',  color: '#EAB308', shade: '#A16207', icon: 'layout-template', hint: 'poster, cover, ad — and how it\'s composed' },
-    { id: 'texture', label: 'Texture', color: '#A855F7', shade: '#7E22CE', icon: 'layers',          hint: 'grain, finish, material' },
-    { id: 'subject', label: 'Subject', color: '#22C55E', shade: '#15803D', icon: 'user',            hint: 'casting, pose, wardrobe, setting' },
-    { id: 'theme',   label: 'Theme',   color: '#F97316', shade: '#C2410C', icon: 'clapperboard',    hint: 'the world it belongs to' },
-    { id: 'avoid',   label: 'Avoid',   color: '#1C1F23', shade: '#000000', icon: 'ban',             hint: 'never do this' },
+    { id: 'color',   label: 'Color',   color: tok('color-pin-color-hue', '#C13A2B'), shade: tok('color-pin-color-shade', '#8E2A1F'), icon: 'palette',         hint: 'palette, hue, warmth' },
+    { id: 'type',    label: 'Type',    color: tok('color-pin-type-hue', '#2F6FE4'), shade: tok('color-pin-type-shade', '#2657B1'), icon: 'type',            hint: 'lettering, hierarchy' },
+    { id: 'format',  label: 'Format',  color: tok('color-pin-format-hue', '#E4B10F'), shade: tok('color-pin-format-shade', '#9D7A0C'), icon: 'layout-template', hint: 'poster, cover, ad — and how it\'s composed' },
+    { id: 'texture', label: 'Texture', color: tok('color-pin-texture-hue', '#7A3FD1'), shade: tok('color-pin-texture-shade', '#522F85'), icon: 'layers',          hint: 'grain, finish, material' },
+    { id: 'subject', label: 'Subject', color: tok('color-pin-subject-hue', '#2EA85C'), shade: tok('color-pin-subject-shade', '#1C6839'), icon: 'user',            hint: 'casting, pose, wardrobe, setting' },
+    { id: 'theme',   label: 'Theme',   color: tok('color-pin-theme-hue', '#E8702A'), shade: tok('color-pin-theme-shade', '#B7541A'), icon: 'clapperboard',    hint: 'the world it belongs to' },
+    { id: 'avoid',   label: 'Avoid',   color: tok('color-pin-avoid-hue', '#141414'), shade: tok('color-pin-avoid-shade', '#000000'), icon: 'ban',             hint: 'never do this' },
   ];
   const pinType = (id) => PIN_TYPES.find((t) => t.id === id) || PIN_TYPES[0];
 
@@ -79,17 +102,17 @@
     const sx = CX - HEAD * 0.34, sy = CY - HEAD * 0.40;
     return `<svg width="${box}" height="${box}" viewBox="0 0 ${VB} ${VB}" aria-hidden="true">
 <defs>
-<linearGradient id="sh-${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#E4E8EC"/><stop offset="45%" stop-color="#B9C0C8"/><stop offset="100%" stop-color="#8E97A1"/></linearGradient>
+<linearGradient id="sh-${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${T.pin.shaft.light}"/><stop offset="45%" stop-color="${T.pin.shaft.mid}"/><stop offset="100%" stop-color="${T.pin.shaft.dark}"/></linearGradient>
 <radialGradient id="bd-${u}" cx="38%" cy="32%" r="72%"><stop offset="0%" stop-color="${t.color}"/><stop offset="72%" stop-color="${t.color}"/><stop offset="100%" stop-color="${t.shade}"/></radialGradient>
 <filter id="soft-${u}" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="${dragging ? 6.5 : 4}"/></filter>
 <filter id="tight-${u}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="${T.pin.hole.blur}"/></filter>
 </defs>
 <g transform="${castTransform(L.k, L.sy)}" filter="url(#soft-${u})" opacity="${dragging ? 0.18 : 0.26}"><path d="${SHAFT}" fill="${T.pin.shadow}"/><circle cx="${CX}" cy="${CY}" r="${HEAD}" fill="${T.pin.shadow}"/></g>
-${selected ? `<g filter="url(#soft-${u})" opacity="0.95"><g fill="#fff" stroke="#fff" stroke-width="13" stroke-linejoin="round"><path d="${SHAFT}"/><circle cx="${CX}" cy="${CY}" r="${HEAD}"/></g></g>` : ''}
+${selected ? `<g filter="url(#soft-${u})" opacity="0.95"><g fill="${T.pin.glow}" stroke="${T.pin.glow}" stroke-width="13" stroke-linejoin="round"><path d="${SHAFT}"/><circle cx="${CX}" cy="${CY}" r="${HEAD}"/></g></g>` : ''}
 ${dragging ? '' : `<ellipse cx="${ENTRY.x}" cy="${ENTRY.y}" rx="${T.pin.hole.rx}" ry="${T.pin.hole.ry}" fill="${T.pin.hole.fill}" opacity="${T.pin.hole.opacity}" filter="url(#tight-${u})"/>`}
 <path d="${SHAFT}" fill="url(#sh-${u})"/>
 <circle cx="${CX}" cy="${CY}" r="${HEAD}" fill="url(#bd-${u})"/>
-<ellipse cx="${sx}" cy="${sy}" rx="${HEAD * 0.20}" ry="${HEAD * 0.15}" fill="#fff" opacity="0.78" transform="rotate(-28 ${sx} ${sy})"/>
+<ellipse cx="${sx}" cy="${sy}" rx="${HEAD * 0.20}" ry="${HEAD * 0.15}" fill="${T.pin.specular}" opacity="0.78" transform="rotate(-28 ${sx} ${sy})"/>
 </svg>`;
   }
 
@@ -197,19 +220,19 @@ ${dragging ? '' : `<ellipse cx="${ENTRY.x}" cy="${ENTRY.y}" rx="${T.pin.hole.rx}
 <feComposite in="SourceGraphic" in2="goo" operator="atop" result="shape"/>
 <feColorMatrix in="shape" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 60 -29.5" result="ring-solid"/>
 <feMorphology in="ring-solid" operator="dilate" radius="1" result="ring-a"/>
-<feFlood flood-color="#1F3648" flood-opacity="0.12" result="ring-c"/>
+<feFlood flood-color="${T.shadow}" flood-opacity="${T.menu.ring}" result="ring-c"/>
 <feComposite in="ring-c" in2="ring-a" operator="in" result="ring"/>
 <feGaussianBlur in="shape" stdDeviation="2" result="s2-b"/><feOffset in="s2-b" dy="2" result="s2-o"/>
-<feFlood flood-color="#1F3648" flood-opacity="0.16" result="s2-c"/><feComposite in="s2-c" in2="s2-o" operator="in" result="s2"/>
+<feFlood flood-color="${T.shadow}" flood-opacity="${T.menu.near}" result="s2-c"/><feComposite in="s2-c" in2="s2-o" operator="in" result="s2"/>
 <feGaussianBlur in="shape" stdDeviation="9" result="s3-b"/><feOffset in="s3-b" dy="4" result="s3-o"/>
-<feFlood flood-color="#1F3648" flood-opacity="0.20" result="s3-c"/><feComposite in="s3-c" in2="s3-o" operator="in" result="s3"/>
+<feFlood flood-color="${T.shadow}" flood-opacity="${T.menu.far}" result="s3-c"/><feComposite in="s3-c" in2="s3-o" operator="in" result="s3"/>
 <feMerge><feMergeNode in="s3"/><feMergeNode in="s2"/><feMergeNode in="ring"/><feMergeNode in="shape"/></feMerge>
 </filter></defs>
 <g filter="url(#goo-${u})">${FAN.map((f, i) => `<circle class="pin-goo-blob" data-i="${i}" data-kind="${ITEMS[i].id}" cx="${ORIGIN.x}" cy="${ORIGIN.y}" r="${R}" style="--fx:${f.fx}px;--i:${i}"/>`).join('')}</g>
 </svg>
 <svg class="disc" viewBox="0 0 ${BOX.w} ${BOX.h}" aria-hidden="true" focusable="false">
 <defs><radialGradient id="hd-${u}" cx="38%" cy="32%" r="72%"><stop offset="0%" stop-color="${this.t.color}"/><stop offset="72%" stop-color="${this.t.color}"/><stop offset="100%" stop-color="${this.t.shade}"/></radialGradient></defs>
-<circle class="disc-c" cx="${ORIGIN.x}" cy="${ORIGIN.y}" r="10" fill="url(#hd-${u})"/><ellipse class="disc-s" fill="#fff" opacity="0.78"/>
+<circle class="disc-c" cx="${ORIGIN.x}" cy="${ORIGIN.y}" r="10" fill="url(#hd-${u})"/><ellipse class="disc-s" fill="${T.pin.specular}" opacity="0.78"/>
 </svg>
 <svg class="bridge" viewBox="0 0 ${BOX.w} ${BOX.h}" aria-hidden="true" focusable="false"><path fill="transparent" style="pointer-events:none"/></svg>
 ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}" data-kind="${it.id}" aria-label="${it.label}" title="${it.label}" tabindex="-1" style="left:${ORIGIN.x - SAT / 2}px;top:${ORIGIN.y - SAT / 2}px;width:${SAT}px;height:${SAT}px;color:${it.id === 'delete' ? T.brand.cherry : T.ink.body};--fx:${FAN[i].fx}px;--i:${i}">${icon(it.icon, 15, 2)}</button>`).join('')}`;
@@ -585,7 +608,7 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
       this.arrowL = el.querySelector('.tray-arrow-l'); this.arrowR = el.querySelector('.tray-arrow-r'); this.lead = el.querySelector('.tray-lead');
       this.pointerX = null; this.panning = false; this.lifting = false; this.raf = 0;
       if (o.onLift) el.classList.add('tray-lift');
-      this.lead.addEventListener('click', () => { if (o.onAdd) o.onAdd(); else { this.lead.animate([{ transform: 'translateY(-50%) rotate(0)' }, { transform: 'translateY(-50%) rotate(90deg)' }], { duration: 260, easing: 'cubic-bezier(0.34,1.56,0.64,1)' }); } });
+      this.lead.addEventListener('click', () => { if (o.onAdd) o.onAdd(); else { this.lead.animate([{ transform: 'translateY(-50%) rotate(0)' }, { transform: 'translateY(-50%) rotate(90deg)' }], { duration: 260, easing: T.ease.spring }); } });
 
       // dock magnification: pointer x over the pill (mouse only)
       this.pill.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && !this.panning && !this.lifting) { this.pointerX = e.clientX; this.animate(); } });
@@ -688,7 +711,7 @@ ${ITEMS.map((it, i) => `<button type="button" class="pin-goo-item" data-i="${i}"
       this.arrowL.classList.toggle('hidden', !overflowing); this.arrowR.classList.toggle('hidden', !overflowing);
       this.arrowL.disabled = !overflowing || atStart; this.arrowR.disabled = !overflowing || atEnd;
       const fadeL = 34 + 16, FADE = 18;
-      const mask = `linear-gradient(to right, transparent 0, #000 ${atStart ? 0 : fadeL}px, #000 calc(100% - ${atEnd ? 0 : FADE}px), transparent 100%)`;
+      const mask = `linear-gradient(to right, transparent 0, ${T.mask} ${atStart ? 0 : fadeL}px, ${T.mask} calc(100% - ${atEnd ? 0 : FADE}px), transparent 100%)`;
       s.style.maskImage = mask; s.style.webkitMaskImage = mask;
     }
 
