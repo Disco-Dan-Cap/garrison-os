@@ -10,10 +10,12 @@
   --color-ink-strong-rgb: 31, 42, 51;
   --color-ink-body: #42525F;
   --color-ink-body-rgb: 66, 82, 95;
-  --color-ink-muted: #7C8E9C;
-  --color-ink-muted-rgb: 124, 142, 156;
+  --color-ink-muted: #5A6B79;
+  --color-ink-muted-rgb: 90, 107, 121;
   --color-ink-faint: #B6C5D1;
   --color-ink-faint-rgb: 182, 197, 209;
+  --color-ink-icon: #7C8E9C;
+  --color-ink-icon-rgb: 124, 142, 156;
   --color-ink-on-dark: #FFFFFF;
   --color-ink-on-dark-rgb: 255, 255, 255;
   --color-surface-panel: #F2F9F9;

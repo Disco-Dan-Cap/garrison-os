@@ -116,7 +116,7 @@
 .tray-pill{flex:1 1 auto;min-width:0;position:relative;height:94px;border:2px dashed var(--color-wash-cherry-line);border-radius:var(--radius-shelf);
   background:var(--color-wash-shelf);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:visible}
 .tray-lead{position:absolute;left:var(--space-9);top:50%;transform:translateY(-50%);z-index:var(--z-tray-lead);width:34px;height:34px;border-radius:var(--radius-pill);border:1px solid var(--color-surface-line);
-  background:var(--color-surface-panel);color:var(--color-ink-muted);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-tray-lead);
+  background:var(--color-surface-panel);color:var(--color-ink-icon);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-tray-lead);
   transition:color var(--motion-tray) var(--motion-ease-out), transform var(--motion-tray) var(--motion-ease-out)}
 .tray-lead:hover{color:var(--color-brand-cherry);transform:translateY(-50%) scale(1.06)}
 .tray-lead:active{transform:translateY(-50%) scale(.94)}

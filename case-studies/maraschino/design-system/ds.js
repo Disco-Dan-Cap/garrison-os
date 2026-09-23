@@ -198,19 +198,20 @@
   const RAMP_ROLE = {
     50: ['color.surface.polaroid'], 100: ['color.surface.panelSoft'], 150: ['color.surface.panel'], 200: ['color.board.bg'],
     300: ['color.surface.line'], 350: ['color.wash.shelf'], 400: ['color.cherry.empty'], 500: ['color.ink.faint'],
-    600: ['color.board.dot'], 700: ['color.ink.muted'], 800: ['color.ink.body'], 900: ['color.ink.strong'],
+    600: ['color.board.dot'], 700: ['color.ink.icon'], 750: ['color.ink.muted'], 800: ['color.ink.body'], 900: ['color.ink.strong'],
   };
   const RAMP_WORD = { 50: 'Polaroid paper', 100: 'Fields, washes', 150: 'Chrome', 200: 'The board', 300: 'Hairlines', 350: 'Tray shelf',
-    400: 'Unlit cherry', 500: 'Faint ink', 600: 'Dot grid', 700: 'Muted ink', 800: 'Body ink', 900: 'Strong ink' };
+    400: 'Unlit cherry', 500: 'Faint ink', 600: 'Dot grid', 700: 'Resting icons', 750: 'Muted ink', 800: 'Body ink', 900: 'Strong ink' };
   const BRACKETS = [[0, 4, 'Surfaces', 'paper, fields, chrome, the board'], [4, 7, 'Edges', 'hairlines, the shelf, an unlit cherry'],
-    [7, 9, 'Quiet marks', 'disabled ink, the dot grid'], [9, 12, 'Ink', 'labels, body, headings']];
+    [7, 10, 'Quiet marks', 'disabled ink, the dot grid, resting icons'], [10, 13, 'Ink', 'labels, body, headings']];
 
   const ROLES = [
     ['color.board.bg', 'The canvas, the gate, the ground a board tile is drawn on.', 'A panel fill — the chrome has to sit on it.'],
     ['color.board.dot', 'The dot grid, at every zoom.', 'Anything else.'],
     ['color.ink.strong', 'Headings, values, field text, the selected tab, the rail tag.', 'Paragraphs — too heavy for running text.'],
     ['color.ink.body', 'Paragraphs, chips, secondary buttons, the extraction’s prose.', 'Labels that should recede.'],
-    ['color.ink.muted', 'Labels, hints, counts, meta lines, resting icon buttons.', 'Anything someone must read to act.'],
+    ['color.ink.muted', 'Labels, hints, counts, meta lines — secondary text at any size.', 'Icon-only buttons (those take ink.icon).'],
+    ['color.ink.icon', 'Icon-only buttons at rest: close ×, add +, the tray’s + button, raw JSON.', 'Text of any kind — it fails AA for text (D-049).'],
     ['color.ink.faint', 'Disabled and empty states, the weight caption.', 'The only copy of a message — it fails AA.'],
     ['color.ink.onDark', 'Text and glyphs on strong ink or a pin hue.', 'On chrome — it is white.'],
     ['color.surface.panel', 'Every card, pill, rail and popover; text on cherry.', 'The board.'],
@@ -232,14 +233,15 @@
     return [
       P('Headings, values, field text', 'color.ink.strong', 'color.surface.panel', 'text'),
       P('Body copy in cards and the rail', 'color.ink.body', 'color.surface.panel', 'text'),
-      P('Labels, hints, meta lines', 'color.ink.muted', 'color.surface.panel', 'text', 'Carries 11–12px labels. The one to fix first.'),
+      P('Labels, hints, meta lines', 'color.ink.muted', 'color.surface.panel', 'text', 'Carries 11–12px labels. Darkened to pass (D-049).'),
+      P('Icon-only buttons at rest', 'color.ink.icon', 'color.surface.panel', 'ui', 'The old muted grey, kept for glyphs, where the bar is 3:1.'),
       X(P('A disabled Compile or tray arrow', 'color.ink.faint', 'color.surface.panel', 'text', 'Off on purpose, and Compile says why in readable ink beside it.'), 'Inactive controls: WCAG 2 sets no minimum.'),
       P('Empty values, empty states, the “Soon” tag', 'color.ink.faint', 'color.surface.panel', 'text', 'Reads as absent on purpose; never the only copy of a message.'),
       P('The weight caption under the cherries', 'color.ink.faint', 'color.surface.polaroid', 'text', 'The cherries are the data; the word captions them.'),
       P('Chips and the zoom percentage', 'color.ink.body', 'color.surface.panelSoft', 'text'),
       P('Text in a field', 'color.ink.strong', 'color.surface.panelSoft', 'text'),
       P('The gate’s question', 'color.ink.strong', 'color.board.bg', 'large'),
-      P('The gate’s explanation', 'color.ink.muted', 'color.board.bg', 'text', 'Muted ink on the board: short of AA.'),
+      P('The gate’s explanation', 'color.ink.muted', 'color.board.bg', 'text', 'The board is the hardest ground; the new muted grey clears it.'),
       P('Question numbers, “Compile stopped”, “Done”', 'color.brand.cherry', 'color.surface.panel', 'text'),
       P('Text on a cherry button or pill', 'color.surface.panel', 'color.brand.cherry', 'text'),
       P('The pin count on the armed Compile pill', 'color.surface.panel', 'color.wash.onCherry', 'text', 'White at 22% over cherry, flattened.', over('#FFFFFF', 0.22, cv('color-brand-cherry'))),
@@ -336,9 +338,9 @@ ${sec('get', 'Get the tokens', 'The same two files this page reads.', `
     const r3 = run(3), r45 = run(4.5);
     const ramp = `
 <div class="fig">
-  <div class="ramp" id="ramp-fig">
-    ${r3 >= 0 ? `<div class="rule r3" style="grid-row:1;grid-column:${r3 + 1} / 13">≥ 3:1 · UI marks</div>` : ''}
-    ${r45 >= 0 ? `<div class="rule r45" style="grid-row:2;grid-column:${r45 + 1} / 13">≥ 4.5:1 · text</div>` : ''}
+  <div class="ramp" id="ramp-fig" style="--n:${steps.length}">
+    ${r3 >= 0 ? `<div class="rule r3" style="grid-row:1;grid-column:${r3 + 1} / -1">≥ 3:1 · UI marks</div>` : ''}
+    ${r45 >= 0 ? `<div class="rule r45" style="grid-row:2;grid-column:${r45 + 1} / -1">≥ 4.5:1 · text</div>` : ''}
     ${steps.map((k, i) => `<div class="st" style="grid-row:3" data-step="${k}">
       <button type="button" class="chipc" style="background:${hexes[i]}" data-copy="${hexes[i]}" data-label="slate.${k} · ${hexes[i]}" title="slate.${k} · ${hexes[i]} · ${ratios[i].toFixed(2)}:1 on chrome">
         <span class="ratio" style="color:${inkOn(hexes[i])}">${ratios[i].toFixed(2)}</span></button>
@@ -359,7 +361,7 @@ ${cap('primitive.color.slate · the number in each chip is its contrast on chrom
     const chain = `
 <div class="chain">
   <div class="hd">Primitive · what it is</div><div></div><div class="hd">Role · what it’s for</div><div></div><div class="hd">Part · where you see it</div>
-  ${chainRow('primitive.color.slate.700', 'color.ink.muted', `<span style="font:var(--type-weight-bold) var(--type-size-label)/1 var(--type-family);letter-spacing:var(--type-tracking-wide);text-transform:uppercase;color:var(--color-ink-muted)">Stage 1 · Extraction</span><span style="font:var(--type-size-label)/1 var(--type-family);color:var(--color-ink-muted)">drives the shot list</span>`, 'labels, hints, counts')}
+  ${chainRow('primitive.color.slate.750', 'color.ink.muted', `<span style="font:var(--type-weight-bold) var(--type-size-label)/1 var(--type-family);letter-spacing:var(--type-tracking-wide);text-transform:uppercase;color:var(--color-ink-muted)">Stage 1 · Extraction</span><span style="font:var(--type-size-label)/1 var(--type-family);color:var(--color-ink-muted)">drives the shot list</span>`, 'labels, hints, counts')}
   ${chainRow('primitive.color.cherry.500', 'color.brand.cherry', `<span class="pill cmp armed" style="height:34px">${cherry(14)} Compile <span class="ct">3</span></span>`, 'the action, and focus')}
   ${chainRow('primitive.color.pin.type.hue', 'color.pin.type.hue', `<span style="line-height:0">${pin('type', 30)}</span>`, 'the Type pin’s head')}
   ${chainRow('primitive.color.navy.shadow', 'shadow.polaroid', `<span style="display:block;width:58px;height:66px;background:var(--color-surface-polaroid);border-radius:var(--polaroid-radius);box-shadow:var(--shadow-polaroid);padding:6px 6px 16px"><span style="display:block;height:100%;background:var(--color-surface-panel-soft)"></span></span>`, 'what a polaroid throws')}
@@ -398,7 +400,7 @@ ${cap('primitive.color.slate · the number in each chip is its contrast on chrom
     const washes = `<div class="washes">${W.map(([p, d, st, onC]) => `<div class="wash"><div class="w${onC ? ' on-cherry' : ''}"><i style="${st}"></i></div><div class="m">${tn(p)}<small>${d}</small></div></div>`).join('')}</div>`;
 
     const html = viewHead({ group: 'Foundations', title: 'Colour', lede: 'A cool slate ramp for the chrome, one red for action, seven hues for the pins, and one navy that every shadow is drawn in.', src: ['primitive.color.* → <b>color.*</b>', 'D-020 · D-027 · D-029'] })
-      + sec('ramp', 'The slate ramp', 'Twelve steps, light to dark, and what each one is for. The rulers mark where the ramp becomes readable on chrome.', ramp)
+      + sec('ramp', 'The slate ramp', 'Thirteen steps, light to dark, and what each one is for. The rulers mark where the ramp becomes readable on chrome.', ramp)
       + sec('chain', 'Value, role, part', 'Three layers between a hex code and the thing you see. Each row is live.', chain)
       + sec('roles', 'Roles', 'What a component is allowed to ask for, and when not to.', roles)
       + sec('cherry', 'Brand cherry is not a pin', 'Two reds that sit near each other on purpose.', vs)
@@ -434,7 +436,7 @@ ${cap('primitive.color.slate · the number in each chip is its contrast on chrom
       + `<div class="summary"><div class="s"><b>${n.pass}</b><span>of ${P.length} pairings pass</span></div><div class="s"><b>${n.exempt}</b><span>exempt, and why</span></div><div class="s"><b>${n.miss}</b><span>miss, listed below</span></div><div class="s"><b>${contrast(cv('color-ink-strong'), cv('color-surface-panel')).toFixed(1)}:1</b><span>strong ink on chrome</span></div></div>`
       + sec('pairs', 'Pairings in use', '', `<div class="cfilter"><div class="seg" id="cf"><button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="pass" aria-pressed="false">Passing</button><button type="button" data-f="exempt" aria-pressed="false">Exempt</button><button type="button" data-f="miss" aria-pressed="false">Missing</button></div></div>
         <div class="fig" style="padding:14px 18px"><table class="spec ctable"><thead><tr><th>Where</th><th class="hide-s">Pair</th><th>Sample</th><th>Ratio</th><th class="hide-s">Needs</th><th></th></tr></thead><tbody id="ct">${P.map(row).join('')}</tbody></table></div>
-        <p class="note">The misses are kept visible rather than tuned away in private, and an exemption is only claimed where WCAG names one. Muted ink on chrome is the miss that matters: it carries the small labels and hints, and it’s logged in the decision record as the next change to make. <span class="lbl">D-048</span></p>`)
+        <p class="note">The misses are kept visible rather than tuned away in private, and an exemption is only claimed where WCAG names one. Muted ink used to be the miss that mattered, because it carries the small labels and hints. It was split in two: text moved to a darker grey that passes everywhere, and the old grey stayed on icon-only buttons, where the bar is 3:1. What still misses is faint ink, which only ever marks something absent or placeholder. <span class="lbl">D-049</span></p>`)
       + sec('heads', 'Pin heads', 'Non-text, so the bar is 3:1. Read with the note on the colour page: the fill isn’t how a pin is found.', `<div class="fig" style="padding:14px 18px"><table class="spec ctable"><thead><tr><th>Pin</th><th>On a polaroid</th><th>On the board</th><th>On the shadow navy</th></tr></thead><tbody>${heads}</tbody></table></div>`);
     return { html, mount(el) {
       const seg = $('#cf', el);
