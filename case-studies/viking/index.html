@@ -33,7 +33,7 @@
   .cap{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-2); }
   .grid{ display:flex; gap:9px; align-items:flex-start; }
   .gcol{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:9px; }
-  .grid img{ width:100%; display:block; border-radius:4px; background:#fff; box-shadow:0 2px 9px rgba(26,21,23,.11); cursor:zoom-in; transition:transform .12s ease; }
+  .grid img{ width:100%; height:auto; display:block; border-radius:4px; background:#fff; box-shadow:0 2px 9px rgba(26,21,23,.11); cursor:zoom-in; transition:transform .12s ease; }
   .grid img:hover{ transform:scale(1.015); }
   .lb{ position:fixed; inset:0; z-index:1000; background:rgba(13,10,11,.94); display:none; align-items:center; justify-content:center; }
   .lb.open{ display:flex; }
@@ -79,32 +79,75 @@
 
   <section>
     <div class="gridhead">
+      <div>
+        <div class="eyebrow">Wine refrigerator</div>
+        <div class="sec-title">Studio</div>
+      </div>
+      <div class="cap">Brushed stainless &amp; graphite · closed, open, detail</div>
+    </div>
+    <div class="grid" data-max="4">
+      <img width="1200" height="1500" src="assets/imgs/wr_studio_01.webp" loading="lazy" alt="Wine refrigerator concept in brushed stainless, closed, a cool white light seam running down the door">
+      <img width="1200" height="1500" src="assets/imgs/wr_studio_05.webp" loading="lazy" alt="Wine refrigerator concept in graphite, closed, a warm amber light seam running down the door">
+      <img width="1500" height="1333" src="assets/imgs/wr_studio_02.webp" loading="lazy" alt="The brushed stainless unit with its rack pulled out, bottles resting on light oak shelves">
+      <img width="1500" height="1120" src="assets/imgs/wr_studio_06.webp" loading="lazy" alt="The graphite unit with its rack pulled out, bottles resting on walnut shelves">
+      <img width="1500" height="1500" src="assets/imgs/wr_studio_03.webp" loading="lazy" alt="Close view of wine bottles lying on an oak shelf inside the stainless unit">
+      <img width="1500" height="1500" src="assets/imgs/wr_studio_07.webp" loading="lazy" alt="Close view of wine bottles lying on a walnut shelf inside the graphite unit">
+      <img width="1500" height="1500" src="assets/imgs/wr_studio_04.webp" loading="lazy" alt="Bottle necks angled across the oak shelves under cool white light">
+      <img width="1500" height="1500" src="assets/imgs/wr_studio_08.webp" loading="lazy" alt="Bottle necks angled across the walnut shelves under warm amber light">
+      <img width="1200" height="1500" src="assets/imgs/wr_studio_09.webp" loading="lazy" alt="Detail of the vent grille and light groove at the top of the stainless unit">
+      <img width="1200" height="1500" src="assets/imgs/wr_studio_10.webp" loading="lazy" alt="Detail of the vent grille and light groove at the top of the graphite unit">
+    </div>
+  </section>
+
+  <section>
+    <div class="gridhead">
+      <div>
+        <div class="eyebrow">Wine refrigerator</div>
+        <div class="sec-title">In the kitchen</div>
+      </div>
+      <div class="cap">Luxury home, day &amp; night · professional kitchen</div>
+    </div>
+    <div class="grid" data-max="3">
+      <img width="1500" height="996" src="assets/imgs/wr_kitchen_01.webp" loading="lazy" alt="The stainless unit installed beside a full-height refrigerator in a bright light-wood kitchen">
+      <img width="1500" height="996" src="assets/imgs/wr_kitchen_02.webp" loading="lazy" alt="The graphite unit in a dark-wood kitchen at night, warm light tracing the door">
+      <img width="1500" height="996" src="assets/imgs/wr_kitchen_03.webp" loading="lazy" alt="The stainless unit in a professional kitchen alongside commercial ranges">
+      <img width="1500" height="996" src="assets/imgs/wr_kitchen_04.webp" loading="lazy" alt="Rack pulled out in the bright light-wood kitchen, bottles on display">
+      <img width="1500" height="1006" src="assets/imgs/wr_kitchen_05.webp" loading="lazy" alt="Another angle of the open rack in the bright kitchen, afternoon light across the cabinets">
+      <img width="1500" height="996" src="assets/imgs/wr_kitchen_06.webp" loading="lazy" alt="Rack pulled out in the night kitchen, city view behind">
+      <img width="1500" height="1006" src="assets/imgs/wr_kitchen_07.webp" loading="lazy" alt="Another angle of the open rack at night, warm light on the walnut shelves">
+      <img width="1500" height="996" src="assets/imgs/wr_kitchen_08.webp" loading="lazy" alt="Rack pulled out in the professional kitchen beside the range">
+      <img width="1500" height="1006" src="assets/imgs/wr_kitchen_09.webp" loading="lazy" alt="Another angle of the open rack in the professional kitchen, copper pans behind">
+    </div>
+  </section>
+
+  <section>
+    <div class="gridhead">
       <div><div class="eyebrow">The work</div></div>
       <div class="cap">Sketches · CMF · renders · prototypes · in the kitchen</div>
     </div>
-    <div class="grid" id="vgrid">
-      <img src="assets/imgs/viking_00.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_01.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_02.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_03.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_04.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_05.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_06.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_07.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_08.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_09.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_10.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_11.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_12.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_13.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_14.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_15.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_16.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_17.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_18.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_19.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_20.webp" loading="lazy" alt="Viking Range design work">
-      <img src="assets/imgs/viking_21.webp" loading="lazy" alt="Viking Range design work">
+    <div class="grid" id="vgrid" data-max="5">
+      <img width="1400" height="788" src="assets/imgs/viking_00.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="788" src="assets/imgs/viking_01.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1038" height="678" src="assets/imgs/viking_02.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="788" src="assets/imgs/viking_03.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="788" src="assets/imgs/viking_04.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="787" src="assets/imgs/viking_05.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1280" height="1024" src="assets/imgs/viking_06.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1280" height="1024" src="assets/imgs/viking_07.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1280" height="1024" src="assets/imgs/viking_08.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1280" height="1024" src="assets/imgs/viking_09.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="1050" src="assets/imgs/viking_10.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="1050" src="assets/imgs/viking_11.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1118" height="671" src="assets/imgs/viking_12.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="412" src="assets/imgs/viking_13.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="778" src="assets/imgs/viking_14.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="1050" src="assets/imgs/viking_15.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="577" src="assets/imgs/viking_16.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="906" src="assets/imgs/viking_17.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="907" src="assets/imgs/viking_18.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1400" height="907" src="assets/imgs/viking_19.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1125" height="1299" src="assets/imgs/viking_20.webp" loading="lazy" alt="Viking Range design work">
+      <img width="1042" height="677" src="assets/imgs/viking_21.webp" loading="lazy" alt="Viking Range design work">
     </div>
   </section>
 
@@ -123,18 +166,36 @@
 </div>
 <script>
 (function(){
-  var grid=document.getElementById('vgrid'); if(!grid) return;
-  var items=Array.prototype.slice.call(grid.children);
-  function ncols(w){ return w<560?2 : w<900?3 : 5; }
-  function layout(){ var n=ncols(grid.clientWidth); if(grid.dataset.cols==n) return; grid.dataset.cols=n; grid.innerHTML='';
-    var cols=[]; for(var i=0;i<n;i++){ var c=document.createElement('div'); c.className='gcol'; grid.appendChild(c); cols.push(c); }
-    items.forEach(function(el,i){ cols[i%n].appendChild(el); }); }
-  layout(); var t; addEventListener('resize',function(){ clearTimeout(t); t=setTimeout(layout,150); });
-  var lb=document.getElementById('lb'), lbImg=document.getElementById('lbImg'), lbCount=document.getElementById('lbCount'), cur=0;
-  function show(i){ cur=(i+items.length)%items.length; lbImg.src=items[cur].src; lbImg.alt=items[cur].alt||''; lbCount.textContent=(cur+1)+' / '+items.length; }
-  function openLb(i){ show(i); lb.classList.add('open'); document.body.style.overflow='hidden'; }
-  function closeLb(){ lb.classList.remove('open'); document.body.style.overflow=''; lbImg.src=''; }
-  items.forEach(function(el,i){ el.addEventListener('click',function(){ openLb(i); }); });
+  /* Every .grid on the page lays itself out as columns and feeds the one lightbox.
+     data-max sets the desktop column count (studio 4, kitchen 3, the work 5). */
+  var lb=document.getElementById('lb'), lbImg=document.getElementById('lbImg'), lbCount=document.getElementById('lbCount');
+  var set=[], cur=0, layouts=[];
+
+  function show(i){ cur=(i+set.length)%set.length; lbImg.src=set[cur].src; lbImg.alt=set[cur].alt||''; lbCount.textContent=(cur+1)+' / '+set.length; }
+  function openLb(list,i){ set=list; show(i); lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function closeLb(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; lbImg.src=''; }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.grid'), function(grid){
+    var items=Array.prototype.slice.call(grid.children);
+    var max=parseInt(grid.dataset.max,10)||5;
+    function ncols(w){ return w<560 ? (max<=3?1:2) : w<900 ? Math.min(3,max) : max; }
+    function layout(){
+      var n=ncols(grid.clientWidth); if(grid.dataset.cols==n) return; grid.dataset.cols=n; grid.innerHTML='';
+      var cols=[], h=[]; for(var i=0;i<n;i++){ var c=document.createElement('div'); c.className='gcol'; grid.appendChild(c); cols.push(c); h.push(0); }
+      // each image goes to the shortest column so far, using its declared ratio — keeps the
+      // bottoms of the columns roughly level instead of round-robin's ragged edge
+      items.forEach(function(el){
+        var short=0; for(var i=1;i<n;i++) if(h[i]<h[short]-0.001) short=i;
+        cols[short].appendChild(el);
+        h[short]+=(el.getAttribute('height')/el.getAttribute('width'))||1;
+      });
+    }
+    layout(); layouts.push(layout);
+    items.forEach(function(el,i){ el.addEventListener('click',function(){ openLb(items,i); }); });
+  });
+
+  var t; addEventListener('resize',function(){ clearTimeout(t); t=setTimeout(function(){ layouts.forEach(function(f){ f(); }); },150); });
+
   document.getElementById('lbClose').addEventListener('click',closeLb);
   document.getElementById('lbPrev').addEventListener('click',function(e){ e.stopPropagation(); show(cur-1); });
   document.getElementById('lbNext').addEventListener('click',function(e){ e.stopPropagation(); show(cur+1); });
