@@ -443,9 +443,7 @@
     <li><a href="case-studies/cbh/index.html">CBH, Custom Beer Handles: 3D CAD tap-handle design, POS displays, and packaging</a></li>
     <li><a href="case-studies/viking/index.html">Viking Range: industrial design internship</a></li>
     <li><a href="case-studies/freelance/index.html">Freelance design work: branding and design for a range of clients</a></li>
-    <li><a href="case-studies/shift/index.html">SHIFT: brand and product design</a></li>
-    <li><a href="case-studies/verve/index.html">VERVE: brand and product design</a></li>
-    <li><a href="case-studies/unum/index.html">UNUM: guitar case industrial design</a></li>
+    <li><a href="case-studies/auburn/index.html">Auburn ID Studios: SHIFT, VERVE, UNUM, Amber and HIGHdrate, industrial design studio projects</a></li>
     <li><a href="case-studies/alani-nu/index.html">Alani Nu: spec nootropic line concept and art direction</a></li>
     <li><a href="case-studies/korbel/index.html">Korbel: spec champagne brand direction and packaging</a></li>
     <li><a href="case-studies/herradura/index.html">Tequila Herradura: spec brand film, concept, direction, and edit</a></li>
@@ -561,6 +559,8 @@ const SYMBOLS={
   leaf:["......KK..","....KKvGK.","...KGvGGK.","..KGvGGGK.",".KGvGGGK..",".KvGGGGK..",".KvGGGK...",".KKGGK....","K.KKK....."],
   house:["...XX...","..XXXX..",".XXXXXX.","XXXXXXXX",".XXXXXX.",".XX..XX.",".XX..XX.",".XXXXXX."],
   mug:["........","XXXXXX..","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX.X","XXXXXX..","........"],
+  /* Auburn ID Studios: a drafting compass */
+  compass:["....XXX....","....XXX....",".....X.....","....XXX....","...XX.XX...","...X...X...","..XX...XX..","..X.....X..",".XX.....XX.",".X.......X.","XX.......XX","X.........X"],
   fan:["XX....XX","XXX..XXX",".XX..XX.","...XX...","...XX...",".XX..XX.","XXX..XXX","XX....XX"],
   inhaler:[".XXXXXX.","X.....XX","X....X.X","X...X..X","X..X...X","X.X....X","XX.....X",".XXXXXX."],
   /* disco ball: multicolor checkered facets + hanger (W white, C ice blue, L lavender, Y gold, K black) */
@@ -730,21 +730,11 @@ const PROJECTS=[
     role:"Freelance · Brand & Product Design", year:"Various",
     cover:"case-studies/freelance/assets/cover.webp",
     embed:"case-studies/freelance/index.html"},
-  {id:"shift", name:"SHIFT", color:"#a06ee0", dark:"#6c3cab", sym:"inhaler",
-    one:"A dry-powder inhaler developed with CSP Technologies — an injection-moldable, airtight case with a distinctive opening action. Sketch → CAD → render.",
-    role:"Industrial Design", year:"2017",
-    cover:"case-studies/shift/assets/cover.webp",
-    embed:"case-studies/shift/index.html"},
-  {id:"verve", name:"VERVE", color:"#3fc1c9", dark:"#1d878e", sym:"fan",
-    one:"A smart-home ceiling fan designed with Emerson Technologies — Nerf-inspired foam blades for child safety, a built-in child-monitor camera, and a Bluetooth speaker ring.",
-    role:"Industrial Design", year:"2017",
-    cover:"case-studies/verve/assets/cover.webp",
-    embed:"case-studies/verve/index.html"},
-  {id:"unum", name:"UNUM", color:"#474d56", dark:"#23272d", sym:"guitar",
-    one:"One adaptive guitar case for many shapes and sizes — taken from renders through CNC-milled molds to a finished, built prototype.",
-    role:"Industrial Design", year:"Concept",
-    cover:"case-studies/unum/assets/cover.webp",
-    embed:"case-studies/unum/index.html"}
+  {id:"auburn", name:"Auburn ID Studios", win:"Auburn ID Studios — Industrial Design Studio Projects", color:"#1f3d6b", dark:"#e87722", sym:"compass",
+    one:"Five industrial design studio projects from Auburn University, sketch to prototype: SHIFT, VERVE, UNUM, Amber and HIGHdrate.",
+    role:"Industrial Design", year:"Auburn University",
+    cover:"case-studies/auburn/assets/cover.webp",
+    embed:"case-studies/auburn/index.html"}
 ];
 
 /* ================= BUILD FOLDERS ================= */
@@ -1185,7 +1175,7 @@ tick(); setInterval(tick,1000);
 /* ================= MOBILE ICON GRID (reflow + UFO/player as cells) ================= */
 (function(){
   const MQ=matchMedia('(max-width:640px)');
-  const order=['marian','cbh','viking','freelance','shift','verve','unum','disco','copia','tampa','maraschino','korbel','herradura','alani','dirtyshirley'];
+  const order=['marian','cbh','viking','freelance','auburn','maraschino','disco','copia','tampa','korbel','herradura','alani','dirtyshirley'];
   const wmp=document.getElementById('wmp-icon'), ufoEl=document.getElementById('ufo'), sol=document.getElementById('sol-icon');
   let applied=false;
   function toMobile(){

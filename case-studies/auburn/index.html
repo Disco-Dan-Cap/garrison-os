@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auburn ID Studios · Industrial design studio projects · Garrison Bullock</title>
+<meta name="description" content="Industrial design studio projects from Auburn University by Garrison Bullock: SHIFT (inhaler, CSP Technologies), VERVE (smart ceiling fan, Emerson), UNUM (adaptive guitar case, Gibson), Amber (flat-pack luminaire, NCAD Dublin) and HIGHdrate (hydration harness, Western Forge).">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ECEDEF; --panel:#F7F8F9; --ink:#171A1D; --ink-2:#6B7077; --line:#D6D9DD;
+    --accent:#e87722; --accent-d:#b4560f;
+    --sans:'Inter',-apple-system,system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  html{ scroll-behavior:smooth; scroll-padding-top:72px; }
+  @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+  body{ background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:1160px; margin:0 auto; padding:50px 40px 110px; }
+  @media(max-width:700px){ .wrap{ padding:34px 18px 80px; } }
+  a{ color:var(--accent-d); text-decoration:none; }
+
+  header.mast{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-bottom:22px; border-bottom:1px solid var(--ink); }
+  .brand-name{ font-weight:800; font-size:30px; letter-spacing:-.02em; line-height:1; }
+  .brand-sub{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.18em; color:var(--ink-2); margin-top:10px; }
+  .meta{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-2); text-align:right; }
+  .meta div+div{ margin-top:5px; } .meta b{ color:var(--ink); font-weight:600; }
+  .eyebrow{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--accent-d); }
+
+  .hero{ padding:46px 0 20px; }
+  .hero h1{ font-weight:800; font-size:clamp(34px,5.4vw,58px); line-height:1.03; letter-spacing:-.03em; margin:15px 0 0; max-width:18ch; }
+  .hero .kicker{ color:#3a4046; font-size:19px; max-width:62ch; margin:20px 0 0; }
+
+  /* jump nav: sticks to the top of the window while you scroll the projects */
+  .jump{ position:sticky; top:0; z-index:20; margin:18px -40px 0; padding:12px 40px; background:rgba(236,237,239,.88);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); display:flex; gap:8px; flex-wrap:wrap; }
+  @media(max-width:700px){ .jump{ margin:14px -18px 0; padding:10px 18px; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; } .jump::-webkit-scrollbar{ display:none; } }
+  .jump a{ flex:0 0 auto; display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.13em;
+    color:var(--ink); background:#fff; border:1px solid var(--line); border-radius:999px; padding:8px 13px; transition:background .15s ease, color .15s ease, border-color .15s ease; }
+  .jump a i{ width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .jump a:hover{ border-color:var(--accent); }
+  .jump a.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .jump a.on i{ background:#fff; }
+
+  /* one project */
+  .proj{ padding:64px 0 30px; border-top:1px solid var(--ink); }
+  .proj:first-of-type{ border-top:0; padding-top:44px; }
+  .proj-head{ display:grid; grid-template-columns:auto 1fr auto; gap:6px 22px; align-items:end; }
+  @media(max-width:760px){ .proj-head{ grid-template-columns:auto 1fr; } .chips{ grid-column:1 / -1; justify-content:flex-start !important; } }
+  .proj-n{ font-family:var(--mono); font-size:13px; color:var(--accent-d); letter-spacing:.1em; padding-bottom:8px; }
+  .proj-name{ font-weight:800; font-size:clamp(36px,5.6vw,60px); letter-spacing:-.035em; line-height:1; margin:0; color:var(--ink); }
+  .proj-line{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-2); margin-top:10px; }
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; padding-bottom:4px; }
+  .chip{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.12em; color:#3a4046; background:#fff; border:1px solid var(--line); border-radius:999px; padding:7px 12px; }
+  .chip b{ color:var(--accent-d); font-weight:600; margin-right:8px; }
+  .hImg{ margin:26px 0 0; border-radius:6px; overflow:hidden; background:var(--panel); border:1px solid var(--line); box-shadow:0 16px 44px rgba(20,24,28,.14); }
+  .hImg img{ width:100%; height:auto; display:block; cursor:zoom-in; }
+  .prose{ color:#3a4046; max-width:66ch; margin-top:26px; }
+  .prose p{ margin:0 0 14px; }
+  .sub{ margin:40px 0 18px; }
+  .sub-title{ font-weight:800; font-size:clamp(20px,2.6vw,28px); letter-spacing:-.02em; margin:6px 0 0; }
+  .sub-lede{ color:#3a4046; max-width:64ch; margin:-6px 0 18px; }
+
+  .grid{ display:flex; gap:10px; align-items:flex-start; }
+  .gcol{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:10px; }
+  .grid img{ width:100%; height:auto; display:block; border-radius:4px; background:#fff; border:1px solid var(--line); box-shadow:0 3px 12px rgba(20,24,28,.09); cursor:zoom-in; transition:transform .12s ease, box-shadow .12s ease; }
+  .grid img:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(20,24,28,.16); }
+  .poster{ display:flex; justify-content:center; }
+  .poster img{ max-width:520px; width:100%; height:auto; border-radius:6px; border:1px solid var(--line); box-shadow:0 16px 44px rgba(20,24,28,.16); cursor:zoom-in; }
+
+  .credits{ display:grid; grid-template-columns:max-content 1fr; gap:0 34px; max-width:760px; margin-top:38px; }
+  .credits dt{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.13em; color:var(--accent-d); padding:12px 0; border-top:1px solid var(--line); }
+  .credits dd{ margin:0; padding:12px 0; border-top:1px solid var(--line); color:#3a4046; }
+  @media(max-width:560px){ .credits{ grid-template-columns:1fr; } .credits dd{ border-top:0; padding-top:0; } }
+
+  footer{ padding:46px 0 0; border-top:1px solid var(--ink); text-align:center; margin-top:40px; }
+  .foot{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-2); }
+  .foot+.foot{ margin-top:6px; }
+
+  .lb{ position:fixed; inset:0; z-index:1000; background:rgba(12,13,15,.94); display:none; align-items:center; justify-content:center; }
+  .lb.open{ display:flex; }
+  .lb img{ max-width:92vw; max-height:88vh; border-radius:4px; box-shadow:0 24px 70px rgba(0,0,0,.6); background:#fff; }
+  .lb-btn{ position:absolute; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.28); color:#fff; cursor:pointer; width:50px; height:50px; border-radius:50%; font-size:24px; display:flex; align-items:center; justify-content:center; }
+  .lb-btn:hover{ background:rgba(255,255,255,.22); }
+  .lb-prev{ left:24px; top:50%; transform:translateY(-50%); } .lb-next{ right:24px; top:50%; transform:translateY(-50%); }
+  .lb-close{ top:20px; right:24px; width:42px; height:42px; font-size:22px; }
+  .lb-count{ position:absolute; bottom:22px; left:50%; transform:translateX(-50%); font-family:var(--mono); font-size:12px; color:#d2d5d9; letter-spacing:.12em; }
+  @media(max-width:560px){ .lb-prev{left:8px} .lb-next{right:8px} .lb-btn{width:42px;height:42px;font-size:20px} }
+</style>
+  <link rel="stylesheet" href="../../assets/cursors/cursors.css">
+<style>
+  /* cursors.css sets overflow-x:hidden on html/body to stop iOS side-pull; that turns body into a
+     scroll container and breaks the sticky jump nav. clip stops the side-pull without it. */
+  html, body{ overflow-x:clip; }
+</style>
+<!-- favicon -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <div class="brand-name">Auburn ID Studios</div>
+      <div class="brand-sub">Industrial design studio projects · Auburn University</div>
+    </div>
+    <div class="meta">
+      <div><b>School</b> &nbsp;Auburn University</div>
+      <div><b>Degree</b> &nbsp;B.S. Industrial Design, 2019</div>
+      <div><b>Projects</b> &nbsp;5</div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow">Industrial design · Studio work</div>
+    <h1>Five studio projects, sketch to prototype.</h1>
+    <p class="kicker">Studio work from my industrial design degree at Auburn: sponsored projects with CSP Technologies, Emerson, Gibson and Western Forge, and a three-day workshop at the National College of Art &amp; Design in Dublin during my study-abroad semester.</p>
+  </div>
+
+  <nav class="jump" aria-label="Projects"><a href="#shift" style="--accent:#a06ee0"><i></i>SHIFT</a><a href="#verve" style="--accent:#3fc1c9"><i></i>VERVE</a><a href="#unum" style="--accent:#5b636e"><i></i>UNUM</a><a href="#amber" style="--accent:#d9962b"><i></i>Amber</a><a href="#highdrate" style="--accent:#1f8fd6"><i></i>HIGHdrate</a></nav>
+
+  <article class="proj" id="shift" style="--accent:#a06ee0;--accent-d:#6c3cab">
+    <header class="proj-head">
+      <div class="proj-n">01</div>
+      <div>
+        <h2 class="proj-name">SHIFT</h2>
+        <div class="proj-line">Dry-powder inhaler</div>
+      </div>
+      <div class="chips"><span class="chip"><b>Sponsor</b>CSP Technologies</span><span class="chip"><b>Year</b>2017</span></div>
+    </header>
+    <figure class="hImg"><img src="../shift/assets/imgs/shift_07.webp" width="1339" height="1071" loading="lazy" alt="SHIFT dry-powder inhaler, hero render"></figure>
+    <div class="prose">
+      <p>SHIFT is a dry-powder inhaler (DPI) I developed with CSP Technologies. The brief was a single injection-moldable case for the medication: airtight, with a distinctive opening action.</p>
+      <p>This project taught me how many constraints come with injection-molding plastic products. Rather than letting the production process limit the form, I learned to design with the mold and push what it could do.</p>
+    </div>
+      <div class="sub">
+        <div class="eyebrow">Renders</div>
+        <h3 class="sub-title">The form.</h3>
+      </div>
+      <div class="grid" data-max="3">
+        <img src="../shift/assets/imgs/shift_08.webp" width="1500" height="844" loading="lazy" alt="SHIFT inhaler render">
+        <img src="../shift/assets/imgs/shift_09.webp" width="1500" height="844" loading="lazy" alt="SHIFT inhaler render">
+        <img src="../shift/assets/imgs/shift_10.webp" width="1500" height="844" loading="lazy" alt="SHIFT inhaler render">
+        <img src="../shift/assets/imgs/shift_11.webp" width="1500" height="844" loading="lazy" alt="SHIFT inhaler render">
+        <img src="../shift/assets/imgs/shift_12.webp" width="1500" height="844" loading="lazy" alt="SHIFT inhaler render">
+        <img src="../shift/assets/imgs/shift_13.webp" width="1500" height="844" loading="lazy" alt="SHIFT inhaler render">
+        <img src="../shift/assets/imgs/shift_14.webp" width="1500" height="844" loading="lazy" alt="SHIFT inhaler render">
+      </div>
+      <div class="sub">
+        <div class="eyebrow">Exploration</div>
+        <h3 class="sub-title">Sketches &amp; concepts.</h3>
+      </div>
+      <p class="sub-lede">Early sketches and the three named concept directions: SHIFT, FLUX, and ALPHA.</p>
+      <div class="grid" data-max="3">
+        <img src="../shift/assets/imgs/shift_00.webp" width="1500" height="611" loading="lazy" alt="SHIFT concept sketches">
+        <img src="../shift/assets/imgs/shift_04.webp" width="1500" height="931" loading="lazy" alt="SHIFT concept sketches">
+        <img src="../shift/assets/imgs/shift_05.webp" width="1500" height="943" loading="lazy" alt="SHIFT concept sketches">
+        <img src="../shift/assets/imgs/shift_01.webp" width="1500" height="971" loading="lazy" alt="SHIFT concept sketches">
+        <img src="../shift/assets/imgs/shift_03.webp" width="1500" height="971" loading="lazy" alt="SHIFT concept sketches">
+        <img src="../shift/assets/imgs/shift_06.webp" width="1500" height="945" loading="lazy" alt="SHIFT concept sketches">
+        <img src="../shift/assets/imgs/shift_02.webp" width="1500" height="971" loading="lazy" alt="SHIFT concept sketches">
+      </div>
+      <div class="sub">
+        <div class="eyebrow">The poster</div>
+        <h3 class="sub-title">SHIFT.</h3>
+      </div>
+      <div class="poster"><img src="../shift/assets/imgs/shift_15.webp" width="1500" height="2166" loading="lazy" alt="SHIFT presentation poster"></div>
+      <dl class="credits">
+        <dt>Role</dt><dd>Industrial design: research, sketching, CAD, rendering, 3D printing, and user testing.</dd>
+        <dt>Challenge</dt><dd>An injection-moldable, airtight DPI case with a distinctive opening function.</dd>
+      </dl>
+  </article>
+  <article class="proj" id="verve" style="--accent:#3fc1c9;--accent-d:#16808a">
+    <header class="proj-head">
+      <div class="proj-n">02</div>
+      <div>
+        <h2 class="proj-name">VERVE</h2>
+        <div class="proj-line">Smart-home ceiling fan</div>
+      </div>
+      <div class="chips"><span class="chip"><b>Sponsor</b>Emerson Technologies</span><span class="chip"><b>Year</b>2017</span></div>
+    </header>
+    <figure class="hImg"><img src="../verve/assets/imgs/verve_02.webp" width="1500" height="843" loading="lazy" alt="VERVE ceiling fan with orange foam blades, hero render"></figure>
+    <div class="prose">
+      <p>VERVE is a smart-home ceiling fan I developed with Emerson Technologies. The goal was a fan that works in any home, old or modern. A ceiling fan sits high and dead-center in the room, which makes it a natural hub for smart-home tech.</p>
+      <p>Verve has three foam blades, a child-monitor and security camera, and a Bluetooth speaker ring. The foam blades use a Nerf-inspired material, which I landed on after my research turned up a pattern of kids hurting their hands or hitting their heads on fan blades while jumping on their beds.</p>
+    </div>
+      <div class="sub">
+        <div class="eyebrow">The product</div>
+        <h3 class="sub-title">The fan.</h3>
+      </div>
+      <div class="grid" data-max="2">
+        <img src="../verve/assets/imgs/verve_00.webp" width="1500" height="843" loading="lazy" alt="VERVE ceiling fan">
+        <img src="../verve/assets/imgs/verve_01.webp" width="1500" height="843" loading="lazy" alt="VERVE ceiling fan">
+        <img src="../verve/assets/imgs/verve_08.webp" width="1500" height="844" loading="lazy" alt="VERVE ceiling fan">
+        <img src="../verve/assets/imgs/verve_11.webp" width="1500" height="844" loading="lazy" alt="VERVE ceiling fan">
+      </div>
+      <div class="sub">
+        <div class="eyebrow">Research &amp; process</div>
+        <h3 class="sub-title">How it came together.</h3>
+      </div>
+      <p class="sub-lede">Research, exploded components, and usage, from the original project boards.</p>
+      <div class="grid" data-max="3">
+        <img src="../verve/assets/imgs/verve_03.webp" width="1500" height="844" loading="lazy" alt="VERVE research and process board">
+        <img src="../verve/assets/imgs/verve_04.webp" width="1500" height="844" loading="lazy" alt="VERVE research and process board">
+        <img src="../verve/assets/imgs/verve_05.webp" width="1500" height="844" loading="lazy" alt="VERVE research and process board">
+        <img src="../verve/assets/imgs/verve_07.webp" width="1500" height="844" loading="lazy" alt="VERVE research and process board">
+        <img src="../verve/assets/imgs/verve_06.webp" width="1500" height="844" loading="lazy" alt="VERVE research and process board">
+        <img src="../verve/assets/imgs/verve_09.webp" width="1500" height="844" loading="lazy" alt="VERVE research and process board">
+        <img src="../verve/assets/imgs/verve_10.webp" width="1500" height="844" loading="lazy" alt="VERVE research and process board">
+      </div>
+      <dl class="credits">
+        <dt>Role</dt><dd>Industrial design: research, concept, CAD modeling, rendering, and a hand-built foam-and-wood scale model.</dd>
+        <dt>Process</dt><dd>User research &rarr; sketch &rarr; CAD &rarr; renders, documented end to end.</dd>
+      </dl>
+  </article>
+  <article class="proj" id="unum" style="--accent:#5b636e;--accent-d:#23272d">
+    <header class="proj-head">
+      <div class="proj-n">03</div>
+      <div>
+        <h2 class="proj-name">UNUM</h2>
+        <div class="proj-line">Adaptive guitar case</div>
+      </div>
+      <div class="chips"><span class="chip"><b>Sponsor</b>Gibson</span><span class="chip"><b>Type</b>Concept &rarr; prototype</span></div>
+    </header>
+    <figure class="hImg"><img src="../unum/assets/cover.webp" width="1280" height="800" loading="lazy" alt="UNUM guitar case seen from above, with the UNUM wordmark"></figure>
+    <div class="prose">
+      <p>UNUM takes on a problem nobody had solved: one guitar case that adapts to many different shapes and sizes. And it looks damn good doing it.</p>
+      <p>It went from foam studies through CNC-milled molds to a built and finished prototype.</p>
+    </div>
+      <div class="sub">
+        <div class="eyebrow">The work</div>
+        <h3 class="sub-title">Concept to prototype.</h3>
+      </div>
+      <div class="grid" data-max="5">
+        <img src="../unum/assets/imgs/unum_00.webp" width="1400" height="1866" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_01.webp" width="1400" height="1050" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_02.webp" width="1400" height="1866" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_03.webp" width="1400" height="1050" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_04.webp" width="1400" height="788" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_05.webp" width="1400" height="787" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_06.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_07.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_08.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_09.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_10.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_11.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_12.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_13.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_14.webp" width="478" height="638" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_15.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_16.webp" width="1145" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_17.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_18.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_19.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_20.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_21.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_22.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_23.webp" width="1145" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_24.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_25.webp" width="1145" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_26.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_27.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_28.webp" width="1145" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_29.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_30.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_31.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_32.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_33.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_34.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_35.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_36.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+        <img src="../unum/assets/imgs/unum_37.webp" width="644" height="859" loading="lazy" alt="UNUM guitar case, concept and prototype">
+      </div>
+      <dl class="credits">
+        <dt>Role</dt><dd>Industrial design: concept, CAD, rendering, and physical prototyping.</dd>
+        <dt>Process</dt><dd>Foam studies &rarr; CNC-milled molds &rarr; a built and finished prototype.</dd>
+      </dl>
+  </article>
+  <article class="proj" id="amber" style="--accent:#d9962b;--accent-d:#94600f">
+    <header class="proj-head">
+      <div class="proj-n">04</div>
+      <div>
+        <h2 class="proj-name">Amber</h2>
+        <div class="proj-line">Flat-pack paper luminaire</div>
+      </div>
+      <div class="chips"><span class="chip"><b>Where</b>NCAD, Dublin</span><span class="chip"><b>Format</b>Three-day workshop</span></div>
+    </header>
+    <figure class="hImg"><img src="assets/amber_00.webp" width="1920" height="1080" loading="lazy" alt="Amber luminaire lit from within, title slide reading Amber, Flat Pack Luminaire, Three Day Workshop in Dublin, Ireland, National College of Art &amp; Design"></figure>
+    <div class="prose">
+      <p>Amber is a flat-pack paper luminaire I designed in a three-day workshop at the National College of Art &amp; Design in Dublin, during my study-abroad semester.</p>
+      <p>My first sketches were organic and kinetic. As I kept sketching I realized I could get the same sense of movement from several simpler, repeated pieces. Quarter-scale models showed how the paper would take the shape, and full-scale models settled the connection points and the hanging. In the final piece, string tightens the paper into shape: the bottom piece hangs from the wire and every other piece simply stacks on top of it.</p>
+    </div>
+      <div class="sub">
+        <div class="eyebrow">Process</div>
+        <h3 class="sub-title">Sketch, model, light.</h3>
+      </div>
+      <div class="grid" data-max="2">
+        <img src="assets/amber_01.webp" width="2000" height="1125" loading="lazy" alt="Amber luminaire process board">
+        <img src="assets/amber_02.webp" width="2000" height="1125" loading="lazy" alt="Amber luminaire process board">
+        <img src="assets/amber_03.webp" width="1920" height="1080" loading="lazy" alt="Amber luminaire process board">
+        <img src="assets/amber_04.webp" width="1920" height="1080" loading="lazy" alt="Amber luminaire process board">
+      </div>
+      <dl class="credits">
+        <dt>Role</dt><dd>Concept sketching, quarter- and full-scale paper models, and the final luminaire.</dd>
+        <dt>Setting</dt><dd>Three-day workshop at the National College of Art &amp; Design, Dublin, during a study-abroad semester.</dd>
+      </dl>
+  </article>
+  <article class="proj" id="highdrate" style="--accent:#1f8fd6;--accent-d:#155f96">
+    <header class="proj-head">
+      <div class="proj-n">05</div>
+      <div>
+        <h2 class="proj-name">HIGHdrate</h2>
+        <div class="proj-line">Hydration harness for workers at height</div>
+      </div>
+      <div class="chips"><span class="chip"><b>Sponsor</b>Western Forge</span><span class="chip"><b>Type</b>Research &rarr; full-scale model</span></div>
+    </header>
+    <figure class="hImg"><img src="assets/highdrate_00.webp" width="1920" height="1080" loading="lazy" alt="HIGHdrate harness worn over a white t-shirt, the hydration hose running over the shoulder"></figure>
+    <div class="prose">
+      <p>HIGHdrate is a hydration harness for construction workers, a studio project for Western Forge. The brief started broad: observe construction sites and design tools that improve the daily lives of the people working them.</p>
+      <p>Field research with ironworkers and telephone-tower inspectors narrowed it down. Everyone agreed staying hydrated is crucial to working safely, but drinking from a bottle while climbing a 300-foot tower is tricky and dangerous, and the one product on the market sat on the upper back, loaded the shoulders, and meant taking off the whole harness to refill it.</p>
+      <p>HIGHdrate moves the water to the lower lumbar so the weight rides on the hips. Dual zippers open the pouch from either side, so it can be pulled around to the front, refilled and put back without taking the harness off, and the hose runs up the back through a protective channel. The pouch is Camelbak&rsquo;s Antidote Lumbar Reservoir.</p>
+    </div>
+      <div class="sub">
+        <div class="eyebrow">Process</div>
+        <h3 class="sub-title">Problem to final model.</h3>
+      </div>
+      <div class="grid" data-max="2">
+        <img src="assets/highdrate_01.webp" width="2000" height="1125" loading="lazy" alt="HIGHdrate research and process board">
+        <img src="assets/highdrate_02.webp" width="1920" height="1080" loading="lazy" alt="HIGHdrate research and process board">
+        <img src="assets/highdrate_03.webp" width="1920" height="1080" loading="lazy" alt="HIGHdrate research and process board">
+        <img src="assets/highdrate_04.webp" width="2000" height="1125" loading="lazy" alt="HIGHdrate research and process board">
+        <img src="assets/highdrate_05.webp" width="1920" height="1080" loading="lazy" alt="HIGHdrate research and process board">
+        <img src="assets/highdrate_06.webp" width="1920" height="1080" loading="lazy" alt="HIGHdrate research and process board">
+        <img src="assets/highdrate_07.webp" width="1920" height="1080" loading="lazy" alt="HIGHdrate research and process board">
+        <img src="assets/highdrate_08.webp" width="1920" height="1080" loading="lazy" alt="HIGHdrate research and process board">
+      </div>
+      <dl class="credits">
+        <dt>Role</dt><dd>Field research, concept sketching, full-scale model construction, and the final model.</dd>
+        <dt>Insight</dt><dd>Put the weight on the hips, and make the pouch refillable without unclipping from the harness.</dd>
+      </dl>
+  </article>
+
+  <footer>
+    <div class="foot">Auburn ID Studios · Industrial design by Garrison Bullock</div>
+    <div class="foot">&copy; 2026 Garrison Bullock</div>
+  </footer>
+</div>
+
+<div class="lb" id="lb" aria-hidden="true">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous">&#8249;</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next">&#8250;</button>
+  <div class="lb-count" id="lbCount"></div>
+</div>
+<script>
+(function(){
+  /* masonry: each .grid lays out into data-max columns, each image going to the shortest column */
+  var layouts=[];
+  Array.prototype.forEach.call(document.querySelectorAll('.grid'), function(grid){
+    var items=Array.prototype.slice.call(grid.children), max=parseInt(grid.dataset.max,10)||3;
+    function ncols(w){ return w<560 ? (max<=2?1:2) : w<900 ? Math.min(3,max) : max; }
+    function layout(){
+      var n=ncols(grid.clientWidth); if(grid.dataset.cols==n) return; grid.dataset.cols=n; grid.innerHTML='';
+      var cols=[], h=[]; for(var i=0;i<n;i++){ var c=document.createElement('div'); c.className='gcol'; grid.appendChild(c); cols.push(c); h.push(0); }
+      items.forEach(function(el){ var s=0; for(var i=1;i<n;i++) if(h[i]<h[s]-0.001) s=i; cols[s].appendChild(el); h[s]+=(el.getAttribute('height')/el.getAttribute('width'))||1; });
+    }
+    layout(); layouts.push(layout);
+  });
+  var t; addEventListener('resize',function(){ clearTimeout(t); t=setTimeout(function(){ layouts.forEach(function(f){ f(); }); },150); });
+
+  /* lightbox: cycles through the images of the project you clicked in */
+  var lb=document.getElementById('lb'), lbImg=document.getElementById('lbImg'), lbCount=document.getElementById('lbCount'), set=[], cur=0;
+  function show(i){ cur=(i+set.length)%set.length; lbImg.src=set[cur].getAttribute('src'); lbImg.alt=set[cur].alt||''; lbCount.textContent=(cur+1)+' / '+set.length; }
+  function openLb(list,i){ set=list; show(i); lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function closeLb(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; lbImg.src=''; }
+  Array.prototype.forEach.call(document.querySelectorAll('.proj'), function(p){
+    var list=Array.prototype.slice.call(p.querySelectorAll('img'));
+    list.forEach(function(el,i){ el.addEventListener('click',function(){ openLb(list,i); }); });
+  });
+  document.getElementById('lbClose').addEventListener('click',closeLb);
+  document.getElementById('lbPrev').addEventListener('click',function(e){ e.stopPropagation(); show(cur-1); });
+  document.getElementById('lbNext').addEventListener('click',function(e){ e.stopPropagation(); show(cur+1); });
+  lb.addEventListener('click',function(e){ if(e.target===lb) closeLb(); });
+  addEventListener('keydown',function(e){ if(!lb.classList.contains('open')) return; if(e.key==='Escape') closeLb(); else if(e.key==='ArrowLeft') show(cur-1); else if(e.key==='ArrowRight') show(cur+1); });
+
+  /* jump nav: highlight the project crossing the 40% line of the window, none above the first */
+  var links={}; Array.prototype.forEach.call(document.querySelectorAll('.jump a'), function(a){ links[a.getAttribute('href').slice(1)]=a; });
+  var projs=Array.prototype.slice.call(document.querySelectorAll('.proj')), last=null, ticking=false;
+  function mark(){
+    ticking=false; var y=innerHeight*0.4, id=null;
+    projs.forEach(function(p){ var r=p.getBoundingClientRect(); if(r.top<=y && r.bottom>y) id=p.id; });
+    if(id===last) return; last=id;
+    Object.keys(links).forEach(function(k){ links[k].classList.toggle('on', k===id); });
+    var a=id&&links[id]; if(a && a.parentNode.scrollWidth>a.parentNode.clientWidth) a.parentNode.scrollTo({left:a.offsetLeft-a.parentNode.clientWidth/2+a.offsetWidth/2, behavior:'smooth'});
+  }
+  addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(mark); } },{passive:true});
+  addEventListener('resize',mark); mark();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "495c7fa3f7544163bba06e1f509ba3b0"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
