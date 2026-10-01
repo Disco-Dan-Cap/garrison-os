@@ -256,10 +256,65 @@ export async function initUnum3D(host, opts = {}) {
     const pin = mesh(new THREE.CylinderGeometry(0.06, 0.06, HINGE.len + 0.2, 12), chrome); pin.rotation.x = Math.PI / 2; pin.position.set(HINGE.x, SEAM, zc); base.add(pin);
   });
 
-  /* ── the guitar (modelled here: spruce top, rosewood back & sides, mahogany neck) ──── */
-  const guitar = buildGuitar(); guitar.position.set(0, FLOOR + 0.02, 19.0); base.add(guitar);
+  /* ── the guitars (modelled here) and the adjustable interior ─────────────────────────
+     Both guitars lie with the butt toward +z; shape y ("sy", inches from the butt) maps to world z = ZB - sy. */
+  const ZB = 19.6;
+  const between = (a, b, r, mat) => { const d = b.clone().sub(a), m = mesh(new THREE.CylinderGeometry(r, r, d.length(), 6), mat);
+    m.position.copy(a).add(b).multiplyScalar(0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); m.castShadow = false; return m; };
+  const extrude = (shape, depth, mats, bevel = 0, curve = 32) => {
+    const geo = new THREE.ExtrudeGeometry(shape, { depth, curveSegments: curve, bevelEnabled: bevel > 0, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 4 });
+    geo.rotateX(-Math.PI / 2); return mesh(geo, mats);
+  };
+  const GUITARS = { acoustic: buildAcoustic(), electric: buildElectric() };
+  Object.values(GUITARS).forEach((g) => { g.position.set(0, FLOOR + 0.02, ZB); base.add(g); });
+  GUITARS.electric.visible = false;
+  // how far the body reaches to each side at a given distance from the butt
+  function reach(outline, sy) {
+    let L = 0, R = 0; const n = outline.length;
+    for (let i = 0; i < n; i++) { const a = outline[i], b = outline[(i + 1) % n];
+      if ((a.y - sy) * (b.y - sy) <= 0 && a.y !== b.y) { const x = a.x + (sy - a.y) / (b.y - a.y) * (b.x - a.x); R = Math.max(R, x); L = Math.max(L, -x); } }
+    return [L, R];
+  }
 
-  function buildGuitar() {
+  /* the adjustable interior: full-width slots with white U end caps, a lengthwise slot at the
+     headstock end, and felt-sleeved rods that slide in and lock against whatever guitar is in it */
+  const ROD_R = 0.62, SLOT_W = 0.42, SLOT_X = 8.35, CAP_L = 4.0, HEAD_SLOT = [-21.95, -15.4];
+  const ROWS = [-0.75, 6.0, 10.6, 13.4, 16.6];             // sy of each cross slot (the first sits below the butt)
+  const white = new THREE.MeshPhysicalMaterial({ color: 0xf3f3f0, roughness: 0.32, clearcoat: 0.4, clearcoatRoughness: 0.2 });
+  const slotDark = new THREE.MeshStandardMaterial({ color: 0x0b0b0c, roughness: 0.8 });
+  const interior = new THREE.Group(); base.add(interior);
+  function uCap(len) { // U-shaped liner: rounded closed end at local -x (the wall), open at 0 toward the middle
+    const w = 1.3, sw = SLOT_W, r = w / 2, ri = sw / 2, sh = new THREE.Shape();
+    sh.moveTo(0, r); sh.lineTo(-len + r, r); sh.absarc(-len + r, 0, r, Math.PI / 2, Math.PI * 1.5, false); sh.lineTo(0, -r);
+    sh.lineTo(0, -ri); sh.lineTo(-len + r, -ri); sh.absarc(-len + r, 0, ri, Math.PI * 1.5, Math.PI / 2, true); sh.lineTo(0, ri); sh.closePath();
+    const m = extrude(sh, 0.05, white, 0.025, 16); return m;
+  }
+  function slotStrip(w, l) { const ol = rrOutline(w, l, Math.min(w, l) / 2 - 0.002, 8); return cap(ol, 0, FLOOR + 0.004, slotDark); }
+  ROWS.forEach((sy) => {
+    const z = ZB - sy, strip = slotStrip(SLOT_X * 2, SLOT_W); strip.position.z = z; interior.add(strip);
+    [-1, 1].forEach((side) => { const c = uCap(CAP_L); c.rotation.y = side < 0 ? 0 : Math.PI; c.position.set(side * (SLOT_X - CAP_L), FLOOR + 0.006, z); interior.add(c); });
+  });
+  { const len = HEAD_SLOT[1] - HEAD_SLOT[0], strip = slotStrip(SLOT_W, len); strip.position.z = (HEAD_SLOT[0] + HEAD_SLOT[1]) / 2; interior.add(strip);
+    const c = uCap(3.4); c.rotation.y = -Math.PI / 2; c.position.set(0, FLOOR + 0.006, HEAD_SLOT[0] + 3.4); interior.add(c); }
+
+  // the rods: a felt sleeve over a post, soft crown on top, white washer at the base
+  const sleeve = new THREE.LatheGeometry([[0, 0], [0.58, 0], [0.62, 0.25], [0.63, 3.2], [0.6, 3.55], [0.5, 3.8], [0.3, 3.95], [0.08, 4.0], [0, 4.0]].map(([x, y]) => new THREE.Vector2(x, y)), 40);
+  const washer = new THREE.CylinderGeometry(0.84, 0.86, 0.1, 40);
+  const rods = [];
+  function rod(axis, rest, fixed, clampOf) {   // axis 'x' (cross slot) or 'z' (head slot)
+    const g = new THREE.Group(); const sl = mesh(sleeve, felt); const w = mesh(washer, white); w.position.y = 0.05;
+    g.add(w, sl); g.position.y = FLOOR + 0.01; interior.add(g);
+    const r = { g, axis, rest, fixed, clampOf, v: rest }; rods.push(r); return r;
+  }
+  const clampSide = (sy, side) => (name) => {
+    if (sy < 0) return side * 1.7;                                   // below the butt: pinch it from either side
+    const [L, R] = reach(GUITARS[name].userData.outline, sy);
+    return side * Math.min(SLOT_X - ROD_R - 0.1, (side < 0 ? L : R) + ROD_R + 0.04);
+  };
+  ROWS.forEach((sy) => [-1, 1].forEach((side) => rod('x', side * (SLOT_X - ROD_R - 0.1), ZB - sy, clampSide(sy, side))));
+  rod('z', HEAD_SLOT[0] + ROD_R + 0.08, 0, (name) => ZB - GUITARS[name].userData.tip - ROD_R - 0.05);
+
+  function buildAcoustic() {
     const g = new THREE.Group();
     const BL = 18.5, DEPTH = 3.1, Y0 = DEPTH;            // body length and depth; Y0 = top of the soundboard
     // body outline: a smooth spline through half-widths, mirrored
@@ -329,13 +384,65 @@ export async function initUnum3D(host, opts = {}) {
       const b = mesh(btn, ivory); b.rotation.z = Math.PI / 2; b.position.set(sdir * 2.15, Y0 - 0.18, z); g.add(b);
     }
     // strings: saddle → nut → tuner post; four wound, two plain
-    const between = (a, b, r, mat) => { const d = b.clone().sub(a), m = mesh(new THREE.CylinderGeometry(r, r, d.length(), 6), mat);
-      m.position.copy(a).add(b).multiplyScalar(0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); m.castShadow = false; return m; };
     for (let i = 0; i < 6; i++) {
       const sx = -1.05 + i * 0.42, nx = -0.68 + i * 0.272, r = 0.034 - i * 0.004, mat = i < 4 ? bronze : steel;
       const a = new THREE.Vector3(sx, Y0 + 0.5, -4.95), b = new THREE.Vector3(nx, Y0 + 0.42, -NUT);
       g.add(between(a, b, r, mat), between(b, posts[i], r, mat));
     }
+    g.userData = { outline, tip: NUT + 6.8 };
+    return g;
+  }
+
+
+  function buildElectric() {   // a Strat-style solid body: black gloss, white guard, maple neck
+    const g = new THREE.Group();
+    const D = 1.75, Y0 = D, NUT = 32.6, SADDLE = 7.1, FB0 = 14.6, SCALE = 25.5;
+    const P = (pts, n) => new THREE.CatmullRomCurve3(pts.map(([x, y]) => new THREE.Vector3(x, y, 0)), true, 'centripetal').getPoints(n).map((v) => new THREE.Vector2(v.x, v.y));
+    const outline = P([[0, 0], [3.6, 0.4], [5.8, 1.8], [6.45, 4.0], [6.2, 6.5], [5.3, 8.4], [5.2, 9.8], [5.9, 11.6], [6.0, 13.4], [5.4, 15.4], [4.6, 17.0],
+      [3.9, 17.4], [3.2, 16.6], [2.4, 15.4], [1.15, 15.2], [-1.15, 15.2], [-2.4, 15.0], [-3.4, 16.8], [-4.0, 18.4], [-4.6, 18.8], [-5.2, 18.2],
+      [-5.6, 16.2], [-6.0, 13.5], [-5.9, 11.6], [-5.2, 9.8], [-5.3, 8.4], [-6.2, 6.5], [-6.45, 4.0], [-5.8, 1.8], [-3.6, 0.4]], 200);
+    const gloss = new THREE.MeshPhysicalMaterial({ color: 0x050506, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.14, envMapIntensity: 0.55 });
+    const guardMat = new THREE.MeshPhysicalMaterial({ color: 0xf1eee6, roughness: 0.3, clearcoat: 0.6, clearcoatRoughness: 0.1 });
+    const nickel = new THREE.MeshStandardMaterial({ color: 0xe1e4e8, metalness: 1, roughness: 0.16 });
+    const cream = new THREE.MeshStandardMaterial({ color: 0xece4cf, roughness: 0.4 });
+    const [mc] = woodCanvas(256, 1024, '#e3bd84', 'rgba(150,100,45,A)', 70, 2, 13);
+    const maple = new THREE.MeshPhysicalMaterial({ map: tex(mc, 8, true), roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08 });
+
+    const body = extrude(new THREE.Shape(outline), D - 0.3, gloss, 0.15, 64); body.position.y = 0.15; g.add(body);
+    const guard = extrude(new THREE.Shape(P([[1.15, 15.25], [2.4, 15.4], [3.7, 13.6], [4.5, 11.2], [4.6, 8.8], [3.6, 6.9], [1.4, 6.0], [-1.6, 7.4], [-3.1, 9.4], [-3.6, 12.2], [-3.0, 14.4], [-1.15, 15.25]], 120)), 0.07, guardMat);
+    guard.position.y = Y0; g.add(guard);
+    [[9.4, 0.14], [11.3, 0], [13.1, 0]].forEach(([sy, ang]) => { const pu = mesh(new THREE.BoxGeometry(2.75, 0.14, 0.7), cream); pu.position.set(0, Y0 + 0.13, -sy); pu.rotation.y = ang; g.add(pu); });
+    [[2.9, 8.6], [3.5, 7.3], [3.85, 6.0]].forEach(([x, sy]) => { const k = mesh(new THREE.CylinderGeometry(0.36, 0.38, 0.42, 28), cream); k.position.set(x, Y0 + 0.28, -sy); g.add(k); });
+    const plate = mesh(new THREE.BoxGeometry(2.9, 0.1, 1.7), nickel); plate.position.set(0, Y0 + 0.12, -6.7); g.add(plate);
+    for (let i = 0; i < 6; i++) { const sd = mesh(new THREE.BoxGeometry(0.34, 0.24, 0.55), nickel); sd.position.set(-1.0 + i * 0.4, Y0 + 0.28, -SADDLE); g.add(sd); }
+
+    // maple neck with frets and dots painted on, Strat-style headstock with six in-line tuners
+    const [fc, fg] = woodCanvas(128, 1024, '#e7c38c', 'rgba(150,100,45,A)', 30, 2, 17);
+    const fy = (y) => (1 - (y - FB0) / (NUT - FB0)) * 1024;
+    fg.fillStyle = '#c9ccd1'; for (let n = 1; n <= 21; n++) { const y = fy(NUT - (SCALE - SCALE / Math.pow(2, n / 12))); fg.fillRect(0, y - 1.5, 128, 3); }
+    fg.fillStyle = '#1b1410'; const mid = (n) => NUT - (SCALE - SCALE / Math.pow(2, (n - 0.5) / 12));
+    [3, 5, 7, 9, 15, 17, 19].forEach((n) => { fg.beginPath(); fg.arc(64, fy(mid(n)), 7, 0, Math.PI * 2); fg.fill(); });
+    [44, 84].forEach((x) => { fg.beginPath(); fg.arc(x, fy(mid(12)), 7, 0, Math.PI * 2); fg.fill(); });
+    const fbTex = new THREE.CanvasTexture(fc); fbTex.colorSpace = THREE.SRGBColorSpace; fbTex.anisotropy = ANISO;
+    fbTex.repeat.set(1 / 2.4, 1 / (NUT - FB0)); fbTex.offset.set(0.5, -FB0 / (NUT - FB0));
+    const trap = (y0, w0, y1, w1) => new THREE.Shape([new THREE.Vector2(-w0 / 2, y0), new THREE.Vector2(w0 / 2, y0), new THREE.Vector2(w1 / 2, y1), new THREE.Vector2(-w1 / 2, y1)]);
+    const neck = extrude(trap(FB0, 2.2, NUT, 1.65), 0.85, [new THREE.MeshPhysicalMaterial({ map: fbTex, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08 }), maple], 0.04);
+    neck.position.y = Y0 - 0.45; g.add(neck);
+    const head = new THREE.Shape(P([[-0.82, NUT - 0.05], [0.82, NUT - 0.05], [1.3, NUT + 1.0], [1.4, NUT + 4.6], [1.05, NUT + 6.5], [0.2, NUT + 7.0], [-0.8, NUT + 6.8], [-1.35, NUT + 6.1], [-1.05, NUT + 5.1], [-0.9, NUT + 1.6]], 80));
+    const hs = extrude(head, 0.5, maple, 0.04); hs.position.y = Y0 - 0.2; g.add(hs);
+    const nut = mesh(new THREE.BoxGeometry(1.7, 0.12, 0.2), cream); nut.position.set(0, Y0 + 0.46, -NUT); g.add(nut);
+    const posts = [];
+    for (let i = 0; i < 6; i++) {
+      const sy = NUT + 1.0 + i * 0.95, x = 0.62;
+      const pst = mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.42, 14), nickel); pst.position.set(x, Y0 + 0.5, -sy); g.add(pst); posts.push(new THREE.Vector3(x, Y0 + 0.62, -sy));
+      const sh = mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.7, 8), nickel); sh.rotation.z = Math.PI / 2; sh.position.set(1.65, Y0 + 0.05, -sy); g.add(sh);
+      const bt = mesh(new THREE.BoxGeometry(0.16, 0.42, 0.55), nickel); bt.position.set(2.05, Y0 + 0.05, -sy); g.add(bt);
+    }
+    for (let i = 0; i < 6; i++) {
+      const a = new THREE.Vector3(-1.0 + i * 0.4, Y0 + 0.42, -SADDLE), b = new THREE.Vector3(-0.68 + i * 0.272, Y0 + 0.53, -NUT), r = 0.03 - i * 0.0035;
+      g.add(between(a, b, r, nickel), between(b, posts[5 - i], r, nickel));
+    }
+    g.userData = { outline, tip: NUT + 7.0 };
     return g;
   }
 
@@ -349,6 +456,7 @@ export async function initUnum3D(host, opts = {}) {
 
   /* ── state + animation ────────────────────────────────────────────────────────────── */
   let lidT = 0, lidTo = 0, exT = 0, exTo = 0, flT = 0, flTo = 0, running = false, visible = false;
+  let gtr = 'acoustic', pending = null, held = false;   // held: rods locked against the guitar
   const lerp = (a, b, k) => a + (b - a) * k;
   const smooth = (t) => t * t * (3 - 2 * t);
   const EXPLODE = [[band0, 3.4], [band1, 6.6], [lidPivot, 10.8], [lidBand, 2.6]];
@@ -356,6 +464,7 @@ export async function initUnum3D(host, opts = {}) {
   function apply() {
     EXPLODE.forEach(([g, dy]) => (g.position.y = g.userData.y0 + dy * smooth(exT)));
     lidPivot.rotation.z = LIDMAX * smooth(lidT) * (1 - exT);
+    rods.forEach((r) => { if (r.axis === 'x') r.g.position.set(r.v, FLOOR + 0.01, r.fixed); else r.g.position.set(r.fixed, FLOOR + 0.01, r.v); });
     const f = smooth(flT);                       // roll over the long axis to show the bottom
     flipper.rotation.z = Math.PI * f; flipper.position.y = TOP / 2 + Math.sin(Math.PI * flT) * 10.5; root.position.y = -TOP / 2;
     contact.material.opacity = 1 - Math.sin(Math.PI * flT) * 0.75;
@@ -366,7 +475,15 @@ export async function initUnum3D(host, opts = {}) {
   function tick() {
     if (!running) return;
     lidT = lerp(lidT, lidTo, 0.07); exT = lerp(exT, exTo, 0.065); flT = lerp(flT, flTo, 0.05);
+    stepRods(0.075);
     controls.update(); render(); requestAnimationFrame(tick);
+  }
+  // rods: slide out to the walls when released; once out, a pending guitar swap happens; then they slide in and lock
+  function rodTarget(r) { return held && !pending ? r.clampOf(gtr) : r.rest; }
+  function stepRods(k) {
+    let out = true;
+    rods.forEach((r) => { const t = rodTarget(r); r.v = lerp(r.v, t, k); if (Math.abs(r.v - r.rest) > 0.06) out = false; });
+    if (pending && out) { GUITARS[gtr].visible = false; gtr = pending; pending = null; GUITARS[gtr].visible = true; }
   }
   function start() { if (!running && visible) { running = true; requestAnimationFrame(tick); } }
   function resize() {
@@ -380,12 +497,20 @@ export async function initUnum3D(host, opts = {}) {
   const $ = (s) => host.querySelector(s);
   const btnLid = $('[data-u3="lid"]'), btnEx = $('[data-u3="explode"]'), btnFlip = $('[data-u3="flip"]');
   const press = (b, on, a, z) => { if (!b) return; b.textContent = on ? a : z; b.setAttribute('aria-pressed', String(on)); };
-  function setLid(open) { if (open) { setExplode(false); setFlip(false); } lidTo = open ? 1 : 0; press(btnLid, open, 'Close lid', 'Open lid'); start(); }
+  function setLid(open) { if (open) { setExplode(false); setFlip(false); held = true; } lidTo = open ? 1 : 0; press(btnLid, open, 'Close lid', 'Open lid'); start(); }
   function setExplode(on) { if (on) setFlip(false); exTo = on ? 1 : 0; press(btnEx, on, 'Assemble', 'Explode'); start(); }
   function setFlip(on) { if (on) { lidTo = 0; press(btnLid, false, 'Close lid', 'Open lid'); exTo = 0; press(btnEx, false, 'Assemble', 'Explode'); } flTo = on ? 1 : 0; press(btnFlip, on, 'Flip back', 'Flip over'); start(); }
   btnLid && btnLid.addEventListener('click', () => setLid(lidTo < 0.5));
   btnEx && btnEx.addEventListener('click', () => setExplode(exTo < 0.5));
   btnFlip && btnFlip.addEventListener('click', () => setFlip(flTo < 0.5));
+  function setGuitar(n) {
+    if (!GUITARS[n]) return;
+    host.querySelectorAll('[data-guitar]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.guitar === n)));
+    if (lidTo < 0.5) setLid(true);
+    if (n !== (pending || gtr)) pending = n === gtr ? null : n;
+    held = true; start();
+  }
+  host.querySelectorAll('[data-guitar]').forEach((b) => b.addEventListener('click', () => setGuitar(b.dataset.guitar)));
   host.querySelectorAll('[data-felt]').forEach((b) => b.addEventListener('click', () => {
     const n = b.dataset.felt; if (!FELTS[n]) return;
     felt.map = feltMap(n); felt.sheenColor.set(FELTS[n].sheen); felt.needsUpdate = true;
@@ -413,6 +538,6 @@ export async function initUnum3D(host, opts = {}) {
   }, { threshold: 0.25 }).observe(host);
 
   host.classList.add('ready'); render();
-  const settle = () => { lidT = lidTo; exT = exTo; flT = flTo; controls.update(); render(); };   // jump to the end state (tests)
-  return { settle, open: () => setLid(true), close: () => setLid(false), explode: setExplode, flip: setFlip, scene, camera, renderer, controls };
+  const settle = () => { lidT = lidTo; exT = exTo; flT = flTo; for (let i = 0; i < 400; i++) stepRods(0.5); controls.update(); render(); };   // jump to the end state (tests)
+  return { settle, guitar: setGuitar, open: () => setLid(true), close: () => setLid(false), explode: setExplode, flip: setFlip, scene, camera, renderer, controls };
 }

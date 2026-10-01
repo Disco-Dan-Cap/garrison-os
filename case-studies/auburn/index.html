@@ -101,6 +101,11 @@
     border-radius:999px; padding:11px 15px; cursor:pointer; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); transition:background .15s ease, transform .15s ease; }
   .u3-btns button:hover{ background:var(--accent-d); transform:translateY(-1px); }
   .u3-btns button[aria-pressed="true"]{ background:#fff; color:var(--ink); border-color:rgba(23,26,29,.15); }
+  .u3-right{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+  .u3-gtr{ display:flex; gap:2px; background:rgba(255,255,255,.75); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid rgba(23,26,29,.08); border-radius:999px; padding:4px; }
+  .u3-gtr button{ font:500 10.5px/1 var(--mono); letter-spacing:.13em; text-transform:uppercase; color:#3a4046; background:transparent; border:0; border-radius:999px; padding:9px 13px; cursor:pointer; transition:background .15s ease, color .15s ease; }
+  .u3-gtr button[aria-pressed="true"]{ background:var(--ink); color:#fff; }
+  .u3-gtr button:not([aria-pressed="true"]):hover{ background:rgba(23,26,29,.07); }
   .u3-felt{ display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.75); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid rgba(23,26,29,.08); border-radius:999px; padding:6px 8px 6px 13px; }
   .u3-felt span{ font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#3a4046; margin-right:3px; }
   .u3-felt button{ width:24px; height:24px; border-radius:50%; background:var(--c); border:2px solid #fff; box-shadow:0 0 0 1px rgba(23,26,29,.18); cursor:pointer; padding:0; transition:transform .15s ease, box-shadow .15s ease; }
@@ -112,7 +117,7 @@
     .u3{ aspect-ratio:1/1; }
     .u3-ui{ position:static; margin-top:10px; justify-content:center; }
     .u3-btns button{ padding:10px 13px; font-size:10px; background:var(--ink); }
-    .u3-felt{ background:#fff; }
+    .u3-felt{ background:#fff; } .u3-gtr{ background:#fff; } .u3-right{ justify-content:center; }
     .u3-hint{ top:10px; font-size:9.5px; padding:7px 11px; }
   }
   .lb{ position:fixed; inset:0; z-index:1000; background:rgba(12,13,15,.94); display:none; align-items:center; justify-content:center; }
@@ -271,10 +276,11 @@
       </div>
       <div class="u3-ui">
         <div class="u3-btns"><button type="button" data-u3="lid" aria-pressed="false">Open lid</button><button type="button" data-u3="flip" aria-pressed="false">Flip over</button><button type="button" data-u3="explode" aria-pressed="false">Explode</button></div>
-        <div class="u3-felt" role="group" aria-label="Felt lining"><span>Lining</span><button type="button" data-felt="emerald" aria-pressed="true" aria-label="Emerald green felt" style="--c:#0b5a3c"></button><button type="button" data-felt="black" aria-pressed="false" aria-label="Black felt" style="--c:#141416"></button><button type="button" data-felt="cream" aria-pressed="false" aria-label="Cream felt" style="--c:#d6c3a0"></button></div>
+        <div class="u3-right"><div class="u3-gtr" role="group" aria-label="Guitar"><button type="button" data-guitar="acoustic" aria-pressed="true">Acoustic</button><button type="button" data-guitar="electric" aria-pressed="false">Electric</button></div>
+        <div class="u3-felt" role="group" aria-label="Felt lining"><span>Lining</span><button type="button" data-felt="emerald" aria-pressed="true" aria-label="Emerald green felt" style="--c:#0b5a3c"></button><button type="button" data-felt="black" aria-pressed="false" aria-label="Black felt" style="--c:#141416"></button><button type="button" data-felt="cream" aria-pressed="false" aria-label="Cream felt" style="--c:#d6c3a0"></button></div></div>
       </div>
     </div>
-    <div class="u3-cap">Modelled from my final renders. Drag to turn it, open the lid on its hinge, flip it to see UNUM pressed into the bottom, and try the lining in emerald, black or cream.</div>
+    <div class="u3-cap">Modelled from my final renders. Switch guitars and watch the felt rods slide out, then back in to lock against the new shape. Drag to turn it, flip it to see UNUM on the bottom, and try the lining in emerald, black or cream.</div>
     <div class="prose">
       <p>UNUM takes on a problem nobody had solved: one guitar case that adapts to many different shapes and sizes. And it looks damn good doing it.</p>
       <p>The case is a black vacuum-formed shell wrapped in three polished metal bands; the middle band steps out into a carry handle, and a window runs the length of the lid so the guitar shows through. UNUM is pressed into the bottom of the shell, and 3D-printed end caps finish the slots for the adjustment sliders, keeping the felt down and clean.</p>
