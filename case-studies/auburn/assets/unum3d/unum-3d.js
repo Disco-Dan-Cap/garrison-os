@@ -193,7 +193,7 @@ export async function initUnum3D(host, opts = {}) {
 
   // UNUM, pressed into the bottom of the shell (letters from Garrison's logo file)
   const letterOutlines = letters.map((Lt) => {
-    let pts = Lt.o.map(([x, z]) => ({ x: -x * LETTER_SCALE, z: -z * LETTER_SCALE }));   // turned so it reads UNUM once the case is flipped
+    let pts = Lt.o.map(([x, z]) => ({ x: x * LETTER_SCALE, z: -z * LETTER_SCALE }));   // mirrored along the case so it reads UNUM once flipped (checked top-down)
     let area = 0; pts.forEach((p, i) => { const q = pts[(i + 1) % pts.length]; area += p.x * q.z - q.x * p.z; });
     if (area < 0) pts.reverse();
     return withNormals(pts, 32);
