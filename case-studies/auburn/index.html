@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Auburn ID Studios · Industrial design studio projects · Garrison Bullock</title>
 <meta name="description" content="Industrial design studio projects from Auburn University by Garrison Bullock: SHIFT (inhaler, CSP Technologies), VERVE (smart ceiling fan, Emerson), UNUM (adaptive guitar case, Gibson), Amber (flat-pack luminaire, NCAD Dublin) and HIGHdrate (hydration harness, Western Forge).">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.166.1/examples/jsm/" } }</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -78,6 +79,42 @@
   .foot{ font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-2); }
   .foot+.foot{ margin-top:6px; }
 
+
+  /* UNUM in 3D: controls float over the scene on desktop, sit under it on phones */
+  .u3-wrap{ position:relative; margin-top:26px; }
+  .u3{ position:relative; aspect-ratio:16/10; border-radius:6px; overflow:hidden; border:1px solid var(--line);
+    background:radial-gradient(120% 95% at 50% 32%, #fafbfc 0%, #e6e8eb 58%, #d2d6db 100%); box-shadow:0 16px 44px rgba(20,24,28,.14); }
+  .u3-stage{ position:absolute; inset:0; cursor:grab; }
+  .u3-stage:active{ cursor:grabbing; }
+  .u3-stage canvas{ display:block; width:100%; height:100%; }
+  .u3-fallback{ display:none; width:100%; height:100%; object-fit:cover; }
+  .u3-wrap.failed .u3-stage, .u3-wrap.failed .u3-ui, .u3-wrap.failed .u3-hint, .u3-wrap.failed .u3-load{ display:none; }
+  .u3-load{ position:absolute; inset:0; display:grid; place-items:center; font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-2); pointer-events:none; transition:opacity .4s ease; }
+  .u3-wrap.ready .u3-load{ opacity:0; }
+  .u3-hint{ position:absolute; left:50%; top:16px; transform:translateX(-50%); font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:#3a4046;
+    background:rgba(255,255,255,.72); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid rgba(23,26,29,.08); border-radius:999px; padding:8px 13px; pointer-events:none; transition:opacity .5s ease; white-space:nowrap; }
+  .u3-wrap.touched .u3-hint{ opacity:0; }
+  .u3-ui{ position:absolute; left:14px; right:14px; bottom:14px; display:flex; justify-content:space-between; align-items:flex-end; gap:10px; flex-wrap:wrap; pointer-events:none; }
+  .u3-ui > *{ pointer-events:auto; }
+  .u3-btns{ display:flex; gap:8px; }
+  .u3-btns button{ font:500 11px/1 var(--mono); letter-spacing:.13em; text-transform:uppercase; color:#fff; background:rgba(23,26,29,.78); border:1px solid rgba(255,255,255,.18);
+    border-radius:999px; padding:11px 15px; cursor:pointer; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); transition:background .15s ease, transform .15s ease; }
+  .u3-btns button:hover{ background:var(--accent-d); transform:translateY(-1px); }
+  .u3-btns button[aria-pressed="true"]{ background:#fff; color:var(--ink); border-color:rgba(23,26,29,.15); }
+  .u3-felt{ display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.75); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid rgba(23,26,29,.08); border-radius:999px; padding:6px 8px 6px 13px; }
+  .u3-felt span{ font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#3a4046; margin-right:3px; }
+  .u3-felt button{ width:24px; height:24px; border-radius:50%; background:var(--c); border:2px solid #fff; box-shadow:0 0 0 1px rgba(23,26,29,.18); cursor:pointer; padding:0; transition:transform .15s ease, box-shadow .15s ease; }
+  .u3-felt button:hover{ transform:scale(1.1); }
+  .u3-felt button[aria-pressed="true"]{ box-shadow:0 0 0 2px var(--ink); }
+  .u3-wrap button:focus-visible{ outline:2px solid var(--accent-d); outline-offset:2px; }
+  .u3-cap{ font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); margin-top:12px; }
+  @media(max-width:700px){
+    .u3{ aspect-ratio:1/1; }
+    .u3-ui{ position:static; margin-top:10px; justify-content:center; }
+    .u3-btns button{ padding:10px 13px; font-size:10px; background:var(--ink); }
+    .u3-felt{ background:#fff; }
+    .u3-hint{ top:10px; font-size:9.5px; padding:7px 11px; }
+  }
   .lb{ position:fixed; inset:0; z-index:1000; background:rgba(12,13,15,.94); display:none; align-items:center; justify-content:center; }
   .lb.open{ display:flex; }
   .lb img{ max-width:92vw; max-height:88vh; border-radius:4px; box-shadow:0 24px 70px rgba(0,0,0,.6); background:#fff; }
@@ -225,11 +262,44 @@
       </div>
       <div class="chips"><span class="chip"><b>Sponsor</b>Gibson</span><span class="chip"><b>Type</b>Concept &rarr; prototype</span></div>
     </header>
-    <figure class="hImg"><img src="../unum/assets/cover.webp" width="1280" height="800" loading="lazy" alt="UNUM guitar case seen from above, with the UNUM wordmark"></figure>
+    <div class="u3-wrap" id="unum3d">
+      <div class="u3">
+        <div class="u3-stage"></div>
+        <img class="u3-fallback" src="assets/unum_r04.webp" width="1280" height="1024" alt="UNUM guitar case, open, with an acoustic guitar inside">
+        <div class="u3-load">Loading the 3D case</div>
+        <div class="u3-hint">Drag to turn it · click it to open</div>
+      </div>
+      <div class="u3-ui">
+        <div class="u3-btns"><button type="button" data-u3="lid" aria-pressed="false">Open lid</button><button type="button" data-u3="explode" aria-pressed="false">Explode layers</button></div>
+        <div class="u3-felt" role="group" aria-label="Felt lining"><span>Lining</span><button type="button" data-felt="charcoal" aria-pressed="true" aria-label="Charcoal felt" style="--c:#2e2d32"></button><button type="button" data-felt="rose" aria-pressed="false" aria-label="Rose felt" style="--c:#c54a84"></button><button type="button" data-felt="blush" aria-pressed="false" aria-label="Blush felt" style="--c:#ebc2c4"></button><button type="button" data-felt="plum" aria-pressed="false" aria-label="Plum felt" style="--c:#602e71"></button></div>
+      </div>
+    </div>
+    <div class="u3-cap">Built from the original CAD: the 23 × 50 in footprint, the five CNC-cut layers, the window slot and the U-N-U-M slider slots.</div>
     <div class="prose">
       <p>UNUM takes on a problem nobody had solved: one guitar case that adapts to many different shapes and sizes. And it looks damn good doing it.</p>
-      <p>It went from foam studies through CNC-milled molds to a built and finished prototype.</p>
+      <p>The case is five layers, CNC-cut from my own CAD and stacked 12 inches tall: a floor slab, two wall rings, and a lid with a window down its length. The slider slots that adjust the case to each guitar are cut into the floor as the letters U-N-U-M, and 3D-printed end caps line them to keep the felt down and clean.</p>
     </div>
+      <div class="sub">
+        <div class="eyebrow">Renders</div>
+        <h3 class="sub-title">The case.</h3>
+      </div>
+      <div class="grid" data-max="3">
+        <img src="assets/unum_r00.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+        <img src="assets/unum_r01.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+        <img src="assets/unum_r02.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+        <img src="assets/unum_r03.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+        <img src="assets/unum_r04.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+        <img src="assets/unum_r05.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+        <img src="assets/unum_r06.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+        <img src="assets/unum_r07.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+        <img src="assets/unum_r08.webp" width="1280" height="1024" loading="lazy" alt="UNUM guitar case render">
+      </div>
+      <div class="sub">
+        <div class="eyebrow">Detail</div>
+        <h3 class="sub-title">The end caps.</h3>
+      </div>
+      <p class="sub-lede">Printed caps that fit the U-shaped slider slots, keeping the felt lining tucked down and clean.</p>
+      <div class="poster"><img src="assets/unum_endcaps.webp" width="829" height="859" loading="lazy" alt="UNUM end caps laid out on a 3D printer build plate, U-shaped channels with support structures"></div>
       <div class="sub">
         <div class="eyebrow">The work</div>
         <h3 class="sub-title">Concept to prototype.</h3>
@@ -378,7 +448,7 @@
   function openLb(list,i){ set=list; show(i); lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
   function closeLb(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; lbImg.src=''; }
   Array.prototype.forEach.call(document.querySelectorAll('.proj'), function(p){
-    var list=Array.prototype.slice.call(p.querySelectorAll('img'));
+    var list=Array.prototype.slice.call(p.querySelectorAll('img:not(.u3-fallback)'));
     list.forEach(function(el,i){ el.addEventListener('click',function(){ openLb(list,i); }); });
   });
   document.getElementById('lbClose').addEventListener('click',closeLb);
@@ -400,6 +470,16 @@
   addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(mark); } },{passive:true});
   addEventListener('resize',mark); mark();
 })();
+</script>
+<script type="module">
+  /* the 3D case loads only as you approach the UNUM section */
+  const host=document.getElementById('unum3d');
+  if(host){
+    const go=async()=>{ try{ const { initUnum3D }=await import('./assets/unum3d/unum-3d.js'); window.UNUM3D=await initUnum3D(host); }
+      catch(e){ console.error(e); host.classList.add('failed'); const f=host.querySelector('.u3-fallback'); if(f) f.style.display='block'; } };
+    if('IntersectionObserver' in window){ const io=new IntersectionObserver(en=>{ if(en[0].isIntersecting){ io.disconnect(); go(); } },{ rootMargin:'900px 0px' }); io.observe(host); }
+    else go();
+  }
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "495c7fa3f7544163bba06e1f509ba3b0"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
