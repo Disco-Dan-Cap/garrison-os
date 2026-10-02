@@ -308,8 +308,11 @@ export async function initUnum3D(host, opts = {}) {
   }
   const clampSide = (sy, side) => (name) => {
     if (sy < 0) return side * 1.7;                                   // below the butt: pinch it from either side
-    const [L, R] = reach(GUITARS[name].userData.outline, sy);
-    return side * Math.min(SLOT_X - ROD_R - 0.1, (side < 0 ? L : R) + ROD_R + 0.04);
+    const u = GUITARS[name].userData, [L, R] = reach(u.outline, sy);
+    let ext = side < 0 ? L : R;
+    const [y0, w0, y1, w1] = u.neck;   // past the body on this side, the rod comes in to the neck instead
+    if (sy >= y0 && sy <= y1) ext = Math.max(ext, (w0 + (w1 - w0) * (sy - y0) / (y1 - y0)) / 2);
+    return side * Math.min(SLOT_X - ROD_R - 0.1, ext + ROD_R + 0.04);
   };
   ROWS.forEach((sy) => [-1, 1].forEach((side) => rod('x', side * (SLOT_X - ROD_R - 0.1), ZB - sy, clampSide(sy, side))));
   rod('z', HEAD_SLOT[0] + ROD_R + 0.08, 0, (name) => ZB - GUITARS[name].userData.tip - ROD_R - 0.05);
@@ -389,62 +392,113 @@ export async function initUnum3D(host, opts = {}) {
       const a = new THREE.Vector3(sx, Y0 + 0.5, -4.95), b = new THREE.Vector3(nx, Y0 + 0.42, -NUT);
       g.add(between(a, b, r, mat), between(b, posts[i], r, mat));
     }
-    g.userData = { outline, tip: NUT + 6.8 };
+    g.userData = { outline, tip: NUT + 6.8, neck: [BODYJOIN - 0.6, 2.3, NUT, 1.75] };
     return g;
   }
 
 
-  function buildElectric() {   // a Strat-style solid body: black gloss, white guard, maple neck
+  function buildElectric() {   // a road-worn 3-tone sunburst Stratocaster: mint guard, aged plastics, rosewood board
     const g = new THREE.Group();
-    const D = 1.75, Y0 = D, NUT = 32.6, SADDLE = 7.1, FB0 = 14.6, SCALE = 25.5;
+    const D = 1.75, Y0 = D, SADDLE = 5.5, SCALE = 25.5, NUT = SADDLE + SCALE, FB0 = 13.05;
     const P = (pts, n) => new THREE.CatmullRomCurve3(pts.map(([x, y]) => new THREE.Vector3(x, y, 0)), true, 'centripetal').getPoints(n).map((v) => new THREE.Vector2(v.x, v.y));
-    const outline = P([[0, 0], [3.6, 0.4], [5.8, 1.8], [6.45, 4.0], [6.2, 6.5], [5.3, 8.4], [5.2, 9.8], [5.9, 11.6], [6.0, 13.4], [5.4, 15.4], [4.6, 17.0],
-      [3.9, 17.4], [3.2, 16.6], [2.4, 15.4], [1.15, 15.2], [-1.15, 15.2], [-2.4, 15.0], [-3.4, 16.8], [-4.0, 18.4], [-4.6, 18.8], [-5.2, 18.2],
-      [-5.6, 16.2], [-6.0, 13.5], [-5.9, 11.6], [-5.2, 9.8], [-5.3, 8.4], [-6.2, 6.5], [-6.45, 4.0], [-5.8, 1.8], [-3.6, 0.4]], 200);
-    const gloss = new THREE.MeshPhysicalMaterial({ color: 0x050506, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.14, envMapIntensity: 0.55 });
-    const guardMat = new THREE.MeshPhysicalMaterial({ color: 0xf1eee6, roughness: 0.3, clearcoat: 0.6, clearcoatRoughness: 0.1 });
-    const nickel = new THREE.MeshStandardMaterial({ color: 0xe1e4e8, metalness: 1, roughness: 0.16 });
-    const cream = new THREE.MeshStandardMaterial({ color: 0xece4cf, roughness: 0.4 });
-    const [mc] = woodCanvas(256, 1024, '#e3bd84', 'rgba(150,100,45,A)', 70, 2, 13);
-    const maple = new THREE.MeshPhysicalMaterial({ map: tex(mc, 8, true), roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08 });
+    // body outline traced from the reference photo; x+ is the treble side, sy from the butt
+    // body outline traced from Garrison's reference photo (lower bout scaled to 12.75 in)
+    const outline = P([[-4.59, 17.61], [-4.80, 17.47], [-4.97, 17.28], [-5.12, 17.06], [-5.27, 16.74], [-5.36, 16.45], [-5.43, 16.04], [-5.47, 15.59], [-5.47, 15.18], [-5.40, 14.57], [-5.24, 13.84], [-4.64, 11.81], [-4.51, 11.27], [-4.46, 10.86], [-4.46, 10.29], [-4.53, 9.80], [-4.65, 9.36], [-5.08, 8.26], [-5.65, 6.92], [-5.88, 6.46], [-6.28, 4.95], [-6.37, 4.26], [-6.37, 3.37], [-6.26, 2.70], [-6.04, 2.14], [-5.83, 1.80], [-5.50, 1.40], [-5.23, 1.13], [-4.69, 0.71], [-4.62, 0.58], [-4.60, 0.32], [-4.52, 0.19], [-4.37, 0.07], [-4.19, 0.01], [-4.03, 0.03], [-3.83, 0.18], [-3.72, 0.22], [-2.88, 0.03], [-2.59, 0.00], [3.09, 0.00], [3.31, 0.02], [3.94, 0.18], [4.04, 0.16], [4.28, 0.01], [4.54, 0.00], [4.64, 0.02], [4.71, 0.12], [4.67, 0.41], [4.71, 0.52], [5.21, 0.92], [5.44, 1.15], [5.74, 1.52], [6.00, 1.95], [6.17, 2.38], [6.27, 2.70], [6.34, 3.11], [6.38, 3.50], [6.32, 3.85], [6.22, 5.06], [6.01, 5.84], [5.76, 6.51], [5.53, 7.05], [4.64, 8.87], [4.51, 9.24], [4.44, 9.58], [4.44, 10.19], [4.53, 10.68], [4.80, 11.42], [4.91, 11.86], [5.04, 12.19], [5.21, 12.52], [5.34, 13.12], [5.38, 13.62], [5.34, 14.06], [5.26, 14.45], [5.15, 14.75], [4.96, 15.04], [4.71, 15.22], [4.41, 15.27], [4.24, 15.24], [4.13, 15.18], [4.01, 15.06], [3.93, 14.90], [3.73, 14.08], [3.55, 13.65], [3.37, 13.41], [3.20, 13.25], [3.01, 13.13], [2.81, 13.04], [2.49, 12.96], [2.03, 12.94], [1.24, 13.07], [1.15, 12.99], [1.10, 12.73], [0.97, 12.67], [-1.02, 12.66], [-1.11, 12.72], [-1.15, 12.84], [-1.15, 14.70], [-1.18, 14.80], [-1.23, 14.84], [-1.29, 14.85], [-1.79, 14.71], [-2.25, 14.71], [-2.70, 14.83], [-3.09, 15.05], [-3.29, 15.25], [-3.44, 15.46], [-3.65, 15.96], [-3.72, 16.28], [-3.77, 17.02], [-3.84, 17.63], [-3.95, 17.69], [-4.22, 17.69], [-4.43, 17.67]], 320);
 
-    const body = extrude(new THREE.Shape(outline), D - 0.3, gloss, 0.15, 64); body.position.y = 0.15; g.add(body);
-    const guard = extrude(new THREE.Shape(P([[1.15, 15.25], [2.4, 15.4], [3.7, 13.6], [4.5, 11.2], [4.6, 8.8], [3.6, 6.9], [1.4, 6.0], [-1.6, 7.4], [-3.1, 9.4], [-3.6, 12.2], [-3.0, 14.4], [-1.15, 15.25]], 120)), 0.07, guardMat);
-    guard.position.y = Y0; g.add(guard);
-    [[9.4, 0.14], [11.3, 0], [13.1, 0]].forEach(([sy, ang]) => { const pu = mesh(new THREE.BoxGeometry(2.75, 0.14, 0.7), cream); pu.position.set(0, Y0 + 0.13, -sy); pu.rotation.y = ang; g.add(pu); });
-    [[2.9, 8.6], [3.5, 7.3], [3.85, 6.0]].forEach(([x, sy]) => { const k = mesh(new THREE.CylinderGeometry(0.36, 0.38, 0.42, 28), cream); k.position.set(x, Y0 + 0.28, -sy); g.add(k); });
-    const plate = mesh(new THREE.BoxGeometry(2.9, 0.1, 1.7), nickel); plate.position.set(0, Y0 + 0.12, -6.7); g.add(plate);
-    for (let i = 0; i < 6; i++) { const sd = mesh(new THREE.BoxGeometry(0.34, 0.24, 0.55), nickel); sd.position.set(-1.0 + i * 0.4, Y0 + 0.28, -SADDLE); g.add(sd); }
+    // 3-tone burst + road wear, painted on a canvas that maps 1:1 onto the top
+    const BX = 6.6, BY = 18.4, CW = 512, CH = 720, cx = (x) => (x + BX) / (2 * BX) * CW, cy = (y) => (1 - y / BY) * CH, ci = (v) => v / (2 * BX) * CW;
+    const [bc, bg] = canvas(CW, CH);
+    const path = () => { bg.beginPath(); outline.forEach((p, k) => (k ? bg.lineTo(cx(p.x), cy(p.y)) : bg.moveTo(cx(p.x), cy(p.y)))); bg.closePath(); };
+    let gr = bg.createRadialGradient(cx(0), cy(7.5), 10, cx(0), cy(7.5), ci(7)); gr.addColorStop(0, '#c98a2e'); gr.addColorStop(0.55, '#a65a1c'); gr.addColorStop(1, '#7a2a12');
+    bg.fillStyle = gr; bg.fillRect(0, 0, CW, CH);
+    bg.save(); path(); bg.clip();
+    bg.filter = 'blur(30px)'; bg.lineJoin = 'round'; path(); bg.strokeStyle = 'rgba(96,22,10,1)'; bg.lineWidth = ci(7.2); bg.stroke();
+    bg.filter = 'blur(20px)'; path(); bg.strokeStyle = 'rgba(10,7,6,1)'; bg.lineWidth = ci(4.4); bg.stroke();
+    bg.filter = 'blur(6px)'; path(); bg.strokeStyle = 'rgba(8,6,5,1)'; bg.lineWidth = ci(1.9); bg.stroke();
+    bg.filter = 'none'; path(); bg.strokeStyle = '#0d0907'; bg.lineWidth = ci(0.5); bg.stroke();
+    // wear: raw alder showing through, edged with yellowed lacquer
+    const rnd = rng(31);
+    const blob = (x, y, r, wood = true) => {
+      const n = 40, ph = [rnd() * 6, rnd() * 6, rnd() * 6], am = [0.22 + rnd() * 0.2, 0.12 + rnd() * 0.12, 0.06 + rnd() * 0.06], sq = 0.6 + rnd() * 0.6, rot = rnd() * Math.PI;
+      const pts = Array.from({ length: n }, (_, k) => { const a = k / n * Math.PI * 2, rr = r * (1 + am[0] * Math.sin(2 * a + ph[0]) + am[1] * Math.sin(3 * a + ph[1]) + am[2] * Math.sin(7 * a + ph[2]));
+        const ux = Math.cos(a) * rr, uy = Math.sin(a) * rr * sq; return [cx(x) + ci(ux * Math.cos(rot) - uy * Math.sin(rot)), cy(y) - ci(ux * Math.sin(rot) + uy * Math.cos(rot))]; });
+      const draw = (grow) => { bg.beginPath(); pts.forEach(([px, py], k) => { const qx = cx(x) + (px - cx(x)) * grow, qy = cy(y) + (py - cy(y)) * grow; k ? bg.lineTo(qx, qy) : bg.moveTo(qx, qy); }); bg.closePath(); bg.fill(); };
+      bg.fillStyle = 'rgba(214,140,40,.55)'; draw(1.12);
+      if (wood) { bg.fillStyle = '#c79b63'; draw(1); bg.strokeStyle = 'rgba(150,105,60,.35)'; bg.lineWidth = 1; for (let t = 0; t < 4; t++) { const yy = cy(y) + (rnd() - 0.5) * ci(r); bg.beginPath(); bg.moveTo(cx(x) - ci(r), yy); bg.lineTo(cx(x) + ci(r), yy + (rnd() - 0.5) * 6); bg.stroke(); } }
+    };
+    // edge wear clusters where a player's body and arm rub: bass side, butt, lower treble bout
+    const near = (a, b) => outline.filter((p) => p.y >= a && p.y <= b);
+    [[0, 3, 4, -1], [0, 6, 3, 1], [6, 13, 3, -1], [13, 18.5, 2, -1], [9, 14, 1, 1]].forEach(([a, b, n, sideSign]) => {
+      const pts = near(a, b).filter((p) => Math.sign(p.x) === sideSign || sideSign === 0);
+      for (let k = 0; k < n; k++) { const p = pts[Math.floor(rnd() * pts.length)]; if (!p) continue; const inx = -p.x, iny = 7.5 - p.y, l = Math.hypot(inx, iny) || 1, d = 0.15 + rnd() * 0.35;
+        blob(p.x + inx / l * d, p.y + iny / l * d, 0.18 + rnd() * 0.42); } });
+    [[-3.3, 12.0, 0.95], [-3.4, 10.4, 0.6], [-1.3, 0.8, 0.5], [1.6, 0.7, 0.55]].forEach(([x, y, r]) => blob(x, y, r));
+    for (let k = 0; k < 36; k++) { bg.fillStyle = rnd() < 0.6 ? 'rgba(199,155,99,.85)' : 'rgba(230,160,50,.8)'; bg.beginPath(); bg.arc(cx((rnd() - 0.5) * 12.4), cy(rnd() * 18), 0.6 + rnd() * 2.2, 0, Math.PI * 2); bg.fill(); }
+    bg.restore();
+    const burst = new THREE.CanvasTexture(bc); burst.colorSpace = THREE.SRGBColorSpace; burst.anisotropy = ANISO; burst.repeat.set(1 / (2 * BX), 1 / BY); burst.offset.set(0.5, 0);
+    const [ec, eg] = canvas(512, 64); eg.fillStyle = '#0d0907'; eg.fillRect(0, 0, 512, 64);
+    for (let k = 0; k < 28; k++) { const x = rnd() * 512, y = rnd() * 64, w = 3 + rnd() * 26, h = 2 + rnd() * 14; eg.fillStyle = 'rgba(226,156,48,.9)'; eg.fillRect(x - 1, y - 1, w + 2, h + 2); eg.fillStyle = '#c79b63'; eg.fillRect(x, y, w, h); }
+    const edgeTex = tex(ec, 1); edgeTex.repeat.set(1 / 10, 1 / 1.9);
+    const top = new THREE.MeshPhysicalMaterial({ map: burst, roughness: 0.5, clearcoat: 0.35, clearcoatRoughness: 0.4, envMapIntensity: 0.45 });
+    const edge = new THREE.MeshPhysicalMaterial({ map: edgeTex, roughness: 0.55, clearcoat: 0.3, clearcoatRoughness: 0.4, envMapIntensity: 0.45 });
+    const mint = new THREE.MeshPhysicalMaterial({ color: 0xdbe7cd, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.18 });
+    const aged = new THREE.MeshStandardMaterial({ color: 0xefe3c4, roughness: 0.42 });
+    const nickel = new THREE.MeshStandardMaterial({ color: 0xe1e4e8, metalness: 1, roughness: 0.18 });
+    const dark = new THREE.MeshStandardMaterial({ color: 0x2a2a2c, metalness: 0.6, roughness: 0.35 });
 
-    // maple neck with frets and dots painted on, Strat-style headstock with six in-line tuners
-    const [fc, fg] = woodCanvas(128, 1024, '#e7c38c', 'rgba(150,100,45,A)', 30, 2, 17);
+    const body = extrude(new THREE.Shape(outline), D - 0.44, [top, edge], 0.22, 64); body.position.y = 0.22; g.add(body);
+    // mint 3-ply guard; the neck sits over its top edge
+    const guard = extrude(new THREE.Shape(P([[4.54, 14.87], [4.49, 14.89], [4.43, 14.87], [4.37, 14.79], [4.32, 14.63], [4.25, 14.14], [3.96, 13.40], [3.88, 13.27], [3.44, 12.92], [3.29, 12.83], [3.09, 12.74], [2.49, 12.56], [2.22, 12.58], [1.14, 12.85], [1.01, 12.82], [0.71, 12.65], [0.09, 12.56], [-0.34, 12.57], [-0.87, 12.64], [-1.07, 12.73], [-1.18, 12.86], [-1.20, 13.28], [-1.17, 13.36], [-1.07, 13.43], [-1.18, 13.55], [-1.20, 13.76], [-1.25, 13.84], [-1.36, 13.91], [-1.79, 14.05], [-1.93, 14.02], [-2.10, 13.90], [-2.15, 13.82], [-2.17, 13.69], [-2.13, 13.53], [-2.00, 13.21], [-1.97, 12.86], [-1.90, 12.56], [-1.91, 12.35], [-1.84, 11.85], [-1.85, 11.46], [-2.04, 10.40], [-2.43, 9.34], [-2.65, 8.83], [-2.86, 8.19], [-2.97, 7.15], [-2.87, 6.52], [-2.83, 6.41], [-2.53, 5.96], [-2.32, 5.76], [-2.03, 5.62], [-1.84, 5.58], [-1.68, 5.59], [-1.60, 5.67], [-1.57, 5.90], [-1.51, 5.99], [-1.40, 6.04], [-1.25, 6.00], [-1.15, 6.09], [-1.06, 6.12], [-0.47, 6.11], [-0.27, 5.97], [-0.16, 6.08], [-0.07, 6.12], [0.01, 6.10], [0.11, 6.04], [0.28, 6.12], [1.28, 6.11], [1.43, 6.02], [1.48, 5.84], [1.44, 5.71], [1.32, 5.66], [1.47, 5.62], [1.53, 5.58], [1.60, 5.39], [1.64, 5.53], [1.77, 5.58], [2.14, 5.57], [2.45, 5.51], [2.77, 5.48], [3.26, 5.31], [3.54, 5.15], [4.30, 4.54], [4.82, 4.04], [5.04, 3.90], [5.24, 3.83], [5.41, 3.83], [5.52, 3.87], [5.66, 4.00], [5.76, 4.20], [5.79, 4.39], [5.71, 5.08], [5.36, 6.06], [5.02, 6.88], [4.57, 7.85], [4.52, 8.04], [4.55, 8.19], [4.37, 8.29], [4.27, 8.48], [4.14, 8.95], [3.99, 9.32], [3.97, 9.69], [3.91, 9.95], [3.93, 10.25], [4.02, 10.68], [4.15, 11.05], [4.22, 11.40], [4.38, 11.81], [4.55, 12.15], [4.72, 12.76], [4.86, 13.07], [4.88, 13.60], [4.84, 13.84], [4.84, 14.20], [4.64, 14.71]], 260)), 0.06, [mint, aged], 0.025);
+    guard.position.y = Y0 + 0.01; g.add(guard);
+    // single-coil pickups with pole pieces; the bridge pickup slants
+    [[12.0, 0], [9.66, 0], [7.4, -0.17]].forEach(([sy, ang]) => {
+      const pu = new THREE.Group(); pu.position.set(0, Y0 + 0.1, -sy); pu.rotation.y = ang; g.add(pu);
+      const cover = extrude(rrShape2(2.75, 0.7, 0.33), 0.28, aged, 0.04); pu.add(cover);
+      for (let k = 0; k < 6; k++) { const pole = mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.06, 12), dark); pole.position.set(-0.98 + k * 0.392, 0.36, 0); pu.add(pole); }
+    });
+    // vintage trem bridge: plate, six bent-steel saddles, strings anchored behind
+    const plate = mesh(new THREE.BoxGeometry(3.0, 0.08, 1.55), nickel); plate.position.set(0.05, Y0 + 0.06, -(SADDLE - 0.35)); g.add(plate);
+    for (let k = 0; k < 6; k++) { const sd = mesh(new THREE.BoxGeometry(0.4, 0.22, 0.62), nickel); sd.position.set(-1.0 + k * 0.4, Y0 + 0.2, -SADDLE); g.add(sd); }
+    // knobs, switch tip, jack plate, strap buttons
+    [[2.14, 7.03], [3.73, 6.19], [5.1, 4.97]].forEach(([x, sy]) => { const k = mesh(new THREE.CylinderGeometry(0.33, 0.4, 0.5, 32), aged); k.position.set(x, Y0 + 0.3, -sy); g.add(k); });
+    const sw = mesh(new THREE.CapsuleGeometry ? new THREE.SphereGeometry(0.12, 12, 10) : new THREE.SphereGeometry(0.12, 12, 10), aged); sw.position.set(3.41, Y0 + 0.4, -8.53); g.add(sw);
+    const jack = mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.08, 32), nickel); jack.scale.set(1, 1, 0.55); jack.rotation.y = 0.55; jack.position.set(3.75, Y0 + 0.02, -3.35); g.add(jack);
+    [[-3.85, 18.12, 0.1], [0, -0.05, 0.9]].forEach(([x, sy, yy]) => { const b = mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.3, 14), nickel); b.rotation.x = Math.PI / 2; b.position.set(x, yy, -sy); g.add(b); });
+
+    // maple neck, rosewood board with clay dots, small vintage headstock, six in-line tuners on the bass side
+    const [mc] = woodCanvas(256, 1024, '#dca35a', 'rgba(150,95,40,A)', 70, 2, 13);
+    const maple = new THREE.MeshPhysicalMaterial({ map: tex(mc, 8, true), roughness: 0.4, clearcoat: 0.7, clearcoatRoughness: 0.2 });
+    const [fc, fg] = woodCanvas(128, 1024, '#3a2116', 'rgba(10,4,2,A)', 50, 2, 17);
     const fy = (y) => (1 - (y - FB0) / (NUT - FB0)) * 1024;
-    fg.fillStyle = '#c9ccd1'; for (let n = 1; n <= 21; n++) { const y = fy(NUT - (SCALE - SCALE / Math.pow(2, n / 12))); fg.fillRect(0, y - 1.5, 128, 3); }
-    fg.fillStyle = '#1b1410'; const mid = (n) => NUT - (SCALE - SCALE / Math.pow(2, (n - 0.5) / 12));
-    [3, 5, 7, 9, 15, 17, 19].forEach((n) => { fg.beginPath(); fg.arc(64, fy(mid(n)), 7, 0, Math.PI * 2); fg.fill(); });
-    [44, 84].forEach((x) => { fg.beginPath(); fg.arc(x, fy(mid(12)), 7, 0, Math.PI * 2); fg.fill(); });
+    fg.fillStyle = '#cfd2d6'; for (let n = 1; n <= 21; n++) { const y = fy(NUT - (SCALE - SCALE / Math.pow(2, n / 12))); fg.fillRect(0, y - 1.5, 128, 3); }
+    fg.fillStyle = '#d6b089'; const mid = (n) => NUT - (SCALE - SCALE / Math.pow(2, (n - 0.5) / 12));
+    [3, 5, 7, 9, 15, 17, 19, 21].forEach((n) => { fg.beginPath(); fg.arc(64, fy(mid(n)), 7.5, 0, Math.PI * 2); fg.fill(); });
+    [42, 86].forEach((x) => { fg.beginPath(); fg.arc(x, fy(mid(12)), 7.5, 0, Math.PI * 2); fg.fill(); });
     const fbTex = new THREE.CanvasTexture(fc); fbTex.colorSpace = THREE.SRGBColorSpace; fbTex.anisotropy = ANISO;
     fbTex.repeat.set(1 / 2.4, 1 / (NUT - FB0)); fbTex.offset.set(0.5, -FB0 / (NUT - FB0));
+    const rose = new THREE.MeshStandardMaterial({ color: 0x3a2116, roughness: 0.6 });
     const trap = (y0, w0, y1, w1) => new THREE.Shape([new THREE.Vector2(-w0 / 2, y0), new THREE.Vector2(w0 / 2, y0), new THREE.Vector2(w1 / 2, y1), new THREE.Vector2(-w1 / 2, y1)]);
-    const neck = extrude(trap(FB0, 2.2, NUT, 1.65), 0.85, [new THREE.MeshPhysicalMaterial({ map: fbTex, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08 }), maple], 0.04);
-    neck.position.y = Y0 - 0.45; g.add(neck);
-    const head = new THREE.Shape(P([[-0.82, NUT - 0.05], [0.82, NUT - 0.05], [1.3, NUT + 1.0], [1.4, NUT + 4.6], [1.05, NUT + 6.5], [0.2, NUT + 7.0], [-0.8, NUT + 6.8], [-1.35, NUT + 6.1], [-1.05, NUT + 5.1], [-0.9, NUT + 1.6]], 80));
-    const hs = extrude(head, 0.5, maple, 0.04); hs.position.y = Y0 - 0.2; g.add(hs);
-    const nut = mesh(new THREE.BoxGeometry(1.7, 0.12, 0.2), cream); nut.position.set(0, Y0 + 0.46, -NUT); g.add(nut);
+    const neck = extrude(trap(FB0, 2.2, NUT, 1.65), 0.62, maple, 0.06); neck.position.y = Y0 - 0.42; g.add(neck);
+    const board = extrude(trap(FB0, 2.2, NUT, 1.65), 0.2, [new THREE.MeshStandardMaterial({ map: fbTex, roughness: 0.55 }), rose], 0.02); board.position.y = Y0 + 0.2; g.add(board);
+    const head = new THREE.Shape(P([[-0.8, NUT - 0.05], [0.8, NUT - 0.05], [0.95, NUT + 1.2], [1.0, NUT + 2.8], [1.15, NUT + 4.2], [1.5, NUT + 5.4], [1.55, NUT + 6.3], [1.2, NUT + 6.95],
+      [0.4, NUT + 7.15], [-0.45, NUT + 6.95], [-0.85, NUT + 6.3], [-0.9, NUT + 3.0]], 90));
+    const hs = extrude(head, 0.48, maple, 0.04); hs.position.y = Y0 - 0.2; g.add(hs);
+    const nut = mesh(new THREE.BoxGeometry(1.7, 0.12, 0.2), aged); nut.position.set(0, Y0 + 0.47, -NUT); g.add(nut);
     const posts = [];
-    for (let i = 0; i < 6; i++) {
-      const sy = NUT + 1.0 + i * 0.95, x = 0.62;
-      const pst = mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.42, 14), nickel); pst.position.set(x, Y0 + 0.5, -sy); g.add(pst); posts.push(new THREE.Vector3(x, Y0 + 0.62, -sy));
-      const sh = mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.7, 8), nickel); sh.rotation.z = Math.PI / 2; sh.position.set(1.65, Y0 + 0.05, -sy); g.add(sh);
-      const bt = mesh(new THREE.BoxGeometry(0.16, 0.42, 0.55), nickel); bt.position.set(2.05, Y0 + 0.05, -sy); g.add(bt);
+    for (let k = 0; k < 6; k++) {
+      const sy = NUT + 0.9 + k * 0.95, x = -0.45;
+      const pst = mesh(new THREE.CylinderGeometry(0.12, 0.13, 0.4, 14), nickel); pst.position.set(x, Y0 + 0.48, -sy); g.add(pst); posts.push(new THREE.Vector3(x, Y0 + 0.6, -sy));
+      const sh = mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.7, 8), nickel); sh.rotation.z = Math.PI / 2; sh.position.set(-1.25, Y0 + 0.04, -sy); g.add(sh);
+      const bt = mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.12, 18), nickel); bt.rotation.z = Math.PI / 2; bt.position.set(-1.65, Y0 + 0.04, -sy); g.add(bt);
     }
-    for (let i = 0; i < 6; i++) {
-      const a = new THREE.Vector3(-1.0 + i * 0.4, Y0 + 0.42, -SADDLE), b = new THREE.Vector3(-0.68 + i * 0.272, Y0 + 0.53, -NUT), r = 0.03 - i * 0.0035;
-      g.add(between(a, b, r, nickel), between(b, posts[5 - i], r, nickel));
+    for (let k = 0; k < 6; k++) {   // k=0 is the low E (bass side, x-), wound to the post nearest the nut
+      const a = new THREE.Vector3(-1.0 + k * 0.4, Y0 + 0.33, -SADDLE), b = new THREE.Vector3(-0.68 + k * 0.272, Y0 + 0.54, -NUT), r = 0.03 - k * 0.0035;
+      g.add(between(a, b, r, nickel), between(b, posts[k], r, nickel));
     }
-    g.userData = { outline, tip: NUT + 7.0 };
+    g.userData = { outline, tip: NUT + 7.15, neck: [FB0, 2.2, NUT, 1.65] };
     return g;
   }
+  function rrShape2(w, h, r) { const s = new THREE.Shape(), x = w / 2, y = h / 2; s.moveTo(-x + r, -y); s.lineTo(x - r, -y); s.absarc(x - r, 0, r, -Math.PI / 2, Math.PI / 2, false); s.lineTo(-x + r, y); s.absarc(-x + r, 0, r, Math.PI / 2, Math.PI * 1.5, false); return s; }
 
   /* ── ground: soft contact shadow + the key light's shadow ─────────────────────────── */
   const [sc, sg] = canvas(256, 512); sg.filter = 'blur(16px)'; sg.fillStyle = 'rgba(0,0,0,.62)';
