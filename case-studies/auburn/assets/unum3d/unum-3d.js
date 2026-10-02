@@ -25,10 +25,11 @@ HINGE.x = -(BAND.w / 2 + BAND.t / 2 + HINGE.r);
 const LIDMAX = THREE.MathUtils.degToRad(104);
 const LETTER_SCALE = 0.72, POCKET = 0.55;
 
-const FELTS = {
-  emerald: { base: '#08452e', sheen: '#1f7a55' },
-  black: { base: '#141416', sheen: '#55565c' },
-  cream: { base: '#d6c3a0', sheen: '#fff3dc' },
+const FELTS = {   // velvet linings: base colour, the lighter crushed-pile mottle, and the sheen along grazing angles
+  emerald: { base: '#154629', mottle: '#246039', sheen: '#3f8a5c' },
+  wine: { base: '#470e15', mottle: '#621a23', sheen: '#93374a' },
+  black: { base: '#131315', mottle: '#26262a', sheen: '#5d5e66' },
+  cream: { base: '#cdb791', mottle: '#e0cfaf', sheen: '#fff3dc' },
 };
 
 export async function initUnum3D(host, opts = {}) {
@@ -87,19 +88,25 @@ export async function initUnum3D(host, opts = {}) {
   const pebble = tex(pc, 5);
 
   // felt: fine fibres, the same pattern for colour and for bump
-  function feltCanvas(fillHex) {
+  // velvet: a soft crushed-pile mottle (large, blurred light and dark patches), then very fine grain
+  function feltCanvas(fillHex, mottleHex = fillHex) {
     const [c, g] = canvas(512); g.fillStyle = fillHex; g.fillRect(0, 0, 512, 512);
     const r = rng(21);
-    for (let i = 0; i < 16000; i++) {
-      const x = r() * 512, y = r() * 512, a = r() * Math.PI * 2, len = 3 + r() * 9, light = r() < 0.5, al = 0.05 + r() * 0.12;
-      g.strokeStyle = light ? `rgba(255,255,255,${al})` : `rgba(0,0,0,${al * 1.2})`; g.lineWidth = 0.5 + r() * 0.7;
-      tiled(512, x, y, len, (X, Y) => { g.beginPath(); g.moveTo(X, Y); g.quadraticCurveTo(X + Math.cos(a + 0.9) * len * 0.5, Y + Math.sin(a + 0.9) * len * 0.5, X + Math.cos(a) * len, Y + Math.sin(a) * len); g.stroke(); });
+    g.filter = 'blur(30px)';
+    for (let i = 0; i < 60; i++) {
+      const x = r() * 512, y = r() * 512, rx = 50 + r() * 110, ry = rx * (0.35 + r() * 0.5), a = r() * Math.PI, light = r() < 0.55;
+      g.globalAlpha = 0.06 + r() * 0.1; g.fillStyle = light ? mottleHex : 'rgba(0,0,0,.4)';
+      tiled(512, x, y, rx + 40, (X, Y) => { g.beginPath(); g.ellipse(X, Y, rx, ry, a, 0, Math.PI * 2); g.fill(); });
     }
+    g.filter = 'none'; g.globalAlpha = 1;
+    const img = g.getImageData(0, 0, 512, 512), d = img.data;
+    for (let k = 0; k < d.length; k += 4) { const n = (r() - 0.5) * 9; d[k] += n; d[k + 1] += n; d[k + 2] += n; }
+    g.putImageData(img, 0, 0);
     return c;
   }
-  const feltBump = tex(feltCanvas('#808080'), 4);
+  const feltBump = tex(feltCanvas('#808080', '#9a9a9a'), 9);
   const feltMaps = {};
-  const feltMap = (n) => feltMaps[n] || (feltMaps[n] = tex(feltCanvas(FELTS[n].base), 4, true));
+  const feltMap = (n) => feltMaps[n] || (feltMaps[n] = tex(feltCanvas(FELTS[n].base, FELTS[n].mottle), 9, true));
 
   // wood: long grain lines over a base colour
   function woodCanvas(w, h, base, line, n, wav, seed) {
@@ -118,8 +125,8 @@ export async function initUnum3D(host, opts = {}) {
     clearcoat: 0.45, clearcoatRoughness: 0.3, envMapIntensity: 0.85, side: THREE.DoubleSide });
   const metal = new THREE.MeshPhysicalMaterial({ color: 0xa9adb3, metalness: 1, roughness: 0.12, anisotropy: 0.3, envMapIntensity: 0.75, side: THREE.DoubleSide });
   const chrome = new THREE.MeshStandardMaterial({ color: 0xe8eaed, metalness: 1, roughness: 0.1 });
-  const felt = new THREE.MeshPhysicalMaterial({ map: feltMap(o.felt), bumpMap: feltBump, bumpScale: 1.2, roughness: 1, metalness: 0,
-    sheen: 1, sheenRoughness: 0.5, sheenColor: new THREE.Color(FELTS[o.felt].sheen), side: THREE.DoubleSide });
+  const felt = new THREE.MeshPhysicalMaterial({ map: feltMap(o.felt), bumpMap: feltBump, bumpScale: 0.35, roughness: 0.95, metalness: 0,
+    sheen: 1, sheenRoughness: 0.35, sheenColor: new THREE.Color(FELTS[o.felt].sheen), side: THREE.DoubleSide });
   const glass = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, roughness: 0.02, transmission: 1, thickness: 0.12, ior: 1.49,
     transparent: true, opacity: 1, side: THREE.DoubleSide });
 
