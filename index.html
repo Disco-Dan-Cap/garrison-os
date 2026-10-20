@@ -358,6 +358,8 @@
   .wmp-stop,.wmp-prev,.wmp-next,.wmp-mute{width:26px;height:26px;}
   .wmp-stop svg,.wmp-prev svg,.wmp-next svg,.wmp-mute svg{width:13px;height:13px;}
   .wmp-vol{width:72px;margin-left:2px;}
+  .wmp-yt{position:absolute;inset:0;background:#000;z-index:2;} .wmp-yt[hidden]{display:none;} .wmp-yt iframe,.wmp-yt #wmpYT{width:100%;height:100%;display:block;border:0;}
+  #wmpStage.yt .hint,#wmpStage.yt .wmp-vizlabel{display:none;}
   .wmp-track{margin-left:auto;font-size:10px;color:#33405a;font-style:italic;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   @media(max-width:640px){ #wmpwin{top:52px;} .wmp-stage{height:200px;} .wmp-track{display:none;} }
 </style>
@@ -505,6 +507,7 @@
   <div class="wmp-stage" id="wmpStage">
     <video id="wmpVideo" class="wmp-video" muted loop playsinline preload="none" poster="assets/media/visuals-poster.jpg"><source src="assets/media/visuals.mp4" type="video/mp4"></video>
     <canvas id="wmpCanvas"></canvas>
+    <div id="wmpYTwrap" class="wmp-yt" hidden><div id="wmpYT"></div></div>
     <div class="wmp-vizlabel" id="wmpVizLabel">Ambience: Energy</div>
     <div class="hint">click to change visualization</div>
   </div>
@@ -521,7 +524,7 @@
       <span class="wmp-track" id="wmpTrack">Boards of Canada &mdash; Roygbiv</span>
     </div>
   </div>
-  <audio id="wmpAudio" src="assets/media/roygbiv.mp3" preload="metadata" loop></audio>
+  <audio id="wmpAudio" src="assets/media/roygbiv.mp3" preload="metadata"></audio>
 </div>
 
 <div id="crt"></div>
@@ -1067,11 +1070,56 @@ tick(); setInterval(tick,1000);
   const PAUSE_SVG='<svg viewBox="0 0 16 16"><rect x="3.5" y="2.5" width="3.5" height="11" fill="currentColor"/><rect x="9" y="2.5" width="3.5" height="11" fill="currentColor"/></svg>';
   playBtn.innerHTML=PLAY_SVG;
   function fmt(t){ if(!isFinite(t)) return '00:00'; t=Math.max(0,t|0); const m=(t/60)|0,s=t%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
-  function setPlayIcon(){ playBtn.innerHTML=audio.paused?PLAY_SVG:PAUSE_SVG; }
-
+  /* ---- playlist: the mp3 plays through the audio element (with the visualizer); the Gang Starr
+     track plays through YouTube's official embed, shown in the stage, driven by the same buttons ---- */
+  const TRACKS=[
+    {type:'audio', title:'Boards of Canada \u2014 Roygbiv'},
+    {type:'yt', id:'NqhNTA2VHqk', title:'Gang Starr \u2014 Above the Clouds'}
+  ];
+  let cur=0, yt=null, ytReady=false, ytWant=false, ytPoll=null;
+  const trackEl=document.getElementById('wmpTrack'), ytWrap=document.getElementById('wmpYTwrap');
+  const isYT=()=>TRACKS[cur].type==='yt';
+  function isPaused(){ if(isYT()) return !(ytReady&&yt.getPlayerState&&yt.getPlayerState()===1); return audio.paused; }
+  function setPlayIcon(){ playBtn.innerHTML=isPaused()?PLAY_SVG:PAUSE_SVG; }
+  function loadYT(cb){
+    if(ytReady){ cb(); return; }
+    ytWant=true;
+    if(window.YT&&window.YT.Player) return makeYT(cb);
+    const prev=window.onYouTubeIframeAPIReady; window.onYouTubeIframeAPIReady=function(){ if(prev) prev(); makeYT(cb); };
+    if(!document.getElementById('ytApi')){ const sc=document.createElement('script'); sc.id='ytApi'; sc.src='https://www.youtube.com/iframe_api'; document.head.appendChild(sc); }
+  }
+  function makeYT(cb){
+    if(yt) return;
+    yt=new YT.Player('wmpYT',{ videoId:TRACKS[1].id, host:'https://www.youtube-nocookie.com',
+      playerVars:{controls:0, rel:0, playsinline:1, disablekb:1, iv_load_policy:3, fs:0},
+      events:{
+        onReady:()=>{ ytReady=true; yt.setVolume(+vol.value); if(audio.muted) yt.mute(); if(ytWant&&isYT()) yt.playVideo(); cb&&cb(); },
+        onStateChange:(e)=>{ if(!isYT()) return; setPlayIcon();
+          if(e.data===1){ statusEl.textContent='Playing: YouTube'; startPoll(); }
+          else if(e.data===2){ statusEl.textContent='Paused'; }
+          else if(e.data===0){ next(); } },
+        onError:()=>{ statusEl.textContent='Track unavailable'; }
+      }});
+  }
+  function startPoll(){ if(ytPoll) return; ytPoll=setInterval(()=>{ if(!isYT()||!ytReady) return; const t=yt.getCurrentTime()||0, d=yt.getDuration()||0;
+    timeEl.textContent=fmt(t)+' / '+fmt(d); if(!seeking&&d) seek.value=(t/d)*1000; },250); }
+  function showTrack(){
+    trackEl.textContent=TRACKS[cur].title; trackEl.title=TRACKS[cur].title;
+    const y=isYT(); ytWrap.hidden=!y; stage.classList.toggle('yt',y);
+    if(y){ stopViz(); video.pause(); } else applyMode();
+    timeEl.textContent='00:00 / '+(y?'00:00':fmt(audio.duration)); seek.value=0;
+  }
+  function go(n, autoplay){
+    if(isYT()&&ytReady) yt.pauseVideo(); else { audio.pause(); }
+    cur=(n+TRACKS.length)%TRACKS.length; showTrack();
+    if(!isYT()) audio.currentTime=0; else if(ytReady) yt.seekTo(0,true);
+    if(autoplay) play(); else setPlayIcon();
+  }
+  function next(){ go(cur+1,true); }
+  function prev(){ const t=isYT()?(ytReady?yt.getCurrentTime():0):audio.currentTime; if(t>3){ if(isYT()) yt.seekTo(0,true); else audio.currentTime=0; } else go(cur-1,true); }
   /* ---- open / hide / drag (reuses bringFront + z from above) ---- */
-  function openWin(){ win.classList.add('open'); bringFront(win); play(); applyMode(); }
-  function hideWin(){ win.classList.remove('open'); stopViz(); video.pause(); }
+  function openWin(){ win.classList.add('open'); bringFront(win); play(); if(!isYT()) applyMode(); }
+  function hideWin(){ win.classList.remove('open'); stopViz(); video.pause(); if(isYT()&&ytReady) yt.pauseVideo(); }
   icon.addEventListener('click',openWin);
   document.getElementById('wmpClose').addEventListener('click',hideWin);
   document.getElementById('wmpMin').addEventListener('click',hideWin);
@@ -1100,28 +1148,34 @@ tick(); setInterval(tick,1000);
       srcNode.connect(analyser); analyser.connect(actx.destination); started=true;
     }catch(e){ started=false; }
   }
-  function play(){ initAudio(); if(actx&&actx.state==='suspended') actx.resume(); audio.play().catch(()=>{}); }
-  playBtn.addEventListener('click',()=>{ audio.paused?play():audio.pause(); });
-  stopBtn.addEventListener('click',()=>{ audio.pause(); audio.currentTime=0; });
-  document.getElementById('wmpPrev').addEventListener('click',()=>{ audio.currentTime=0; });
-  document.getElementById('wmpNext').addEventListener('click',()=>{ audio.currentTime=0; });
-  muteBtn.addEventListener('click',()=>{ audio.muted=!audio.muted; muteBtn.style.opacity=audio.muted?'.5':'1'; });
+  function play(){
+    if(isYT()){ ytWant=true; loadYT(()=>yt.playVideo()); if(ytReady) yt.playVideo(); return; }
+    initAudio(); if(actx&&actx.state==='suspended') actx.resume(); audio.play().catch(()=>{});
+  }
+  function pause(){ if(isYT()){ ytWant=false; if(ytReady) yt.pauseVideo(); } else audio.pause(); }
+  playBtn.addEventListener('click',()=>{ isPaused()?play():pause(); });
+  stopBtn.addEventListener('click',()=>{ if(isYT()){ ytWant=false; if(ytReady){ yt.pauseVideo(); yt.seekTo(0,true); } timeEl.textContent='00:00 / '+fmt(ytReady?yt.getDuration():0); seek.value=0; statusEl.textContent='Stopped'; }
+    else { audio.pause(); audio.currentTime=0; } });
+  document.getElementById('wmpPrev').addEventListener('click',prev);
+  document.getElementById('wmpNext').addEventListener('click',next);
+  muteBtn.addEventListener('click',()=>{ audio.muted=!audio.muted; if(ytReady){ audio.muted?yt.mute():yt.unMute(); } muteBtn.style.opacity=audio.muted?'.5':'1'; });
   audio.volume=vol.value/100;
-  vol.addEventListener('input',()=>{ audio.volume=vol.value/100; if(audio.muted&&vol.value>0){ audio.muted=false; muteBtn.style.opacity='1'; } });
+  vol.addEventListener('input',()=>{ audio.volume=vol.value/100; if(ytReady) yt.setVolume(+vol.value); if(audio.muted&&vol.value>0){ audio.muted=false; if(ytReady) yt.unMute(); muteBtn.style.opacity='1'; } });
   let seeking=false;
   seek.addEventListener('input',()=>{ seeking=true; });
-  seek.addEventListener('change',()=>{ if(audio.duration) audio.currentTime=(seek.value/1000)*audio.duration; seeking=false; });
-  audio.addEventListener('play',()=>{ setPlayIcon(); statusEl.textContent='Playing: 128 kbps'; if(modes[mode]==='video'){ if(win.classList.contains('open')) video.play().catch(()=>{}); } else startViz(); });
-  audio.addEventListener('pause',()=>{ setPlayIcon(); statusEl.textContent='Paused'; if(modes[mode]==='video') video.pause(); });
-  audio.addEventListener('loadedmetadata',()=>{ timeEl.textContent='00:00 / '+fmt(audio.duration); });
-  audio.addEventListener('timeupdate',()=>{ timeEl.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration); if(!seeking&&audio.duration) seek.value=(audio.currentTime/audio.duration)*1000; });
+  seek.addEventListener('change',()=>{ if(isYT()){ if(ytReady&&yt.getDuration()) yt.seekTo((seek.value/1000)*yt.getDuration(),true); } else if(audio.duration) audio.currentTime=(seek.value/1000)*audio.duration; seeking=false; });
+  audio.addEventListener('play',()=>{ if(isYT()) return; setPlayIcon(); statusEl.textContent='Playing: 128 kbps'; if(modes[mode]==='video'){ if(win.classList.contains('open')) video.play().catch(()=>{}); } else startViz(); });
+  audio.addEventListener('pause',()=>{ if(isYT()) return; setPlayIcon(); statusEl.textContent='Paused'; if(modes[mode]==='video') video.pause(); });
+  audio.addEventListener('ended',()=>{ if(!isYT()) next(); });
+  audio.addEventListener('loadedmetadata',()=>{ if(!isYT()) timeEl.textContent='00:00 / '+fmt(audio.duration); });
+  audio.addEventListener('timeupdate',()=>{ if(isYT()) return; timeEl.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration); if(!seeking&&audio.duration) seek.value=(audio.currentTime/audio.duration)*1000; });
   audio.addEventListener('error',()=>{ statusEl.textContent='No media file found'; });
 
   /* ---- visualizations ---- */
   const dpr=Math.min(window.devicePixelRatio||1,2), ctx=canvas.getContext('2d');
   function resize(){ const r=stage.getBoundingClientRect(); canvas.width=Math.max(2,(r.width*dpr)|0); canvas.height=Math.max(2,(r.height*dpr)|0); }
   const modes=['video','plasma','bars','wave'], modeNames={video:'Visuals',plasma:'Ambience: Energy',bars:'Bars and Waves',wave:'Oscilloscope'}; let mode=0;
-  stage.addEventListener('click',e=>{ if(e.target.closest('input,button')) return; mode=(mode+1)%modes.length; applyMode(); });
+  stage.addEventListener('click',e=>{ if(e.target.closest('input,button')||isYT()) return; mode=(mode+1)%modes.length; applyMode(); });
   let raf=null,t=0;
   function startViz(){ if(raf) return; resize(); loop(); }
   function stopViz(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
